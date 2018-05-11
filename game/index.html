@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<meta charset='utf-8' content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset='utf-8' content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <script type = 'text/javascript' src="js/jquery.min.js"></script>
 <script type = 'text/javascript' src="js/main.js"></script>
 <link href="css/main.css" rel="stylesheet" type="text/css">
@@ -13,78 +13,403 @@
 </head>
 <body>
 
-<section class='container-fluid' id="title-box">
-	<div id='title-holder'>
-		<h1>Perform Miracles</h1>
-	</div>
-	<div id='miracle-holder'>
-		<h2 id="production"></h2><br>
-		<button class="button button--secondary" id='miracle_button'>
-  			<span class="button__inner">Convert</span>
-		</button>
-	</div>
-</section>
+<div id="left_wrap" class="left_width">
+	<div id="make_sell_spacer"></div>
+    <div id="left_floatable">     
+    <div id="miracle_wrap">
+    <div id="miracle_div">
+        <p>
+            <span id="miracle_lbl">Divine energy</span><br>
+            <strong><span id="power">0</span></strong>
+            <br><small><span id="prod_energy">0</span> energy per tick</small>
+            <small><span id="clicker_rps_g"></span></small>
+        </p>
+        <button class="miracle" id='miracle_button'>Perform Miracle</button>
+    </div>
 
-<section class='container-fluid' id="values-box">
-	<div id='value-holder'>
-		<h1 id="followers">Followers</h1>
-		<h2 id="counter"></h2>
-	</div>
-</section>
-
-<section class='container-fluid' id="upgrades-box">
-	
-	<div class = "tab">
-		<button class="button button--secondary" id="shop-tab-btn">
-			<span class="button__inner">Shop</span></button>
+    <div id="miracle2_div">
+        <p>
+            <span id="follower_label">Followers</span><br>
+            <strong><span id="counter">0</span></strong><br/>
+            <small><span id="production_net">0</span> followers per tick(net)</small>
+            <br><small><span id="production_gross">0</span> followers per tick(gross)</small><br/>
+        </p>
+        <button class="miracle" id= "miracle_button2nd">Ascend</button>
+    </div>
+    <div class="clear"></div>
+    </div>
+    <div id="power_div">
+    	<p>
+            <span id="power_label">Divine Power </span>
+            <strong><span id="click_amount">0</span></strong><br/>
+            <span id="god_label">Godly Status </span>
+            <strong><span id="god_status">[ Minor Deity ]</span></strong><br/>
+        </p>
+    </div>
+    </div> 
+</div> 
+	<div id = "tab_btns" class = "tabs">
+		<button class="button button--secondary" id="convert-tab-btn">
+			<span class="button__inner">Convert</span></button>
+		<button class="button button--secondary" id="ascend-tab-btn">
+			<span class="button__inner">Ascend</span></button>
 		<button class="button button--secondary" id="upgrade-tab-btn">
-			<span class="button__inner">Upgrades</span></button>
+			<span class="button__inner">Augment</span></button>
 		<button class="button button--secondary" id="settings-tab-btn">
 			<span class="button__inner">Settings</span></button>
 	</div>
-	<div id="Shop" class="tabcontent">
+	<div id="tab_divs" class='tabs'>
+	<div id="Conversion" class="tabcontent">
 	
-		<br><span id='purchase-one'>This is the field for purchase for option one.
-			<button id="purchase-btn-one">Purchase</button>
-		</span><br>
-		<br><span id='purchase-two'>This is the field for purchase for option two.
-			<button id="purchase-btn-two">Purchase</button>
-		</span><br>
-		<br><span id='purchase-three'>This is the field for purchase for option three.
-			<button id="purchase-btn-three">Purchase</button>
-		</span><br>
-		<br><span id='purchase-four'>This is the field for purchase for option four.
-			<button id="purchase-btn-four">Purchase</button>
-		</span><br>
-		<br><span id='purchase-one'>This is the field for purchase for option one.
-			<button id="purchase-btn-one">Purchase</button>
-		</span><br>
-		<br><span id='purchase-two'>This is the field for purchase for option two.
-			<button id="purchase-btn-two">Purchase</button>
-		</span><br>
-		<br><span id='purchase-three'>This is the field for purchase for option three.
-			<button id="purchase-btn-three">Purchase</button>
-		</span><br>
-		<br><span id='purchase-four'>This is the field for purchase for option four.
-			<button id="purchase-btn-four">Purchase</button>
-		</span><br>
-		<br><span id='purchase-one'>This is the field for purchase for option one.
-			<button id="purchase-btn-one">Purchase</button>
-		</span><br>
-		<br><span id='purchase-two'>This is the field for purchase for option two.
-			<button id="purchase-btn-two">Purchase</button>
-		</span><br>
-		<br><span id='purchase-three'>This is the field for purchase for option three.
-			<button id="purchase-btn-three">Purchase</button>
-		</span><br>
-		<br><span id='purchase-four'>This is the field for purchase for option four.
-			<button id="purchase-btn-four">Purchase</button>
-		</span><br><br>
+		<div id="purchase_1" class="tab_div">
+		<h3 id="purchase_header_1" class="header_1">This is the field for purchase for option one.
+			<label id="purchase_lbl_1" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_1">10</span>
+			</b>
+			-
+			<em id="purchase_text_1">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_1">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_1" class="purchase" disabled="disabled">Purchase</button>
+		<button id="purchase_sell_btn_1" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right"
+		disabled="disabled" >Sell</button>
+		</div>
+
+		<div id="purchase_2" class="tab_div">
+		<h3 id="purchase_header_2" class="header_1">This is the field for purchase for option two.
+			<label id="purchase_lbl_2" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_2">110</span>
+			</b>
+			-
+			<em id="purchase_text_2">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_2">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_2" class="purchase">Purchase</button>
+		<button id="purchase_sell_btn_2" class="sell" disabled="disabled">Sell</button>
+		</div>
+		<div id="purchase_3" class="tab_div">
+		<h3 id="purchase_header_3" class="header_1">This is the field for purchase for option one.
+			<label id="purchase_lbl_3" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_3">10</span>
+			</b>
+			-
+			<em id="purchase_text_3">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_3">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_3" class="purchase">Purchase</button>
+		<button id="purchase_sell_btn_3" class="sell" disabled="disabled">Sell</button>
+		</div>
+		<div id="purchase_4" class="tab_div">
+		<h3 id="purchase_header_4" class="header_1">This is the field for purchase for option one.
+			<label id="purchase_lbl_4" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_4">10</span>
+			</b>
+			-
+			<em id="purchase_text_4">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_4">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_4" class="purchase" disabled="disabled">Purchase</button>
+		<button id="purchase_sell_btn_4" class="sell" disabled="disabled">Sell</button>
+		</div>
 	</div>
-	<div id="Upgrades" class="tabcontent"></div>
-	<div id="Settings" class="tabcontent"></div>
+	
+	<div id="Acension" class="tabcontent">
+	
+		<div id="ascend_1" class="tab_div">
+		<h3 id="ascend_header_1" class="header_1">This is the field for purchase for option one.
+			<label id="ascend_lbl_1" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="ascend_cost_1">10</span>
+			</b>
+			-
+			<em id="ascend_text_1">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="ascend_out_1">0.1</span>
+			</b>
+			per tick
+			<br>
+			Ascends
+			<b>
+				<span id="ascend_out_1_2">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="ascend_btn_1" class="purchase" disabled="disabled">Purchase</button>
+		<button id="ascend_sell_btn_1" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right"
+		disabled="disabled" >Sell</button>
+		</div>
 
-</section>
+		<div id="ascend_2" class="tab_div">
+		<h3 id="ascend_header_2" class="header_1">This is the field for purchase for option two.
+			<label id="ascend_lbl_2" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="ascend_cost_2">110</span>
+			</b>
+			-
+			<em id="ascend_text_2">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="ascend_out_2">0.1</span>
+			</b>
+			per tick
+			<br>
+			Ascends
+			<b>
+				<span id="ascend_out_2_2">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="ascend_btn_2" class="purchase">Purchase</button>
+		<button id="ascend_sell_btn_2" class="sell" disabled="disabled">Sell</button>
+		</div>
+		<div id="ascend_3" class="tab_div">
+		<h3 id="ascend_header_3" class="header_1">This is the field for purchase for option one.
+			<label id="ascend_lbl_3" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="ascend_cost_3">10</span>
+			</b>
+			-
+			<em id="ascend_text_3">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="ascend_out_3">0.1</span>
+			</b>
+			per tick
+			<br>
+			Ascends
+			<b>
+				<span id="ascend_out_3_2">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="ascend_btn_3" class="purchase">Purchase</button>
+		<button id="ascend_sell_btn_3" class="sell" disabled="disabled">Sell</button>
+		</div>
+		<div id="ascend_4" class="tab_div">
+		<h3 id="ascend_header_4" class="header_1">This is the field for purchase for option one.
+			<label id="ascend_lbl_4" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="ascend_cost_4">10</span>
+			</b>
+			-
+			<em id="ascend_text_4">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="ascend_out_4">0.1</span>
+			</b>
+			per tick
+			<br>
+			Ascends
+			<b>
+				<span id="ascend_out_4_2">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="ascend_btn_4" class="purchase" disabled="disabled">Purchase</button>
+		<button id="ascend_sell_btn_4" class="sell" disabled="disabled">Sell</button>
+		</div>
+	</div>
 
+
+	<div id="Upgrades" class="tabcontent">
+		<div id="upgrade_1" class="tab_div">
+		<h3 id="upgrade_header_1" class="header_1">This is the field for upgrade for option one.
+			<label id="upgrade_lbl_1" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<b>
+			<span id="upgrade_cost_1">10</span>
+			</b>
+			-
+			<em id="upgrade_text_1">Text placeholder</em> 
+		</p>
+		<button id="upgrade_btn_1" class="purchase" disabled="disabled">Purchase</button>
+		</div>
+
+		<div id="upgrade_2" class="tab_div">
+		<h3 id="upgrade_header_2" class="header_1">This is the field for upgrade for option two.
+			<label id="upgrade_lbl_2" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<b>
+			<span id="upgrade_cost_2">110</span>
+			</b>
+			-
+			<em id="upgrade_text_2">Text placeholder</em> 
+		</p>
+		<button id="upgrade_btn_2" class="purchase" disabled="disabled">Purchase</button>
+		</div>
+		<div id="upgrade_3" class="tab_div">
+		<h3 id="upgrade_header_3" class="header_1">This is the field for upgrade for option one.
+			<label id="upgrade_lbl_3" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<b>
+			<span id="upgrade_cost_3">10</span>
+			</b>
+			-
+			<em id="upgrade_text_3">Text placeholder</em> 
+		</p>
+		<button id="upgrade_btn_3" class="purchase" disabled="disabled">Purchase</button>
+		</div>
+		<div id="upgrade_4" class="tab_div">
+		<h3 id="upgrade_header_4" class="header_1">This is the field for purchase for option one.
+			<label id="upgrade_lbl_4" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<b>
+			<span id="upgrade_cost_4">10</span>
+			</b>
+			-
+			<em id="upgrade_text_4">Text placeholder</em> 
+		</p>
+		<button id="upgrade_btn_4" class="purchase" disabled="disabled">Purchase</button>
+		</div>
+	</div>
+
+	<div id="Settings" class="tabcontent">	<div id="purchase_1">
+		<h3 id="purchase_header_1">This is the field for purchase for option one.
+			<label id="purchase_lbl_1" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_1">10</span>
+			</b>
+			-
+			<em id="purchase_text_1">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_1">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_1" class="purchase">Purchase</button>
+		<button id="sell_btn_1">Sell</button>
+		</div>
+
+		<div id="purchase_2">
+		<h3 id="purchase_header_2">This is the field for purchase for option two.
+			<label id="purchase_lbl_2" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_2">110</span>
+			</b>
+			-
+			<em id="purchase_text_2">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_2">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_2" class="purchase">Purchase</button>
+		<button id="sell_btn_2">Sell</button>
+		</div>
+		<div id="purchase_3">
+		<h3 id="purchase_header_3">This is the field for purchase for option one.
+			<label id="purchase_lbl_3" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_3">10</span>
+			</b>
+			-
+			<em id="purchase_text_3">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_3">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_3" class="purchase">Purchase</button>
+		<button id="sell_btn_3">Sell</button>
+		</div>
+		<div id="purchase_4">
+		<h3 id="purchase_header_4">This is the field for purchase for option one.
+			<label id="purchase_lbl_4" class="align_right">0</label>
+		</h3>
+		<p>
+			<b>
+			<span id="purchase_cost_4">10</span>
+			</b>
+			-
+			<em id="purchase_text_4">Text placeholder</em> 
+		</p>
+		<p class = "align_right">
+			Produces
+			<b>
+				<span id="purchase_out_4">0.1</span>
+			</b>
+			per tick
+		</p>
+		<button id="purchase_btn_4" class="purchase">Purchase</button>
+		<button id="sell_btn_4">Sell</button>
+		</div>
+	</div>
+</div>
+<div class="transcend_click"></div>
+<div class="miracle_click"></div>
 </body>
 </html>

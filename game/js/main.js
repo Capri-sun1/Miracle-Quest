@@ -64,8 +64,8 @@ var vals = {
                 "amount":0,
                 "risk":0.005,
                 "output":1,
-                "base_cost":500,
-                "cost":500,
+                "base_cost":375,
+                "cost":375,
                 "unlock_loss":0.2,
                 "unlocked":false,
             },
@@ -75,8 +75,8 @@ var vals = {
                 "amount":0,
                 "risk":0.01,
                 "output":5,
-                "base_cost":1730,
-                "cost":1730,
+                "base_cost":1750,
+                "cost":1750,
                 "unlock_loss":1.2,
                 "unlocked":false,
             },
@@ -86,8 +86,8 @@ var vals = {
                 "amount":0,
                 "risk":0.01,
                 "output":10,
-                "base_cost":8120,
-                "cost":8120,
+                "base_cost":8000,
+                "cost":8000,
                 "unlock_loss":2.0,
                 "unlocked":false,
             }
@@ -142,10 +142,16 @@ function set_item_cost(item) {
   function game_engine(vals, iterations) {
     $('#click_amount').text( '[ ' + vals.click + ' ]');
     $('#counter').text( truncate_bigint(vals.followers) );
+    
     $('#power').text(truncate_bigint(vals.energy));
+    
     $('#production_net').text(truncate_bigint(vals.prod - vals.loss));
+    
     $('#production_gross').text(truncate_bigint(vals.prod));
-    $('#prod_energy').text(truncate_bigint(vals.loss));
+    
+    if( (vals.prod - vals.loss) >= 0.0 || vals.followers >= vals.loss ) $('#prod_energy').text(truncate_bigint(vals.loss));
+    else $('#prod_energy').text(truncate_bigint(vals.prod));
+
     setButtonAvailability(vals);
     setTimeout(function() {
     
@@ -154,10 +160,12 @@ function set_item_cost(item) {
     }
     else {
       game_engine(vals, ++iterations);
-      if( vals.followers > 0 || (vals.prod - vals.loss) > 0)  {
+      var followerThreshold;
+      if( vals.followers >= vals.loss || (vals.prod - vals.loss) > 0)  {
         vals.followers += ( vals.prod - vals.loss);
         vals.energy += vals.loss;
       }
+      else vals.energy += vals.prod;
     }
   
     }, 100);
@@ -277,6 +285,18 @@ $(document).on("click", "#ascend-tab-btn", function(event) {
 });
 $(document).on("click", "#upgrade-tab-btn", function(event) {
   openTab(event, 'Upgrades');
+});
+$(document).on("click", "#pantheon-tab-btn", function(event) {
+  openTab(event, 'Settings');
+});
+$(document).on("click", "#sacrifice-tab-btn", function(event) {
+  openTab(event, 'Settings');
+});
+$(document).on("click", "#stats-tab-btn", function(event) {
+  openTab(event, 'Settings');
+});
+$(document).on("click", "#challenges-tab-btn", function(event) {
+  openTab(event, 'Settings');
 });
 $(document).on("click", "#settings-tab-btn", function(event) {
   openTab(event, 'Settings');

@@ -98,13 +98,13 @@ html {
 }
 .button--secondary:after {
   border-radius: 2px;
-  background-color: #0277BD;
+  background-color: #212121;
 }
 .button--secondary .button__inner {
-  background-color: #03A9F4;
+  background-color: #212121;
 }
 .button--secondary:hover .button__inner, .button--secondary:focus .button__inner {
-  background-color: #03A9F4;
+  background-color: #37474F;
 }
 
 #miracle_wrap {
@@ -286,6 +286,7 @@ html {
   border-bottom-right-radius: 5px;
   width: 90%;
   margin-left: 5%;
+  margin-bottom: 10px;
   -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
           box-shadow: 0 10px 6px -6px #777;
@@ -317,24 +318,21 @@ html {
     border-radius: 2px;
     border: 2px solid  #880E4F;
 } 
-#miracle_button {
-  background-color: #1565C0;
+#miracle_button, #miracle_button2nd {
+  background-color: #263238;
 }
-#miracle_button:hover {
-  background-color: #1E88E5;
-}
-#miracle_button2nd {
-  background-color: #00796B;
-}
-
-#miracle_button2nd:hover {
-  background-color: #009688;
+#miracle_button:hover, #miracle_button2nd:hover {
+  background-color: #546E7A;
 }
 .tabs {
-  margin-top : 10px;
+  margin-top: 5px;
 }
 .tabs .button--secondary.active .button__inner {
-  background-color : #26A69A;
+  background-color : #37474F;
+}
+.tabs .button--secondary {
+  padding-bottom: 5px;
+  margin-bottom: 5px;
 }
 .miracle_click, .transcend_click { 
     display: none;
@@ -344,12 +342,7 @@ html {
     font-weight: bold;
     color: #ccc;
     text-shadow: 0px 1px 1px #333;
-}
-.miracle_click { 
-    color: #1565C0;
-}
-.transcend_click {
-  color: #AD1457
+    color: #263238;
 }
 
 #miracle_div, #miracle2_div {
@@ -358,7 +351,7 @@ html {
 }
 .purchase {
     border: none;
-    background-color: #1976D2;
+    background-color: #37474F;
     color: white;
     padding: 8px 8px;
     text-align: center;
@@ -368,17 +361,17 @@ html {
     border-radius: 2px;
 }
 .purchase:hover {
-  background-color: #64B5F6;
+  background-color: #546E7A;
 }
 .sell:hover {
-  background-color: #64B5F6;
+  background-color: #546E7A;
 }
 button[disabled]:hover {
   background-color: grey;
 }
 .sell {
     border: none;
-    background-color: #1976D2;
+    background-color: #37474F;
     color: white;
     padding: 8px 16px;
     text-align: center;

@@ -4,7 +4,7 @@ var vals = {
   "clickers":{
             "purchase1":{
                 "label":"Online Blogger",
-                "description":"An inspired teenager to spread the word",
+                "description":"An inspired teenager to spread the word.",
                 "amount":0,
                 "risk":0.05,
                 "output":0.2,
@@ -15,7 +15,7 @@ var vals = {
             },
             "purchase2":{
                 "label":"Leaflets",
-                "description":"Leaflets for your followers to hand out",
+                "description":"Leaflets for your followers to hand out.",
                 "amount":0,
                 "risk":0.005,
                 "output":1,
@@ -26,7 +26,7 @@ var vals = {
             },
             "purchase3":{
                 "label":"Public speaker",
-                "description":"Propagating the word in public places",
+                "description":"An attendant to speak in public places.",
                 "amount":0,
                 "risk":0.01,
                 "output":5,
@@ -36,8 +36,8 @@ var vals = {
                 "unlocked":false,
             },
             "purchase4":{
-                "label":"Refurbished Abbey",
-                "description":"An old-time abbey, newly rennovated.",
+                "label":"Archaic Chapel",
+                "description":"An old-time chapel capable of holding small services.",
                 "amount":0,
                 "risk":0.01,
                 "output":10,
@@ -49,7 +49,7 @@ var vals = {
     },  "ascend":{
             "ascend1":{
                 "label":"Step-in-booth",
-                "description":"An univiting small booth slowly processing followers",
+                "description":"An univiting small booth to slowly process followers.",
                 "amount":0,
                 "risk":0.05,
                 "output":0.2,
@@ -60,7 +60,7 @@ var vals = {
             },
             "ascend2":{
                 "label":"Acension suite",
-                "description":"A small, plush lounge enticing more followers at a time",
+                "description":"A small, plush lounge holding more followers at a time.",
                 "amount":0,
                 "risk":0.005,
                 "output":1,
@@ -71,7 +71,7 @@ var vals = {
             },
             "ascend3":{
                 "label":"Holy room",
-                "description":"An entire room where your followers can ascend",
+                "description":"An entire room where your followers can ascend.",
                 "amount":0,
                 "risk":0.01,
                 "output":5,
@@ -81,8 +81,8 @@ var vals = {
                 "unlocked":false,
             },
             "ascend4":{
-                "label":"Refurbished Abbey",
-                "description":"An old-time abbey, newly rennovated.",
+                "label":"Delapidated monastery",
+                "description":"A repurposed Monastery for your followers.",
                 "amount":0,
                 "risk":0.01,
                 "output":10,
@@ -94,10 +94,11 @@ var vals = {
   },
   "upgrades": {
 
-
+    //think about creating 'god-battle' mode!
   }
 
 };
+
  //global variable
 var upgrade_box_size = 0;
 

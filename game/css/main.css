@@ -3,6 +3,7 @@ html {
   font-family: 'Helvetica', sans-serif !important;
   font-size: 18px;
   background-color: lightgrey;
+  background-image: url('https://images.pexels.com/photos/289649/pexels-photo-289649.jpeg?cs=srgb&dl=abstract-art-background-289649.jpg&fm=jpg');
 }
 
 .button {
@@ -92,11 +93,11 @@ html {
 
 .button--secondary {
   background-color: #0277BD;
-  border-radius: 1px;
+  border-radius: 2px;
   z-index: 0;
 }
 .button--secondary:after {
-    border-radius: 1px;
+  border-radius: 2px;
   background-color: #0277BD;
 }
 .button--secondary .button__inner {
@@ -213,7 +214,7 @@ html {
 .tab_div {
   margin: 3px;
   padding: 4px;
-  background-color: #fff;
+  background-color: #E3F2FD;
   border-radius: 5px;
 }
 /* Change background color of buttons on hover */
@@ -240,10 +241,11 @@ html {
 }
 #miracle_wrap, #make_sell_spacer {
 
-    background: #fff;
-    border-bottom: 2px solid #dde;
-    border-radius: 5px;
-    width: 100%;
+    background: #E3F2FD;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    width: 90%;
+    margin-left: 5%;
 
 }
 #make_sell_spacer {
@@ -279,6 +281,14 @@ html {
 #power_div {
   text-align: center;
   padding: 1em;
+  background-color: #BBDEFB;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 90%;
+  margin-left: 5%;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
 }
 #miracle_button, #miracle_button2nd {
     -moz-user-select: none; 
@@ -305,7 +315,7 @@ html {
     display: inline-block;
     font-size: 1em;
     border-radius: 2px;
-    border: 2px solid #4A148C;
+    border: 2px solid  #880E4F;
 } 
 #miracle_button {
   background-color: #1565C0;
@@ -314,14 +324,17 @@ html {
   background-color: #1E88E5;
 }
 #miracle_button2nd {
-  background-color: #AD1457;
+  background-color: #00796B;
 }
 
 #miracle_button2nd:hover {
-  background-color: #D81B60
+  background-color: #009688;
+}
+.tabs {
+  margin-top : 10px;
 }
 .tabs .button--secondary.active .button__inner {
-  background-color : #EC407A;
+  background-color : #26A69A;
 }
 .miracle_click, .transcend_click { 
     display: none;
@@ -337,92 +350,6 @@ html {
 }
 .transcend_click {
   color: #AD1457
-}
-@media screen and (min-height: 550px) and (min-width: 700px) { 
-    #left_floatable {
-        position: fixed; 
-        top: 5px;
-        left: 5px;
-        border: none;
-        background: none;
-        width: inherit;
-    }
-    #make_sell_spacer { display: block; }
-}
-
-@media screen and (min-width: 200px) {
-     .tabs .button--secondary { 
-        width: 100%;
-    }
-}
-@media screen and (min-width: 400px) { 
-     .tabs .button--secondary { 
-        width: 48%;
-    }
-}
-@media screen and (min-width: 700px) { 
-    #tab_divs, #tab_btns {
-        float: left;
-        width: 58%;
-    }
-     .tabs .button--secondary { 
-        width: 48%;
-    }
-    #left_wrap { 
-        float: left;
-        min-width: 250px;
-        width: 40%;
-    }
-
-}
-
-@media screen and (min-width: 850px) { 
-
-}
-
-@media screen and (min-width: 1100px) { 
-    .tabs .button--secondary {  
-        width: 31%;
-    }
-    #left_wrap { 
-        width: 30%;
-    }
-    #tab_divs, #tab_btns { 
-        width: 65%;
-    }
-}
-@media screen and (min-width: 1300px) { 
-    .tabs .button--secondary { 
-        width: 23%;
-    }
-    #left_wrap { 
-        width: 25%;
-    }
-    #tab_divs, #tab_btns { 
-        width: 70%;
-    }
-}
-@media screen and (min-width: 1600px) { 
-     .tabs .button--secondary { 
-        width: 19%;
-    }
-    #left_wrap { 
-        width: 20%;
-    }
-    #tab_divs, #tab_btns { 
-        width: 75%;
-    }
-}
-@media screen and (min-width: 1900px) { 
-     .tabs .button--secondary { 
-        width: 15%;
-    }
-    #left_wrap { 
-        width: 16%;
-    }
-    #tab_divs, #tab_btns { 
-        width: 80%;
-    }
 }
 
 #miracle_div, #miracle2_div {
@@ -447,7 +374,7 @@ html {
   background-color: #64B5F6;
 }
 button[disabled]:hover {
-  background-color: gray;
+  background-color: grey;
 }
 .sell {
     border: none;
@@ -462,10 +389,135 @@ button[disabled]:hover {
 }
 
 button:disabled, button.disabled {
-    background-color: gray;
+    background-color: grey;
+    color: lightgrey;
     opacity: .8;
 }
 
+@media screen and (max-width: 700px ) {
+   #left_wrap {
+      margin-top : 0px;
+      margin-bottom: 0px;
+    }
+    .tabs {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    .tabs .button--secondary .button__inner { 
+      font-size: 1.5em;
+    }
+    .purchase {
+      font-size: 0.8em;
+      padding: 8px 6px;
+    }
+    .sell {
+      font-size: 0.8em;
+      padding: 8px 6px;
+    }
+    .tabcontent {
+      padding-bottom: 10px;
+    }
+    .tab_div {
+      padding-bottom: 10px;
+    }
+    .tab_div .align_right {
+      font-size: 0.8em;
+    }
+}
+@media screen and (min-height: 550px) and (min-width: 700px) { 
+    #left_floatable {
+        position: fixed; 
+        top: 5px;
+        left: 5px;
+        border: none;
+        background: none;
+        width: inherit;
+    }
+    #make_sell_spacer { display: block; }
+}
+
+@media screen and (min-width: 200px) {
+     .tabs .button--secondary { 
+        width: 100%;
+    }
+}
+@media screen and (min-width: 400px) { 
+     .tabs .button--secondary { 
+        width: 48%;
+    }
+}
+@media screen and (min-width: 750px) { 
+    #tab_divs, #tab_btns {
+        float: left;
+        width: 58%;
+    }
+     .tabs .button--secondary { 
+        width: 48%;
+    }
+    .tabs .button--secondary .button__inner { 
+        font-size: 0.7em;
+    }
+    #left_wrap { 
+        float: left;
+        min-width: 250px;
+        width: 40%;
+    }
+
+}
+
+@media screen and (min-width: 1100px) { 
+    .tabs .button--secondary {  
+        width: 31%;
+    }
+    .tabs .button--secondary .button__inner { 
+        font-size: 0.6em;
+    }
+    #left_wrap { 
+        width: 30%;
+    }
+    #tab_divs, #tab_btns { 
+        width: 65%;
+    }
+}
+@media screen and (min-width: 1300px) { 
+    .tabs .button--secondary { 
+        width: 22%;
+    }
+    .tabs .button--secondary .button__inner { 
+        font-size: 0.5em;
+    }
+    #left_wrap { 
+        width: 25%;
+    }
+    #tab_divs, #tab_btns { 
+        width: 70%;
+    }
+}
+@media screen and (min-width: 1600px) { 
+     .tabs .button--secondary { 
+        width: 19%;
+    }
+    .tabs .button--secondary .button__inner { 
+        font-size: 0.4em;
+    }
+    #left_wrap { 
+        width: 20%;
+    }
+    #tab_divs, #tab_btns { 
+        width: 75%;
+    }
+}
+@media screen and (min-width: 1900px) { 
+     .tabs .button--secondary { 
+        width: 15%;
+    }
+    #left_wrap { 
+        width: 16%;
+    }
+    #tab_divs, #tab_btns { 
+        width: 80%;
+    }
+}
 
 button[data-balloon] {
   overflow: visible; }

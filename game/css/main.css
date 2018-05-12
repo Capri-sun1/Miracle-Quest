@@ -104,46 +104,10 @@ html {
   background-color: #212121;
 }
 .button--secondary:hover .button__inner, .button--secondary:focus .button__inner {
-  background-color: #37474F;
+  background-color: #E1F5FE;
+  color: #212121;
 }
 
-#miracle_wrap {
-  padding-bottom: 20px;
-}
-#miracle-holder {
-  position:absolute;
-  margin-top : 25%;
-  margin-left: 12.5%;
-}
-#miracle-button {
-    margin-top: 5%;
-}
-#title-holder {
-    position: absolute;
-    margin-left : 10%;
-}
-#title-box {
-  position: absolute;
-  margin-right: 0;
-  margin-bottom: 0;
-  outline: 2px solid #03A9F4;
-  padding-bottom: 1%;
-  padding-right: 1%;
-}
-#title-box h1 {
-  font-size: 2vw;
-}
-#title-box h2 {
-  font-size: 1.5vw;
-}
-#values-box {
-  position: absolute;
-  margin-right: 0;
-  margin-bottom: 0;
-  outline: 2px solid #03A9F4;
-  padding-bottom: 2em;
-  padding-right: 2em;
-}
 #upgrades-box {
   position: absolute;
   margin-left: 50%;
@@ -214,8 +178,12 @@ html {
 .tab_div {
   margin: 3px;
   padding: 4px;
-  background-color: #E3F2FD;
+  background-color: #E1F5FE;
   border-radius: 5px;
+  position: relative;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
 }
 /* Change background color of buttons on hover */
 .tab button:hover {
@@ -239,11 +207,55 @@ html {
 .align_right {
   float :right;
 }
+.align_left {
+  float: left;
+}
+.align_center {
+  text-align: center;
+}
+#stats_div_1 {
+  padding-left: 5%;
+  padding-bottom: 5%;
+}
+.sacrifice {
+  text-align: center;
+  padding: 12px 6px;
+}
+#time_played {
+  position: relative;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-right: 5%;
+  margin-bottom: 1%;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 5px ;
+  font-size: 1em;
+    -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
+}
+#total_energy1 {
+  margin-left: 28%;
+}
+#total_energy2 {
+  margin-left: 19%;
+}
+#total_energy3 {
+  margin-left: 20%;
+}
+#total_energy4 {
+  margin-left: 25%;
+}
+#total_energy5 {
+  margin-left: 21%;
+}
+#total_energy6 {
+  margin-left: 20%;
+}
 #miracle_wrap, #make_sell_spacer {
 
-    background: #E3F2FD;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
+    background: #E1F5FE;
     width: 90%;
     margin-left: 5%;
 
@@ -281,7 +293,8 @@ html {
 #power_div {
   text-align: center;
   padding: 1em;
-  background-color: #BBDEFB;
+  color: #fff;
+  background-color: #212121;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   width: 90%;
@@ -290,6 +303,20 @@ html {
   -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
           box-shadow: 0 10px 6px -6px #777;
+}
+#above_div {
+  text-align: center;
+  padding: 1em;
+  color: #fff;
+  background-color: #212121;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 90%;
+  margin-left: 5%;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
+}
 }
 #miracle_button, #miracle_button2nd {
     -moz-user-select: none; 
@@ -316,21 +343,32 @@ html {
     display: inline-block;
     font-size: 1em;
     border-radius: 2px;
-    border: 2px solid  #880E4F;
 } 
 #miracle_button, #miracle_button2nd {
-  background-color: #263238;
+  background-color: #212121;
 }
 #miracle_button:hover, #miracle_button2nd:hover {
-  background-color: #546E7A;
+  background-color: #E1F5FE;
+  color: #212121;
+  border: 2px solid  #880E4F;
+  padding: 6px 6px;
+}
+#challenges_main_header_div {
+  padding-bottom: 4%;
 }
 .tabs {
   margin-top: 5px;
+
 }
 .tabs .button--secondary.active .button__inner {
-  background-color : #37474F;
+  background-color : #E1F5FE;
+  color: #212121;
 }
 .tabs .button--secondary {
+  position: relative;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
   padding-bottom: 5px;
   margin-bottom: 5px;
 }
@@ -344,14 +382,19 @@ html {
     text-shadow: 0px 1px 1px #333;
     color: #263238;
 }
-
+#settings_div_1,#pantheon_div_1 ,#sacrifice_div_1  {
+  padding: 16px 16px;
+}
+.sacrifice_unlocked {
+  text-align: center;
+}
 #miracle_div, #miracle2_div {
   text-align: center;
   padding: 1.5em;
 }
 .purchase {
     border: none;
-    background-color: #37474F;
+    background-color: #212121;
     color: white;
     padding: 8px 8px;
     text-align: center;
@@ -361,17 +404,32 @@ html {
     border-radius: 2px;
 }
 .purchase:hover {
-  background-color: #546E7A;
+  background-color: #E3F2FD;
+  color: #212121;
+  padding: 6px 6px;
+  border: 2px solid  #880E4F;
 }
 .sell:hover {
-  background-color: #546E7A;
+  background-color: #E3F2FD;
+  color: #212121;
+  padding: 6px 14px;
+  border: 2px solid  #880E4F;
 }
-button[disabled]:hover {
+.purchase[disabled]:hover {
   background-color: grey;
+  color: lightgrey;
+  border: none;
+  padding: 8px 8px;
+}
+.sell[disabled]:hover {
+  background-color: grey;
+  color: lightgrey;
+  border:none;
+  padding: 8px 16px;
 }
 .sell {
     border: none;
-    background-color: #37474F;
+    background-color: #212121;
     color: white;
     padding: 8px 16px;
     text-align: center;
@@ -416,6 +474,9 @@ button:disabled, button.disabled {
     .tab_div .align_right {
       font-size: 0.8em;
     }
+     #time_played {
+      font-size: 0.6em !important;
+    }
 }
 @media screen and (min-height: 550px) and (min-width: 700px) { 
     #left_floatable {
@@ -427,6 +488,10 @@ button:disabled, button.disabled {
         width: inherit;
     }
     #make_sell_spacer { display: block; }
+    
+    #time_played {
+      font-size: 0.4em!important;
+    }
 }
 
 @media screen and (min-width: 200px) {
@@ -454,8 +519,11 @@ button:disabled, button.disabled {
         float: left;
         min-width: 250px;
         width: 40%;
+        margin-top: 12.5%;
     }
-
+    #time_played {
+      font-size: 0.8em !important;
+    }
 }
 
 @media screen and (min-width: 1100px) { 
@@ -467,9 +535,13 @@ button:disabled, button.disabled {
     }
     #left_wrap { 
         width: 30%;
+        margin-top: 6%;
     }
     #tab_divs, #tab_btns { 
         width: 65%;
+    }
+    #time_played {
+      font-size: 1.0em !important;
     }
 }
 @media screen and (min-width: 1300px) { 
@@ -482,8 +554,14 @@ button:disabled, button.disabled {
     #left_wrap { 
         width: 25%;
     }
+    #left_floatable {
+      margin-top: 7.5%;
+    }
     #tab_divs, #tab_btns { 
         width: 70%;
+    }
+    #time_played {
+      font-size: 1.2em !important;
     }
 }
 @media screen and (min-width: 1600px) { 
@@ -495,6 +573,7 @@ button:disabled, button.disabled {
     }
     #left_wrap { 
         width: 20%;
+        margin-top: 5%;
     }
     #tab_divs, #tab_btns { 
         width: 75%;

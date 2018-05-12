@@ -4,9 +4,11 @@
 
 <meta charset='utf-8' content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <script type = 'text/javascript' src="js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
 <script type = 'text/javascript' src="js/main.js"></script>
-<link href="css/main.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="css/main.css" rel="stylesheet" type="text/css">
 <link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <title>Miracle Clicker</title>
@@ -16,6 +18,14 @@
 <div id="left_wrap" class="left_width">
 	<div id="make_sell_spacer"></div>
     <div id="left_floatable">     
+    <div id="above_div">
+    	<p>
+            <span id="power_label">Divine Power </span>
+            <strong><span id="click_amount">0</span></strong><br/>
+            <span id="god_label">Godly Status </span>
+            <strong><span id="god_status">[ Minor Deity ]</span></strong><br/>
+        </p>
+    </div>
     <div id="miracle_wrap">
     <div id="miracle_div">
         <p>
@@ -40,21 +50,21 @@
     </div>
     <div id="power_div">
     	<p>
-            <span id="power_label">Divine Power </span>
-            <strong><span id="click_amount">0</span></strong><br/>
-            <span id="god_label">Godly Status </span>
-            <strong><span id="god_status">[ Minor Deity ]</span></strong><br/>
+            <span id="power_label">Corruption </span>
+            <strong><span id="corruption_amount">0%</span></strong><br/>
+            <span id="save_title">Nothing saved yet.</span>
+            <strong><span id="last_saved"></span></strong><br/>
         </p>
     </div>
     </div> 
 </div> 
 	<div id = "tab_btns" class = "tabs">
 		<button class="button button--secondary" id="convert-tab-btn">
-			<span class="button__inner">Convert</span></button>
+			<span class="button__inner" id="convert-tab-text"></span></button>
 		<button class="button button--secondary" id="ascend-tab-btn">
-			<span class="button__inner">Ascend</span></button>
+			<span class="button__inner" id="ascend-tab-text"></span></button>
 		<button class="button button--secondary" id="upgrade-tab-btn">
-			<span class="button__inner">Augment</span></button>
+			<span class="button__inner" id="augment-tab-text"></span></button>
 		<button class="button button--secondary" id="settings-tab-btn">
 			<span class="button__inner">Settings</span></button>
 		<button class="button button--secondary" id="sacrifice-tab-btn">		
@@ -62,7 +72,7 @@
 		<button class="button button--secondary" id="pantheon-tab-btn">
 			<span class="button__inner">Pantheon</span></button>
 		<button class="button button--secondary" id="challenges-tab-btn">
-			<span class="button__inner">Challenges</span></button>
+			<span class="button__inner" id="challenges-tab-text"></span></button>
 		<button class="button button--secondary" id="stats-tab-btn">
 			<span class="button__inner">Statistics</span></button>
 	</div>
@@ -112,7 +122,8 @@
 			per tick
 		</p>
 		<button id="purchase_btn_2" class="purchase">Purchase</button>
-		<button id="purchase_sell_btn_2" class="sell" disabled="disabled">Sell</button>
+		<button id="purchase_sell_btn_2" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
 		</div>
 		<div id="purchase_3" class="tab_div">
 		<h3 id="purchase_header_3" class="header_1">This is the field for purchase for option one.
@@ -133,7 +144,8 @@
 			per tick
 		</p>
 		<button id="purchase_btn_3" class="purchase">Purchase</button>
-		<button id="purchase_sell_btn_3" class="sell" disabled="disabled">Sell</button>
+		<button id="purchase_sell_btn_3" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
 		</div>
 		<div id="purchase_4" class="tab_div">
 		<h3 id="purchase_header_4" class="header_1">This is the field for purchase for option one.
@@ -154,11 +166,12 @@
 			per tick
 		</p>
 		<button id="purchase_btn_4" class="purchase" disabled="disabled">Purchase</button>
-		<button id="purchase_sell_btn_4" class="sell" disabled="disabled">Sell</button>
+		<button id="purchase_sell_btn_4" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
 		</div>
 	</div>
 	
-	<div id="Acension" class="tabcontent">
+	<div id="Ascension" class="tabcontent">
 	
 		<div id="ascend_1" class="tab_div">
 		<h3 id="ascend_header_1" class="header_1">This is the field for purchase for option one.
@@ -215,7 +228,8 @@
 			per tick
 		</p>
 		<button id="ascend_btn_2" class="purchase">Purchase</button>
-		<button id="ascend_sell_btn_2" class="sell" disabled="disabled">Sell</button>
+		<button id="ascend_sell_btn_2" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
 		</div>
 		<div id="ascend_3" class="tab_div">
 		<h3 id="ascend_header_3" class="header_1">This is the field for purchase for option one.
@@ -242,7 +256,8 @@
 			per tick
 		</p>
 		<button id="ascend_btn_3" class="purchase">Purchase</button>
-		<button id="ascend_sell_btn_3" class="sell" disabled="disabled">Sell</button>
+		<button id="ascend_sell_btn_3" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
 		</div>
 		<div id="ascend_4" class="tab_div">
 		<h3 id="ascend_header_4" class="header_1">This is the field for purchase for option one.
@@ -269,7 +284,8 @@
 			per tick
 		</p>
 		<button id="ascend_btn_4" class="purchase" disabled="disabled">Purchase</button>
-		<button id="ascend_sell_btn_4" class="sell" disabled="disabled">Sell</button>
+		<button id="ascend_sell_btn_4" class="sell" 
+		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
 		</div>
 	</div>
 
@@ -286,7 +302,8 @@
 			-
 			<em id="upgrade_text_1">Text placeholder</em> 
 		</p>
-		<button id="upgrade_btn_1" class="purchase" disabled="disabled">Purchase</button>
+		<button id="upgrade_btn_1" class="purchase" 
+		data-balloon="Click Multiplier x2" data-balloon-pos="right" disabled="disabled">Purchase</button>
 		</div>
 
 		<div id="upgrade_2" class="tab_div">
@@ -300,7 +317,8 @@
 			-
 			<em id="upgrade_text_2">Text placeholder</em> 
 		</p>
-		<button id="upgrade_btn_2" class="purchase" disabled="disabled">Purchase</button>
+		<button id="upgrade_btn_2" class="purchase" 
+		data-balloon="Click Multiplier x3" data-balloon-pos="right" disabled="disabled">Purchase</button>
 		</div>
 		<div id="upgrade_3" class="tab_div">
 		<h3 id="upgrade_header_3" class="header_1">This is the field for upgrade for option one.
@@ -313,7 +331,8 @@
 			-
 			<em id="upgrade_text_3">Text placeholder</em> 
 		</p>
-		<button id="upgrade_btn_3" class="purchase" disabled="disabled">Purchase</button>
+		<button id="upgrade_btn_3" class="purchase" 
+		data-balloon="Click Multiplier x4" data-balloon-pos="right" disabled="disabled">Purchase</button>
 		</div>
 		<div id="upgrade_4" class="tab_div">
 		<h3 id="upgrade_header_4" class="header_1">This is the field for purchase for option one.
@@ -326,95 +345,163 @@
 			-
 			<em id="upgrade_text_4">Text placeholder</em> 
 		</p>
-		<button id="upgrade_btn_4" class="purchase" disabled="disabled">Purchase</button>
+		<button id="upgrade_btn_4" class="purchase" 
+		data-balloon="Click Multiplier x5" data-balloon-pos="right" disabled="disabled">Purchase</button>
 		</div>
 	</div>
+	<div id="Pantheon" class="tabcontent">
+		<div id="pantheon_div_1" class="tab_div" style="text-align:center">
+			<h3 class="header_1" >Enter the arena of the Gods.</h3>
+			<span id="pantheon_lbl_1">120 Divine Power is required to begin challenging other deities.</span>
+		</div>
+		<div id="pantheon_unlocked" style="display:none" class="tab_div">Celestial Pantheon</div>
+	</div>
+	<div id="Sacrifice" class="tabcontent">
+		<div id="sacrifice_div_1" class="tab_div">
+			<div class="sacrifice_locked">
+			<h3 class="header_1" style="text-align:center">Unlock this feature with a sacrifice of 1M followers</h3>
+			<div class="sacrifice"> 
+				<button id="sacrifice_entry_btn_1" class="purchase" 
+				data-balloon="Costs 1M followers, Corruption +5%." data-balloon-pos="right" disabled="disabled">Unlock</button></div>
+			</div>
+			<div class="sacrifice_unlocked" style="display:none">
+				
+				<h3 class="header_1">Follower Sacrifices</h3>
+					<span>Embrace the power of the Old Gods by sacrificing your folllowers to obtain greater might.</span>
 
-	<div id="Settings" class="tabcontent">	<div id="purchase_1">
-		<h3 id="purchase_header_1">This is the field for purchase for option one.
-			<label id="purchase_lbl_1" class="align_right">0</label>
+			</div>
+		</div>
+	</div>
+	<div id="Stats" class="tabcontent">	
+			<div id="stats_div_1" class="tab_div">
+				<h3 id="stats_header_1">Game statistics</h3><br>
+				<p>
+					<h4 id='time_played'>Time played
+						<b>
+							<span id="stats_field_1">0.1</span>
+						</b>
+					</h4>
+					<h4 id='time_played'>Last saved
+						<b>
+							<label id="stats_field_saved">0.1</label>
+						</b>
+					</h4>
+					<br>
+					<h4 id='time_played'>Current energy
+						<b>
+							<span id="stats_field_2">0.1</span>
+						</b>
+						<span id="total_energy1">Total energy</span>
+						<b>
+							<span id="stats_field_3">0.1</span>
+						</b>
+					</h4>
+					<h4 id='time_played'>Current followers
+						<b>
+							<span id="stats_field_4">0.1</span>
+						</b>
+						<span id="total_energy4">Total followers</span>
+						<b>
+							<span id="stats_field_5">0.1</span>
+						</b>
+					</h4>
+					<h4 id='time_played'>Current follower Ascension
+						<b>
+							<span id="stats_field_8">0.1</span>
+						</b>
+						<span id="total_energy3">Max follower Ascension</span>
+						<b>
+							<span id="stats_field_9">0.1</span>
+						</b>
+					</h4>
+
+					<h4 id='time_played'>Current energy production
+						<b>
+							<span id="stats_field_6">0.1</span>
+						</b>
+						<span id="total_energy2">Max energy production</span>
+						<b>
+							<span id="stats_field_7">0.1</span>
+						</b>
+					</h4>
+					<h4 id='time_played'>Miracle clicks
+						<b>
+							<span id="stats_field_13">0.1</span>
+						</b>
+						<span id="total_energy1">Ascension clicks</span>
+						<b>
+							<span id="stats_field_14">0.1</span>
+						</b>
+					</h4>
+					<h4 id='time_played' class="miracle_energy_stat">Ascension click energy
+						<b>
+							<span id="stats_field_15">0.1</span>
+						</b>
+						<span id="total_energy3">Miracle click followers</span>
+						<b>
+							<span id="stats_field_16">0.1</span>
+						</b>
+					</h4>
+					<br>
+					<h4 id='time_played'>Divine power
+						<b>
+							<label id="stats_field_11">0.1</label>
+						</b>
+					</h4>
+					<h4 id='time_played'>Current deity status
+						<b>
+							<span id="stats_field_10">Minor Deity</span>
+						</b>
+					</h4>
+				</p>
+			</div>
+	</div>
+	<div id="Challenges" class="tabcontent">	
+		<div id="challenges_main_header_div" class="tab_div" style="text-align:center">
+				<h3 id="challenges_header">Heavenly Trials</h3><br>
+				<span>Track your progress as you continue through the game.</span><br>
+				<span>Each completed challenge increases your follower production by 2%,  Current Multipler: <strong id="prod_mul">1.00x</strong></span>
+		</div>
+		<div id="challenges_1" class="tab_div">
+		<h3 id="challenges_header_1" class="header_1">This is the field for upgrade for option one.
+			<label id="challenges_lbl_1" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<b>
-			<span id="purchase_cost_1">10</span>
-			</b>
-			-
-			<em id="purchase_text_1">Text placeholder</em> 
+			<em id="challenges_text_1">Text placeholder</em> 
 		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="purchase_out_1">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="purchase_btn_1" class="purchase">Purchase</button>
-		<button id="sell_btn_1">Sell</button>
 		</div>
 
-		<div id="purchase_2">
-		<h3 id="purchase_header_2">This is the field for purchase for option two.
-			<label id="purchase_lbl_2" class="align_right">0</label>
+		<div id="challenges_2" class="tab_div">
+		<h3 id="challenges_header_2" class="header_1">This is the field for upgrade for option two.
+			<label id="challenges_lbl_2" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<b>
-			<span id="purchase_cost_2">110</span>
-			</b>
-			-
-			<em id="purchase_text_2">Text placeholder</em> 
+			<em id="challenges_text_2">Text placeholder</em> 
 		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="purchase_out_2">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="purchase_btn_2" class="purchase">Purchase</button>
-		<button id="sell_btn_2">Sell</button>
 		</div>
-		<div id="purchase_3">
-		<h3 id="purchase_header_3">This is the field for purchase for option one.
-			<label id="purchase_lbl_3" class="align_right">0</label>
+		<div id="challenges_3" class="tab_div">
+		<h3 id="challenges_header_3" class="header_1">This is the field for upgrade for option one.
+			<label id="challenges_lbl_3" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<b>
-			<span id="purchase_cost_3">10</span>
-			</b>
-			-
-			<em id="purchase_text_3">Text placeholder</em> 
+			<em id="challenges_text_3">Text placeholder</em> 
 		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="purchase_out_3">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="purchase_btn_3" class="purchase">Purchase</button>
-		<button id="sell_btn_3">Sell</button>
 		</div>
-		<div id="purchase_4">
-		<h3 id="purchase_header_4">This is the field for purchase for option one.
-			<label id="purchase_lbl_4" class="align_right">0</label>
+		<div id="challenges_4" class="tab_div">
+		<h3 id="challenges_header_4" class="header_1">This is the field for purchase for option one.
+			<label id="challenges_lbl_4" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<b>
-			<span id="purchase_cost_4">10</span>
-			</b>
-			-
-			<em id="purchase_text_4">Text placeholder</em> 
+			<em id="challenges_text_4">Text placeholder</em> 
 		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="purchase_out_4">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="purchase_btn_4" class="purchase">Purchase</button>
-		<button id="sell_btn_4">Sell</button>
 		</div>
+	</div>
+	<div id="Settings" class="tabcontent">	<div id="settings_1" style="text-align:center">
+		<div id="settings_div_1" class="tab_div">
+		<h3 id="settings_header_1">This is the field for purchase for option one.</h3>
+		<button class='purchase' id='delete_save'>Delete save</button>
+	</div>
+	</div>
 	</div>
 </div>
 <div class="transcend_click"></div>

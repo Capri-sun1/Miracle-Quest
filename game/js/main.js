@@ -596,34 +596,29 @@ $(document).on("click", '.miracle', function(event) {
             target.html( '+' + truncate_bigint(vals.click));
             divToAppend = '#miracle_div';
             perform_miracle();
-            offset = $('#counter').offset();
+            offset = $(window).height()/4;
           }else {
             divToAppend = '#miracle2_div'; 
             target = $('.transcend_click:first').clone();
             target.html( '-' + truncate_bigint(vals.click));
-            offset = $('#power').offset();
-            if( can_click() ) perform_trans();
-            else return;
+            offset = $(window).height()/4;
+            if( can_click() ) perform_trans(); else return;
           }
           $(divToAppend).append(target);
           target.show();
           //handle unique animations for each click
-          if( used_id === 'button' ) {
-            target.offset({left:event.pageX-30, top:event.pageY+15});
-          }else target.offset({left:offset.left * 1.1, top:$('#counter').offset().top});
-          var end_y = event.clientY-150;
+           if( used_id === 'button' ) { target.offset({left:event.pageX-30, top:$('#miracle_button').offset().top * 1.1});;
+           }else target.offset({left:offset * 1.1, top:$('#counter').offset().top});
           target.css('opacity',100);
-          if(last_float === 1) { 
-            var this_float = event.pageX;
-            last_float = 0;
-          } else { 
-            var this_float = event.pageX - 60;
-            last_float = 1; 
-          }
 
-          target.animate({ 'top':offset.top *1.05+ 'px', 'opacity':0.1, 'left':offset.left+ 'px'}, 750, function() { 
+          if( used_id === 'button') { target.animate({ 'top': target.offset().top * 1.2 + 'px', 'opacity':0.1, 'left':target.offset.left+ 'px'}, 750, function() { 
             $(this).remove();
           });
+          }
+          else {target.animate({ 'top':offset * 1.2 + 'px', 'opacity':0.1, 'left':offset+ 'px'}, 750, function() { 
+            $(this).remove();
+          });
+          }
 
 });
 

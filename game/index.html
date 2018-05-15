@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<meta charset='utf-8' content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset='utf-8'> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <script type = 'text/javascript' src="js/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+<script type = 'text/javascript' src="js/jquery.toaster.js"></script>
 <script type = 'text/javascript' src="js/main.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link href="css/main.css" rel="stylesheet" type="text/css">
@@ -102,73 +104,6 @@
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
 		disabled="disabled" >Sell</button>
 		</div>
-
-		<div id="purchase_2" class="tab_div">
-		<h3 id="purchase_header_2" class="header_1">This is the field for purchase for option two.
-			<label id="purchase_lbl_2" class="align_right">0</label>
-		</h3>
-		<p>
-			<b>
-			<span id="purchase_cost_2">110</span>
-			</b>
-			-
-			<em id="purchase_text_2">Text placeholder</em> 
-		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="purchase_out_2">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="purchase_btn_2" class="purchase">Purchase</button>
-		<button id="purchase_sell_btn_2" class="sell" 
-		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
-		</div>
-		<div id="purchase_3" class="tab_div">
-		<h3 id="purchase_header_3" class="header_1">This is the field for purchase for option one.
-			<label id="purchase_lbl_3" class="align_right">0</label>
-		</h3>
-		<p>
-			<b>
-			<span id="purchase_cost_3">10</span>
-			</b>
-			-
-			<em id="purchase_text_3">Text placeholder</em> 
-		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="purchase_out_3">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="purchase_btn_3" class="purchase">Purchase</button>
-		<button id="purchase_sell_btn_3" class="sell" 
-		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
-		</div>
-		<div id="purchase_4" class="tab_div">
-		<h3 id="purchase_header_4" class="header_1">This is the field for purchase for option one.
-			<label id="purchase_lbl_4" class="align_right">0</label>
-		</h3>
-		<p>
-			<b>
-			<span id="purchase_cost_4">10</span>
-			</b>
-			-
-			<em id="purchase_text_4">Text placeholder</em> 
-		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="purchase_out_4">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="purchase_btn_4" class="purchase" disabled="disabled">Purchase</button>
-		<button id="purchase_sell_btn_4" class="sell" 
-		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
-		</div>
 	</div>
 	
 	<div id="Ascension" class="tabcontent">
@@ -202,176 +137,113 @@
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
 		disabled="disabled" >Sell</button>
 		</div>
-
-		<div id="ascend_2" class="tab_div">
-		<h3 id="ascend_header_2" class="header_1">This is the field for purchase for option two.
-			<label id="ascend_lbl_2" class="align_right">0</label>
-		</h3>
-		<p>
-			<b>
-			<span id="ascend_cost_2">110</span>
-			</b>
-			-
-			<em id="ascend_text_2">Text placeholder</em> 
-		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="ascend_out_2">0.1</span>
-			</b>
-			per tick
-			<br>
-			Ascends
-			<b>
-				<span id="ascend_out_2_2">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="ascend_btn_2" class="purchase">Purchase</button>
-		<button id="ascend_sell_btn_2" class="sell" 
-		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
-		</div>
-		<div id="ascend_3" class="tab_div">
-		<h3 id="ascend_header_3" class="header_1">This is the field for purchase for option one.
-			<label id="ascend_lbl_3" class="align_right">0</label>
-		</h3>
-		<p>
-			<b>
-			<span id="ascend_cost_3">10</span>
-			</b>
-			-
-			<em id="ascend_text_3">Text placeholder</em> 
-		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="ascend_out_3">0.1</span>
-			</b>
-			per tick
-			<br>
-			Ascends
-			<b>
-				<span id="ascend_out_3_2">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="ascend_btn_3" class="purchase">Purchase</button>
-		<button id="ascend_sell_btn_3" class="sell" 
-		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
-		</div>
-		<div id="ascend_4" class="tab_div">
-		<h3 id="ascend_header_4" class="header_1">This is the field for purchase for option one.
-			<label id="ascend_lbl_4" class="align_right">0</label>
-		</h3>
-		<p>
-			<b>
-			<span id="ascend_cost_4">10</span>
-			</b>
-			-
-			<em id="ascend_text_4">Text placeholder</em> 
-		</p>
-		<p class = "align_right">
-			Produces
-			<b>
-				<span id="ascend_out_4">0.1</span>
-			</b>
-			per tick
-			<br>
-			Ascends
-			<b>
-				<span id="ascend_out_4_2">0.1</span>
-			</b>
-			per tick
-		</p>
-		<button id="ascend_btn_4" class="purchase" disabled="disabled">Purchase</button>
-		<button id="ascend_sell_btn_4" class="sell" 
-		data-balloon="Sells for 50% original value." data-balloon-pos="right" disabled="disabled">Sell</button>
-		</div>
 	</div>
 
 
 	<div id="Upgrades" class="tabcontent">
-		<div id="upgrade_1" class="tab_div">
-		<h3 id="upgrade_header_1" class="header_1">This is the field for upgrade for option one.
-			<label id="upgrade_lbl_1" class="glyphicon glyphicon-remove align_right"></label>
+		<div id="upgrade_1">
+		<div id ="upgrade_1_1" class="tab_div">
+		<h3 id="upgrade_header_1_1" class="header_1">This is the field for upgrade for option one.
+			<label id="upgrade_lbl_1_1" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
 			<b>
-			<span id="upgrade_cost_1">10</span>
+			<span id="upgrade_cost_1_1">10</span>
 			</b>
 			-
-			<em id="upgrade_text_1">Text placeholder</em> 
+			<em id="upgrade_text_1_1">Text placeholder</em> 
 		</p>
-		<button id="upgrade_btn_1" class="purchase" 
-		data-balloon="Click Multiplier x2" data-balloon-pos="right" disabled="disabled">Purchase</button>
+		<button id="upgrade_btn_1_1" class="purchase" disabled="disabled" data-balloon-pos="right">Purchase</button>
 		</div>
-
-		<div id="upgrade_2" class="tab_div">
-		<h3 id="upgrade_header_2" class="header_1">This is the field for upgrade for option two.
-			<label id="upgrade_lbl_2" class="glyphicon glyphicon-remove align_right"></label>
+		</div>
+		<div id="upgrade_2">
+		<div id="upgrade_2_1" class="tab_div">
+		<h3 id="upgrade_header_2_1" class="header_1">This is the field for upgrade for option one.
+			<label id="upgrade_lbl_2_1" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
 			<b>
-			<span id="upgrade_cost_2">110</span>
+			<span id="upgrade_cost_2_1">10</span>
 			</b>
 			-
-			<em id="upgrade_text_2">Text placeholder</em> 
+			<em id="upgrade_text_2_1">Text placeholder</em> 
 		</p>
-		<button id="upgrade_btn_2" class="purchase" 
-		data-balloon="Click Multiplier x3" data-balloon-pos="right" disabled="disabled">Purchase</button>
+		<button id="upgrade_btn_2_1" class="purchase" 
+		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
 		</div>
-		<div id="upgrade_3" class="tab_div">
-		<h3 id="upgrade_header_3" class="header_1">This is the field for upgrade for option one.
-			<label id="upgrade_lbl_3" class="glyphicon glyphicon-remove align_right"></label>
-		</h3>
-		<p>
-			<b>
-			<span id="upgrade_cost_3">10</span>
-			</b>
-			-
-			<em id="upgrade_text_3">Text placeholder</em> 
-		</p>
-		<button id="upgrade_btn_3" class="purchase" 
-		data-balloon="Click Multiplier x4" data-balloon-pos="right" disabled="disabled">Purchase</button>
-		</div>
-		<div id="upgrade_4" class="tab_div">
-		<h3 id="upgrade_header_4" class="header_1">This is the field for purchase for option one.
-			<label id="upgrade_lbl_4" class="glyphicon glyphicon-remove align_right"></label>
-		</h3>
-		<p>
-			<b>
-			<span id="upgrade_cost_4">10</span>
-			</b>
-			-
-			<em id="upgrade_text_4">Text placeholder</em> 
-		</p>
-		<button id="upgrade_btn_4" class="purchase" 
-		data-balloon="Click Multiplier x5" data-balloon-pos="right" disabled="disabled">Purchase</button>
-		</div>
+	</div>
 	</div>
 	<div id="Pantheon" class="tabcontent">
 		<div id="pantheon_div_1" class="tab_div" style="text-align:center">
 			<h3 class="header_1" >Enter the arena of the Gods.</h3>
 			<span id="pantheon_lbl_1">120 Divine Power is required to begin challenging other deities.</span>
 		</div>
-		<div id="pantheon_unlocked" style="display:none" class="tab_div">Celestial Pantheon</div>
-	</div>
-	<div id="Sacrifice" class="tabcontent">
-		<div id="sacrifice_div_1" class="tab_div">
-			<div class="sacrifice_locked">
-			<h3 class="header_1" style="text-align:center">Unlock this feature with a sacrifice of 1M followers</h3>
-			<div class="sacrifice"> 
-				<button id="sacrifice_entry_btn_1" class="purchase" 
-				data-balloon="Costs 1M followers, Corruption +5%." data-balloon-pos="right" disabled="disabled">Unlock</button></div>
-			</div>
-			<div class="sacrifice_unlocked" style="display:none">
-				
-				<h3 class="header_1">Follower Sacrifices</h3>
-					<span>Embrace the power of the Old Gods by sacrificing your folllowers to obtain greater might.</span>
-
-			</div>
+		<div id="pantheon_unlocked" style="display:none" class="tab_div"><h3 style="text-align:center">Celestial Pantheon <strong id="boss_num">Boss 1</strong></h3>
+			<figure style="text-align:center; margin-bottom:5%;" class="boss_img"><input type="image" id="battle_1" class="battle" src="data/fire_image.png"></input>
+			<figcaption><span id="boss_name"> Vengeful spirit: </span> HP <strong id="battle_1_hp">1,000,000</strong><br>Regeneration <strong id='regen'>10 per tick.</strong></figcaption>
+			</figure>
 		</div>
 	</div>
+	<div id="Sacrifice" class="tabcontent" style='padding-bottom:0px'>
+		<div id="sacrifice_locked" class="tab_div">
+			<h3 class="header_1" style="text-align:center">Unlock this feature with a sacrifice of 1M followers</h3>
+			<div class="sacrifice"> 
+				<button id="entry_sacrifice_btn_1" class="purchase" 
+				data-balloon="&darr;1M fol, +5% corrupt" data-balloon-pos="right" disabled="disabled">Unlock</button></div>
+		</div>
+			<div class="sacrifice_unlocked" style="display:none">
+			<div id="sacrifices_div_0" class="tab_div">	
+				<h3 class="header_1">Follower Sacrifices</h3>
+					<span>Embrace the power of the Old Gods by sacrificing your folllowers to obtain greater might.</span><br><br>
+					<span id="sacrifice_header_desc">Each sacrifice affects your <u class="dotted" data-balloon= "&uarr; En. prod, &darr; Fol. prod"
+					 data-balloon-pos="down">corruption</u> level</span>
+			</div>
+			<div id="sacrifices_div_1" class="tab_div" style="margin-top:0.5em">
+			<h3 id="sacrifice_header_1" class="header_1">Malevolent sacrifice</h3>
+			<span id="sacrifice_desc_1"></span>
+			<p>
+				<em id="sacrifice_text_1">Costs </em> 
+				<b>
+					<span id="sacrifice_cost_1">5000000</span>	
+				</b>
+				followers
+			</p>
+				<button id="sacrifice_btn_1" class="purchase" data-balloon="Corruption &uarr; 5%." data-balloon-pos="right"
+				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+			</div>
+			<div id="sacrifices_div_1" class="tab_div" style="margin-top:0.5em">
+			<h3 id="sacrifice_header_2" class="header_1">Composite sacrifice</h3>
+			<span id="sacrifice_desc_2"></span>
+			<p>
+				<em id="purchase_text_2">Costs </em> 
+				<b>
+					<span id="sacrifice_cost_2">5000000</span>	
+				</b>
+				followers,
+				<b>
+					<span id="sacrifice_cost_2_2">5000000</span>	
+				</b>
+				Divine Energy
+
+			</p>
+				<button id="sacrifice_btn_2" class="purchase" data-balloon="Corruption &uarr; 15%." data-balloon-pos="right"
+				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+			</div>
+			<div id="sacrifices_div_1" class="tab_div" style="margin-top:0.5em">
+			<h3 id="sacrifice_header_3" class="header_1">Benevolent sacrifice</h3>
+			<span id="sacrifice_desc_3"></span>
+			<p>
+				<em id="purchase_text_1">Costs </em> 
+				<b>
+					<span id="sacrifice_cost_3">5000000</span>	
+				</b>
+				Divine energy
+			</p>
+				<button id="sacrifice_btn_3" class="purchase" data-balloon="Corruption &darr; 5%." data-balloon-pos="right"
+				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+			</div>
+		</div>
+</div>
 	<div id="Stats" class="tabcontent">	
 			<div id="stats_div_1" class="tab_div">
 				<h3 id="stats_header_1">Game statistics</h3><br>
@@ -462,44 +334,82 @@
 				<span>Track your progress as you continue through the game.</span><br>
 				<span>Each completed challenge increases your follower production by 2%,  Current Multipler: <strong id="prod_mul">1.00x</strong></span>
 		</div>
-		<div id="challenges_1" class="tab_div">
-		<h3 id="challenges_header_1" class="header_1">This is the field for upgrade for option one.
-			<label id="challenges_lbl_1" class="glyphicon glyphicon-remove align_right"></label>
+		<div id ="challenge1">
+		<div id="challenges_1_1" class="tab_div">
+		<h3 id="challenges_header_1_1" class="header_1">This is the field for upgrade for option one.
+			<label id="challenges_lbl_1_1" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<em id="challenges_text_1">Text placeholder</em> 
+			<em id="challenges_text_1_1">Text placeholder</em> 
 		</p>
 		</div>
-
-		<div id="challenges_2" class="tab_div">
-		<h3 id="challenges_header_2" class="header_1">This is the field for upgrade for option two.
-			<label id="challenges_lbl_2" class="glyphicon glyphicon-remove align_right"></label>
+		</div>
+		<div id ="challenge2">
+		<div id="challenges_2_1" class="tab_div">
+		<h3 id="challenges_header_2_1" class="header_1">This is the field for upgrade for option two.
+			<label id="challenges_lbl_2_1" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<em id="challenges_text_2">Text placeholder</em> 
+			<em id="challenges_text_2_1">Text placeholder</em> 
 		</p>
 		</div>
-		<div id="challenges_3" class="tab_div">
-		<h3 id="challenges_header_3" class="header_1">This is the field for upgrade for option one.
-			<label id="challenges_lbl_3" class="glyphicon glyphicon-remove align_right"></label>
+		</div>
+		<div id ="challenge3">
+		<div id="challenges_3_1" class="tab_div">
+		<h3 id="challenges_header_3_1" class="header_1">This is the field for upgrade for option one.
+			<label id="challenges_lbl_3_1" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<em id="challenges_text_3">Text placeholder</em> 
+			<em id="challenges_text_3_1">Text placeholder</em> 
 		</p>
 		</div>
-		<div id="challenges_4" class="tab_div">
-		<h3 id="challenges_header_4" class="header_1">This is the field for purchase for option one.
-			<label id="challenges_lbl_4" class="glyphicon glyphicon-remove align_right"></label>
+		</div>
+		<div id ="challenge4">
+		<div id="challenges_4_1" class="tab_div">
+		<h3 id="challenges_header_4_1" class="header_1">This is the field for purchase for option one.
+			<label id="challenges_lbl_4_1" class="glyphicon glyphicon-remove align_right"></label>
 		</h3>
 		<p>
-			<em id="challenges_text_4">Text placeholder</em> 
+			<em id="challenges_text_4_1">Text placeholder</em> 
 		</p>
+		</div>
+		</div>
+		<div id ="challenge5">
+		<div id="challenges_5_1" class="tab_div">
+		<h3 id="challenges_header_5_1" class="header_1">This is the field for purchase for option one.
+			<label id="challenges_lbl_5_1" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<em id="challenges_text_5_1">Text placeholder</em> 
+		</p>
+		</div>
+		</div>
+		<div id ="challenge6">
+		<div id="challenges_6_1" class="tab_div">
+		<h3 id="challenges_header_6_1" class="header_1">This is the field for purchase for option one.
+			<label id="challenges_lbl_6_1" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<em id="challenges_text_6_1">Text placeholder</em> 
+		</p>
+		</div>
 		</div>
 	</div>
 	<div id="Settings" class="tabcontent">	<div id="settings_1" style="text-align:center">
+		<div id="time_played" style="margin-left:5%;background-color:#E1F5FE;" class="tab_div">
+		<h3 id="settings_header_1" style="padding-bottom:1em">Instructions:
+		<p style="font-weight: normal; font-size:0.8em"> <span><br>-Perform miracles to convert followers</span><br>
+			<span>-Ascend followers to increase your divine energy</span><br>
+			<span>-Use your energy to improve your production</span><br>
+			<span>-Unlock advanced features as you progress</span></p></h3>	
+		</div>
 		<div id="settings_div_1" class="tab_div">
-		<h3 id="settings_header_1">This is the field for purchase for option one.</h3>
+		</h3><br>
+		<h3 id="settings_header_3">Save your game now.</h3>
+		<button id='make_save' class='purchase'>Save</button>
+		<h3 id="settings_header_2">Delete your save.</h3>
 		<button class='purchase' id='delete_save'>Delete save</button>
+		<h4 id="settings_header_4"><br>Created by abarkley123; inspiration drawn from several idle games.</h4><br>
 	</div>
 	</div>
 	</div>

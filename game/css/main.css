@@ -119,26 +119,6 @@ html {
   border-bottom: 1px dashed #fff;
   text-decoration: none; 
 }
-#upgrades-box {
-  position: absolute;
-  margin-left: 50%;
-  margin-right: 0;
-  margin-bottom: 0;
-  padding-top:1%;
-  padding-bottom:1%;
-  width: 65%;
-  overflow: auto;
-}
-.upgrades_box:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-#upgrades {
-  padding-left : 1%;
-  padding-right : 1%;
-  outline: 2px solid #03A9F4;
-}
 #purchase-btn-one {
   margin-left : 15%;
 }
@@ -164,10 +144,6 @@ html {
     width: 100%;
   }
 
-/* Style the tab */
- .tabs .button--secondary { 
-    overflow: hidden;
-}
 
 /* Style the buttons inside the tab */
 .tab button {
@@ -182,6 +158,7 @@ html {
 /* Style the tab content */
 .tabcontent {
     display: none;
+    height: 100%;
     padding-top : 0.5em;
     -webkit-animation: fadeEffect 1s;
     animation: fadeEffect 1s;
@@ -343,7 +320,6 @@ html {
     cursor: pointer;
     border-radius: 10px;
 }
-
 .miracle { 
     border: none;
     background-color: #1976D2;
@@ -355,6 +331,9 @@ html {
     font-size: 1em;
     border-radius: 2px;
 } 
+ #miracle_button2nd {
+  padding: 10px 20px;
+}
 #miracle_button, #miracle_button2nd {
   background-color: #212121;
 }
@@ -364,13 +343,17 @@ html {
   border: 2px solid  #880E4F;
   padding: 6px 6px;
 }
+#miracle_button2nd:hover {
+  padding: 8px 18px;
+}
 #challenges_main_header_div {
   padding-bottom: 4%;
 }
 .tabs {
+  display: block;
   margin-top: 5px;
-
 }
+
 .tabs .button--secondary.active .button__inner {
   background-color : #E1F5FE;
   color: #212121;
@@ -482,7 +465,7 @@ button:disabled, button.disabled {
     opacity: .8;
 }
 
-@media screen and (max-width: 700px ) {
+@media screen and (max-width: 750px ) {
    #left_wrap {
       margin-top : 0px;
       margin-bottom: 0px;

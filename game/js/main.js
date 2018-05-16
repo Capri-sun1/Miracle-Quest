@@ -52,7 +52,7 @@ var vals = {
                 "output":25,
                 "base_cost":5000,
                 "cost":5000,
-                "unlock_rps":2.0,
+                "unlock_rps":5.0,
                 "unlocked":false,
             },
             "purchase5":{
@@ -62,7 +62,7 @@ var vals = {
                 "output":150,
                 "base_cost":30000,
                 "cost":30000,
-                "unlock_rps":5.0,
+                "unlock_rps":25.0,
                 "unlocked":false,
             }
     },  "ascend":{
@@ -103,7 +103,7 @@ var vals = {
                 "output":25,
                 "base_cost":8000,
                 "cost":8000,
-                "unlock_loss":2.0,
+                "unlock_loss":5.0,
                 "unlocked":false,
             },
             "ascend5":{
@@ -113,7 +113,7 @@ var vals = {
                 "output":150,
                 "base_cost":40000,
                 "cost":40000,
-                "unlock_loss":5.0,
+                "unlock_loss":25.0,
                 "unlocked":false,
             }
   },
@@ -122,57 +122,92 @@ var vals = {
           "type":"Click amount",
             "upgrade1":{
               "label":"Basic telekinetics",
-              "description":"Limited control of Earthly forces converts twice as many followers for each miracle.",
+              "description":"Limited control of Earthly forces doubles your Divine Power.",
               "unlocked":false,
-              "cost":500,
+              "cost":25,
               "mul":2
             },
             "upgrade2":{
               "label":"Matter Manipulation",
-              "description":"Ability to turn water into wine converts three times as many followers for each miracle.",
+              "description":"Ability to alter the porperities of being triples your Divine Power.",
               "unlocked":false,
-              "cost":5000,
+              "cost":150,
               "mul":3
             },
             "upgrade3":{
               "label":"Transmogrification",
-              "description":"Ability to convert animals of any shape into followers, netting four times as many followers for each miracle.",
+              "description":"Conversion of animals into any shape triples your Divine Power.",
               "unlocked":false,
-              "cost":50000,
-              "mul":4
+              "cost":750,
+              "mul":3
             },
             "upgrade4":{
               "label":"Elementary conjuring",
-              "description":"Ability to summon bolts of lightning, leveraging fear to increase followers per miracle by five times.",
+              "description":"Fledgling control of the elements triples your Divine power.",
               "unlocked":false,
-              "cost":500000,
-              "mul":5
+              "cost":3500,
+              "mul":3
+            },
+             "upgrade5":{
+              "label":"Studying Holy texts",
+              "description":"Interpreting these ancient writings increases your Divine Power by 4 times.",
+              "unlocked":false,
+              "cost":18500,
+              "mul":4
+            },
+             "upgrade6":{
+              "label":"Burning the Holy texts",
+              "description":"Read them, have you? Page-turners they were not.",
+              "unlocked":false,
+              "cost":80000,
+              "mul":4
             }
           },
           "2": {
             "type":"Tick speed",
             "upgrade1":{
-               "label":"Time warp",
-              "description":"You begin to speed up the passage of time..",
+               "label":"Improved reflexes",
+              "description":"Training speeds up your perception of time passing.",
               "unlocked":false,
-              "cost":2500,
+              "cost":500,
               "mul":0.8
             },
             "upgrade2":{
-               "label":"Gravity bending",
-              "description":"Using gravity to change how time flows.",
+               "label":"Mastered reflexes",
+              "description":"Mastering your form speeds up your perception of time passing futher.",
               "unlocked":false,
-              "cost":250000,
+              "cost":7500,
               "mul":0.8
             },
             "upgrade3":{
+               "label":"Shapeshifting",
+              "description":"Transformation allows your perception of time passing to speed up futher.",
+              "unlocked":false,
+              "cost":10000,
+              "mul":0.8
+            },
+            "upgrade4":{
+               "label":"Mind Control",
+              "description":"Convincing your followers that time is passing at a faster rate.",
+              "unlocked":false,
+              "cost":125000,
+              "mul":0.8
+            },
+            "upgrade5":{
+               "label":"Gravity bending",
+              "description":"Using gravity to change how time flows.",
+              "unlocked":false,
+              "cost":4000000,
+              "mul":0.8
+            },
+            "upgrade6":{
                "label":"God's stopwatch",
               "description":"Your newest toy new from the box.",
               "unlocked":false,
               "cost":250000000,
               "mul":0.8
             },
-            "upgrade4":{
+            "upgrade7":{
                "label":"The Mandela Effect",
               "description":"Reverse time and change what you wish.",
               "unlocked":false,
@@ -417,7 +452,7 @@ var upgrade_box_size = 0;
     if( vals.followers < 0 ) vals.followers = 0;
     $('#click_amount').text( '[ ' + truncate_bigint(vals.click) + ' ]');
     $('#counter').text( truncate_bigint(Math.floor(vals.followers)) );
-    if( $('#last_saved').text() != "" )  $('#last_saved').text(last_saved + ' seconds ago.');
+    if( $('#last_saved').text() != "" )  $('#last_saved').text(Math.round(last_saved) + ' seconds ago.');
     $('#power').text(truncate_bigint(vals.energy));
     //production of followers is (production*achievement_multipler) divided by the corruption factor.
     $('#production_net').text(truncate_bigint(( (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)) - vals.loss)));
@@ -439,12 +474,10 @@ var upgrade_box_size = 0;
       }
       else if( vals.current_tab==="Stats")fix_stats(vals);
       if( vals.click >= 120 ) {vals.pantheon.unlocked = true; fix_names(vals);}
-      else if( iterations % 10 === 0 && iterations != 0) {
-        vals.stats.time_played++;
-        last_saved++;
-      }
+      vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000)/1000;
+      last_saved = (vals.tick + last_saved * 1000)/1000;
       //save every 30 seconds
-      if( (cycles * ( vals.tick * 30 ) >= 30000) ) {
+      if( (cycles * ( vals.tick * 30 ) >= 30000 ) ) {
         saveData();
         cycles = 0;
       }
@@ -467,35 +500,148 @@ var upgrade_box_size = 0;
   
     }, vals.tick);
   }
+  var valsToJSON = function() {
+      var save = {
+        'e':Math.round(vals.energy).toString(16),
+        'p':vals.prod,
+        'cl':vals.click.toString(16),
+        'f':(Math.round(vals.followers)).toString(16),
+        'l':vals.loss,
+        'c':vals.corruption.toString(16),
+        'ac':vals.achievement_multiplier,
+        't':(Math.round(vals.tick)).toString(16)
+      };
+        var unlocks = {
+            "clickers":"cl",
+            "ascend":"asc"
+        };
+        for(var k in unlocks) { 
+            var items = vals[k];
+            var temp_a = [];
+              for(var i in items) { 
+                if(items[i].unlocked) {
+                    temp_a.push([i] + ":" +items[i].amount.toString(16));
+                  }
+              }
+              save[k] = temp_a.join('|');
+        }
+        var tiered = {
+          "upgrades":"up",
+          "challenges":"ch"
+        }
 
+        for(var k in tiered) { 
+            var items_generic = vals[k];
+            var temp_t = [];
+            var temp_arr = [];
+            for( var i in items_generic ) {
+              for( var j in items_generic[i] ) {
+                if(items_generic[i][j].unlocked) 
+                    temp_t.push(items_generic[i][j].label);
+                }
+              }
+            temp_arr.push(temp_t); 
+            save[k] = temp_arr.join('|');
+        }
+
+        var temp_s = {
+          't':vals.stats.time_played.toString(16),
+          't_e':Math.round(vals.stats.total_energy).toString(16),
+          't_f':Math.round(vals.stats.total_followers).toString(16),
+          'm_p':vals.stats.max_prod,
+          'm_l':vals.stats.max_loss,
+          'm_c':vals.stats.miracle_clicks.toString(16),
+          'a_c':vals.stats.ascension_clicks.toString(16),
+          'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
+          'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
+        };
+        save['s'] = temp_s;
+        return save;
+  }
+  function get_valsFromJSON(save) {
+        vals.energy = parseInt(save.e,16);
+        vals.prod = save.p;
+        vals.click = parseInt(save.cl, 16);
+        vals.followers = parseInt(save.f, 16);
+        vals.loss = save.l;
+        vals.corruption = parseInt(save.c, 16);
+        vals.achievement_multiplier = save.ac;
+        vals.tick = parseInt(save.t, 16);
+        var unlocks = {
+            "clickers":"cl",
+            "ascend":"asc"
+        }; 
+        var tiered = {
+          "upgrades":"up",
+          "challenges":"ch"
+        }
+        for(var k in unlocks) {
+            if( save[k]) {
+              var t_items = save[k].split('|');
+                for( var i=0; i<t_items.length; i++ ) {
+                  var item_num = t_items[i].split(':');
+                    for( var x in vals[k] ) {
+                      if( x === item_num[0] ) {
+                        vals[k][x].amount = parseInt(item_num[1],16);
+                        if( x.substr(x.length-1) < Object.keys(vals[k]).length ) {
+                          vals[k][x.substr(0,x.length-1) + String(parseInt(x.substr(x.length-1))+1)].unlocked = true;    
+                        }
+                      }
+                    }
+                }
+            }
+        }
+
+        //load challenges and upgrades
+        for(var k in tiered) {
+            if( save[k]) {
+              var t_items = save[k].split('|');
+              t_items += '';
+              var item = t_items.split(',');
+
+                for( var i=0; i< item.length; i++ ) {
+                  
+                  for( var x in vals[k] ) {
+                    for( var y in vals[k][x] ) {
+                      if( vals[k][x][y].label === item[i] ) {
+                        vals[k][x][y].unlocked = true;    
+                      }
+                    }
+                  }
+                }
+            }
+        }
+        //load data for statistics 
+        if( save.s ) {
+          vals.stats.time_played = parseInt(save.s.t,16);
+          vals.stats.total_energy = parseInt(save.s.t_e,16);
+          vals.stats.total_energy = parseInt(save.s.t_f,16);
+          vals.stats.total_energy = save.s.m_p;
+          vals.stats.total_energy= save.s.m_l;
+          vals.stats.total_energy = parseInt(save.s.m_c,16);
+          vals.stats.total_energy = parseInt(save.s.a_c,16);
+          vals.stats.total_energy = parseInt(save.s.mc_e,16);
+          vals.stats.total_energy = parseInt(save.s.ac_e, 16);
+        }
+  }
+//change this to localstorage
   function saveData() {
     $('#save_title').html("Last saved ");
     $('#last_saved').text("0 seconds ago.");
-    var output_json_1 = {};
-    var output_json_2 = {};
-    for( var k in vals ) {
-      if( k === 'sacrifice'  || k === 'pantheon' || k==='challenges' )  output_json_2[k] = vals[k];
-      else output_json_1[k] = vals[k];
-    }
-    Cookies.set("data-save1", output_json_1, { expires:7});
-    Cookies.set("data-save2", output_json_2, { expires:7});
+    localStorage.sv1 = btoa(JSON.stringify(valsToJSON()));
     last_saved = 0;
   }
   function loadData() {
-    try {
-      var json1 = Cookies.getJSON("data-save1"), json2 = Cookies.getJSON("data-save2");
-      for( var k in vals ) {
-        if( k === 'sacrifice'  || k === 'pantheon' || k==='challenges')  vals[k] = json2[k]; 
-        else vals[k] = json1[k];
+      try {
+        get_valsFromJSON(JSON.parse(atob(localStorage.sv1)));
+      }catch(err) {
+        console.log("No saved data to load.");
       }
-    }
-     catch( error ) {
-       console.log("No saved data to load!");
-     }
+      fix_tab_buttons(vals);
+      fix_names(vals);
   }
   function deleteSave() {
-    Cookies.remove('data-save1');
-    Cookies.remove('data-save2');
+    localStorage.removeItem("sv1");
     location.reload();
   }
   function set_achievement_multiplier(vals) {
@@ -669,7 +815,6 @@ var upgrade_box_size = 0;
         if( vals.ascend[k].unlocked ) unlock_ascend++;
         total_ascend ++;
       }
-    
     $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/" + Object.keys(vals.challenges).length * 2);
     $('#augment-tab-text').text("Augment " + unlock_aug + "/" + total_aug);
     $('#convert-tab-text').text("Convert " + unlock_conv + "/" + total_conv);
@@ -678,7 +823,7 @@ var upgrade_box_size = 0;
   function fix_stats(vals) {
     if( vals.prod > vals.stats.max_prod) vals.stats.max_prod = vals.prod;
     if( vals.loss > vals.stats.max_loss) vals.stats.max_loss = vals.loss;
-       $('#stats_field_1').text(truncate_time(vals.stats.time_played));
+       $('#stats_field_1').text(truncate_time( Math.round(vals.stats.time_played)));
        $('#stats_field_2').text(truncate_bigint(Math.floor(vals.energy)));
        $('#stats_field_3').text(truncate_bigint(Math.floor(vals.stats.total_energy)));
        $('#stats_field_4').text(truncate_bigint(Math.floor(vals.followers)));
@@ -691,7 +836,7 @@ var upgrade_box_size = 0;
        $('#stats_field_11').text(vals.click);
        $('#stats_field_14').text(vals.stats.ascension_clicks);
        if( $('#last_saved').text() != "")
-          $('#stats_field_saved').text(last_saved + " seconds ago.");
+          $('#stats_field_saved').text(Math.round(last_saved) + " seconds ago.");
        else $('#stats_field_saved').text(" never");
        $('#stats_field_15').text(truncate_bigint(vals.stats.ascension_click_energy));
        $('#stats_field_16').text(truncate_bigint(vals.stats.miracle_click_energy));
@@ -738,6 +883,7 @@ var upgrade_box_size = 0;
     for( var k in vals.ascend ) {
       var purchase_num = k.substr(k.length -1 );
       if( vals.loss >= vals.ascend[k].unlock_loss ) {
+        vals.ascend[k].unlocked = true;
         if( !document.getElementById('ascend_' + purchase_num) && !document.getElementById('new_ascend') && k != "ascend1" ){
               var clonedDiv_id = $('#ascend_' + challenge_num + '_' + i);
               $('<div id="new_ascend" class="tab_div"> ' +
@@ -759,7 +905,6 @@ var upgrade_box_size = 0;
               $("#new_ascend").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_2');
               $('#new_ascend').attr('id','ascend_' + purchase_num);
            }
-        vals.ascend[k].unlocked = true;
         $('#ascend_' + purchase_num).css("display", "block");
         $("#ascend_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.ascend[k].label);
         $('#ascend_lbl_' + purchase_num).text(vals.ascend[k].amount);
@@ -787,7 +932,7 @@ var upgrade_box_size = 0;
                 $('<div id="new_upgrade" class="tab_div"> ' +
                 '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
                 '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
-                '<b><span id="upgrade_cost__">10</span></b>-<em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
+                '<b><span id="upgrade_cost__">10</span></b> - <em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
                 ' data-balloon="Tick length - 20%" data-balloon-pos="right" disabled="disabled">Purchase</button></div>').appendTo($('#upgrade_' + purchase_num));
 
                 $('#new_upgrade').find('#upgrade_btn__').attr('id', "upgrade_btn_"+ purchase_num + "_" + i.substr(i.length-1));
@@ -932,11 +1077,8 @@ $(document).on("click", ".purchase", function() {
       var purchase_type = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
       if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
         vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
-        console.log('here');
-        console.log(vals.upgrades[purchase_type[0]].type);
         if( vals.upgrades[purchase_type[0]].type === "Click amount") {
           vals.click *= vals.upgrades[purchase_type[0]][id].mul;
-          console.log('purchase here');
         }
         else vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
         vals.upgrades[purchase_type[0]][id].unlocked = true;
@@ -988,33 +1130,37 @@ $(document).on("click", ".purchase", function() {
   fix_tab_buttons(vals);
   fix_names(vals);
   });
-function gen_target_offset(id, target) {
+function gen_target_offset(id, target, event) {
   switch(id.substr(1,1)) {
-    //generate offsets for miracle click animations
+    //generate offsets for miracle click animation
     case  'm' :
-      if( $(window).width() > 1300 )  
+      if( $(window).width() > 1300 )  {
         //2nd miracle button
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.8});
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY - 125  });
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.15});
-      else if( $(window).width() <= 700) 
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.65});
+        else target.offset({left: 1.2 * $(id).offset().left, top:  event.pageY * 1.05 });
+        }
+        else if( $(window).width() <= 700) {
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.25});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
       //want a less aggressive offset
-      else if(  $(window).width() <= 750) 
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.7});
+      }
+      else if(  $(window).width() <= 750) {
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.2});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
+      }
       else if( $(window).width() <= 1100) 
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.8});
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -100});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.15});
-      else if( $(window).width() <= 1300) 
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
+      else if( $(window).width() <= 1300) {
         //2nd miracle button
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.8});
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -110});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.15});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
+      }
     break;
     case  'b' :
     //generate offsets for boss click animation
@@ -1030,6 +1176,7 @@ function gen_target_offset(id, target) {
       else if( $(window).width() <= 1300) 
         target.offset( {'left': 2.15* $(id).offset().left, 'top': $(id).offset().top*1.2  });
   }
+  console.log($(id).offset().top);
 }
 $(document).on("click", ".battle", function() {
   var btn = $(this).attr('id');
@@ -1137,7 +1284,7 @@ function perform_trans() {
   }
   return;
 }
-//TODO - fix this for variable screen size!
+//TODO - fix this for when you scroll down screen on achievements etc.
 $(document).on("click", '.miracle', function(event) { 
           var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
           var divToAppend, target, offset;
@@ -1157,16 +1304,16 @@ $(document).on("click", '.miracle', function(event) {
           $(divToAppend).append(target);
           target.show();
           //handle unique animations for each click
-          gen_target_offset( '#' + $(this).attr('id'), target); 
+          gen_target_offset( '#' + $(this).attr('id'), target, event); 
             //target.offset({left:event.pageX-30, top:$('#miracle_button').offset().top * 1.1});;
            // }else target.offset({left:offset * 1.1, top:$('#counter').offset().top});
           target.css('opacity',100);
-
-          if( used_id === 'button') { target.animate({ 'top': '+=' + $(window).height()/12, 'opacity':0.1, 'left':target.offset.left+ 'px'}, 750, function() { 
+          if( used_id === 'button') 
+            { target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left':target.offset.left+ 'px'}, 750, function() { 
             $(this).remove();
           });
           }
-          else {target.animate({ 'top':'-=' + $(window).height()/8, 'opacity':0.1, 'left': '-=10'}, 750, function() { 
+          else {target.animate({ 'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '-=10'}, 750, function() { 
             $(this).remove();
           });
           }

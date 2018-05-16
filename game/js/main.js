@@ -14,14 +14,14 @@ var vals = {
      "miracle_click_energy":0,
      "ascension_click_energy":0,
   },
-  "clickers":{
+  "miracle":{
             "purchase1":{
                 "label":"Online Blogger",
                 "description":"An inspired teenager to spread the word.",
                 "amount":0,
                 "output":0.2,
-                "base_cost":20,
-                "cost":20,
+                "base_cost":15,
+                "cost":15,
                 "unlock_rps":0,
                 "unlocked":true,
             },
@@ -30,8 +30,8 @@ var vals = {
                 "description":"Leaflets for your followers to hand out.",
                 "amount":0,
                 "output":1,
-                "base_cost":210,
-                "cost":210,
+                "base_cost":160,
+                "cost":160,
                 "unlock_rps":0.2,
                 "unlocked":false,
             },
@@ -60,8 +60,8 @@ var vals = {
                 "description":"An Earthly representative placed to spread your word.",
                 "amount":0,
                 "output":150,
-                "base_cost":30000,
-                "cost":30000,
+                "base_cost":22500,
+                "cost":225000,
                 "unlock_rps":25.0,
                 "unlocked":false,
             }
@@ -71,8 +71,8 @@ var vals = {
                 "description":"An univiting small booth to slowly process followers.",
                 "amount":0,
                 "output":0.2,
-                "base_cost":35,
-                "cost":35,
+                "base_cost":25,
+                "cost":25,
                 "unlock_loss":0,
                 "unlocked":true,
             },
@@ -81,8 +81,8 @@ var vals = {
                 "description":"A small, plush lounge holding more followers at a time.",
                 "amount":0,
                 "output":1,
-                "base_cost":375,
-                "cost":375,
+                "base_cost":225,
+                "cost":225,
                 "unlock_loss":0.2,
                 "unlocked":false,
             },
@@ -91,8 +91,8 @@ var vals = {
                 "description":"An entire room where your followers can ascend.",
                 "amount":0,
                 "output":5,
-                "base_cost":1750,
-                "cost":1750,
+                "base_cost":1350,
+                "cost":1350,
                 "unlock_loss":1.2,
                 "unlocked":false,
             },
@@ -111,8 +111,8 @@ var vals = {
                 "description":"An entire Cathedral built to connect with you.",
                 "amount":0,
                 "output":150,
-                "base_cost":40000,
-                "cost":40000,
+                "base_cost":30000,
+                "cost":30000,
                 "unlock_loss":25.0,
                 "unlocked":false,
             }
@@ -275,36 +275,71 @@ var vals = {
             "challenge1":{
               "required_type":'click_m',
               "1" :{
+              "type":"quantity",
               "visible":true,
               "unlocked":false,
               "label":"Your first Miracle",
               "description":"You performed your first miracle and gained an awe-struck follower.",
               "click_req":1,
-              "cloned":false
+              },
+              "1_1": {
+              "type":"total",
+              "visible":true,  
+              "unlocked":false,
+              "label":"The first to your cause.",
+              "description":"You've gained 10 followers through performing miracles.",
+              "val_req":10
               },
               "2" : {
+              "type":"quantity",
               "visible":false,  
               "unlocked":false,
               "label":"Miracle happy",
               "description":"You've performed 100 miracles, gaining many followers along the way.",
               "click_req":100
+              },
+              "2_2" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"It's a miracle..!",
+              "description":"You've gained 500 followers through your miracles.",
+              "val_req":500
               }
             },
              "challenge2":{
               "required_type":'click_a',
               "1":{
+                "type":"quantity",
                 "visible":true,
                 "unlocked":false,
                 "label":"Your first ascension",
                 "description":"You ascended a follower to a higher plane of existance, increasing your divine energy.", 
                 "click_req":1
               },
+                "1_1": {
+              "type":"total",
+              "visible":true,  
+              "unlocked":false,
+              "label":"Fast-tracking",
+              "description":"You've gained 10 energy through ascending followers.",
+              "val_req":10
+              },
                "2" : {
+              "type":"quantity",
               "visible":false,  
               "unlocked":false,
               "label":"Highway to heaven",
               "description":"You've performed 100 acensions to increase your Divine Energy.",
               "click_req":100
+              },
+              "2_2" : {
+              "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"It's a long way to Tipperary",
+              "description":"You've gained 500 energy through ascending followers.",
+              "val_req":500
               }
 
             },
@@ -440,7 +475,7 @@ var upgrade_box_size = 0;
     game_engine(vals, 0, 0);
   }
     function set_item_cost(item) { 
-        var cost = ((item.amount + 1) * item.base_cost) * (item.amount + 1);
+        var cost = Math.round(0.9* (((item.amount + 1) * item.base_cost) * (item.amount + 1)));
 
         if((item.amount + 1) > 10) { 
             cost *= 2;
@@ -512,7 +547,7 @@ var upgrade_box_size = 0;
         't':(Math.round(vals.tick)).toString(16)
       };
         var unlocks = {
-            "clickers":"cl",
+            "miracle":"cl",
             "ascend":"asc"
         };
         for(var k in unlocks) { 
@@ -568,7 +603,7 @@ var upgrade_box_size = 0;
         vals.achievement_multiplier = save.ac;
         vals.tick = parseInt(save.t, 16);
         var unlocks = {
-            "clickers":"cl",
+            "miracle":"cl",
             "ascend":"asc"
         }; 
         var tiered = {
@@ -661,32 +696,39 @@ var upgrade_box_size = 0;
         case "click_m":
         for( var i in vals.challenges[k]) {
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-          if( vals.stats.miracle_clicks >= vals.challenges[k][i].click_req) {
+            var has_unlocked = false;
+            if( vals.challenges[k][i].type === "total") {if( vals.stats.miracle_click_energy >= vals.challenges[k][i].val_req ) has_unlocked = true; }
+            else {if( vals.stats.miracle_clicks >= vals.challenges[k][i].click_req) has_unlocked = true; }
             //we don't want achievment messages to show unless the user actually unlocks them => not on startup every time.
-            if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved > 2) )
-              $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
-            vals.challenges[k][i].unlocked = true;
+            if( has_unlocked ){
+              if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved > 2) )
+                $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
+              vals.challenges[k][i].unlocked = true;
+            }
             fix_names(vals);
           }
-        }
         }
         break;
         case "click_a":
         for( var i in vals.challenges[k]) {
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-          if( vals.stats.ascension_clicks >= vals.challenges[k][i].click_req) {
+            var has_unlocked = false;
+            if( vals.challenges[k][i].type === "total") {if( vals.stats.ascension_click_energy >= vals.challenges[k][i].val_req ) has_unlocked = true; }
+            else {if( vals.stats.ascension_clicks >= vals.challenges[k][i].click_req) has_unlocked = true; }
+            
+            if(has_unlocked) {
             if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1) )
               $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
             vals.challenges[k][i].unlocked = true;
+            }
             fix_names(vals);
         }
-      }
       }
         break;
         case "conv":
         for( var i in vals.challenges[k]) {
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-          if( vals.clickers['purchase' + vals.challenges[k][i].req_tier].amount >= vals.challenges[k][i].req_num ) {
+          if( vals.miracle['purchase' + vals.challenges[k][i].req_tier].amount >= vals.challenges[k][i].req_num ) {
             if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1) )
               $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
             vals.challenges[k][i].unlocked = true;
@@ -737,13 +779,13 @@ var upgrade_box_size = 0;
   }
   function setButtonAvailability(vals) {
     if( vals.current_tab === 'Conversion' ) {
-    for( var k in vals.clickers ) {
+    for( var k in vals.miracle ) {
       var purchase_num = k.substr(k.length -1 );
-      if( vals.energy >= vals.clickers[k].cost ) 
+      if( vals.energy >= vals.miracle[k].cost ) 
         $('#purchase_btn_' + purchase_num).prop('disabled', false);
       else $('#purchase_btn_' + purchase_num).prop('disabled', true);
 
-      if( vals.clickers[k].amount > 0 ) 
+      if( vals.miracle[k].amount > 0 ) 
         $('#purchase_sell_btn_' + purchase_num).prop('disabled', false);
       else $('#purchase_sell_btn_' + purchase_num).prop('disabled', true);
     }
@@ -807,15 +849,15 @@ var upgrade_box_size = 0;
           if( vals.upgrades[k][i] != "Click amount" && vals.upgrades[k][i] != "Tick speed" ) total_aug++;
           }
       }
-      for( var k in vals.clickers ) {
-        if( vals.clickers[k].unlocked ) unlock_conv++;
+      for( var k in vals.miracle ) {
+        if( vals.miracle[k].unlocked ) unlock_conv++;
         total_conv ++;
       }
       for( var k in vals.ascend ) {
         if( vals.ascend[k].unlocked ) unlock_ascend++;
         total_ascend ++;
       }
-    $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/" + Object.keys(vals.challenges).length * 2);
+    $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/16");
     $('#augment-tab-text').text("Augment " + unlock_aug + "/" + total_aug);
     $('#convert-tab-text').text("Convert " + unlock_conv + "/" + total_conv);
     $('#ascend-tab-text').text("Ascend " + unlock_ascend + "/" + total_ascend);
@@ -843,10 +885,10 @@ var upgrade_box_size = 0;
   }
    function fix_names( vals ) {
     if( vals.current_tab === 'Conversion') {
-    for( var k in vals.clickers ) {
+    for( var k in vals.miracle ) {
       var purchase_num = k.substr(k.length -1 );
-      if( vals.prod >= vals.clickers[k].unlock_rps ) {
-        vals.clickers[k].unlocked = true;
+      if( vals.prod >= vals.miracle[k].unlock_rps ) {
+        vals.miracle[k].unlocked = true;
         //dynammically create divs as needed, saves creating all in the html file.
          if( !document.getElementById('purchase_' + purchase_num) && !document.getElementById('new_purchase') && k != "purchase1" ){
               var clonedDiv_id = $('#purchase_' + challenge_num + '_' + i);
@@ -868,11 +910,11 @@ var upgrade_box_size = 0;
               $('#new_purchase').attr('id','purchase_' + purchase_num);
            }
         $('#purchase_' + purchase_num).css("display", "block");
-        $("#purchase_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.clickers[k].label);
-        $('#purchase_lbl_' + purchase_num).text(vals.clickers[k].amount);
-        $('#purchase_cost_' + purchase_num).text( '[ ' + truncate_bigint(vals.clickers[k].cost) + ' energy ]');
-        $('#purchase_text_' + purchase_num).text(vals.clickers[k].description);
-        $('#purchase_out_' + purchase_num).text(vals.clickers[k].output + " followers ");
+        $("#purchase_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.miracle[k].label);
+        $('#purchase_lbl_' + purchase_num).text(vals.miracle[k].amount);
+        $('#purchase_cost_' + purchase_num).text( '[ ' + truncate_bigint(vals.miracle[k].cost) + ' energy ]');
+        $('#purchase_text_' + purchase_num).text(vals.miracle[k].description);
+        $('#purchase_out_' + purchase_num).text(vals.miracle[k].output + " followers ");
     }
     else {
       $('#purchase_' + purchase_num).css("display", "none");
@@ -985,9 +1027,16 @@ var upgrade_box_size = 0;
       var challenge_num = k.substr(k.length-1);
       for( var i in vals.challenges[k] ) {
          if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-         if( !document.getElementById('challenges_' + challenge_num + '_' + i) && !document.getElementById('new_challenge') && i != "1" ){
-          if( vals.challenges[k][(String(parseInt(i) -1))].unlocked )  {
-              
+         if( !document.getElementById('challenges_' + challenge_num + '_' + i) && !document.getElementById('new_challenge') && i.substr(i.length-1) != "1" ){
+          var can_clone = false;
+          if( ( vals.challenges[k][i].type === 'quantity' ) ){
+            console.log(i);
+            if( vals.challenges[k][(String(parseInt(i) -1))].unlocked) can_clone = true;
+          } 
+          else if ( vals.challenges[k][i].type === 'total' ) {
+            if( vals.challenges[k][ String(parseInt(i.substr(i.length-1)) -1) + '_' + String(parseInt(i.substr(i.length-1)) -1)].unlocked ) can_clone = true;
+          }
+          if( can_clone) {
               var clonedDiv_id = $('#challenges_' + challenge_num + '_' + i);
               $('<div id="new_challenge" class="tab_div"> ' +
                 '<h3 id="challenge_head_temp" class="header_1">This is the field for upgrade for option one.' +
@@ -1057,11 +1106,11 @@ $(document).on("click", ".purchase", function() {
     var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
     switch( id.substr(0, id.length-1)) {
       case 'purchase':
-        if( vals.energy >= vals.clickers[id].cost ) {
-          vals.energy-= vals.clickers[id].cost;
-          vals.clickers[id].amount ++;
-          vals.clickers[id].cost =  set_item_cost(vals.clickers[id]);
-          vals.prod += vals.clickers[id].output;
+        if( vals.energy >= vals.miracle[id].cost ) {
+          vals.energy-= vals.miracle[id].cost;
+          vals.miracle[id].amount ++;
+          vals.miracle[id].cost =  set_item_cost(vals.miracle[id]);
+          vals.prod += vals.miracle[id].output;
         }
       break;
     case 'ascend' :
@@ -1138,28 +1187,28 @@ function gen_target_offset(id, target, event) {
         //2nd miracle button
         if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY - 125  });
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top:  event.pageY * 1.05 });
+        else target.offset({left: 1.2 * $(id).offset().left, top:  event.pageY + 10 });
         }
         else if( $(window).width() <= 700) {
         if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
+        else target.offset({left: 1.2 * $(id).offset().left, top:event.pageY + 10});
       //want a less aggressive offset
       }
       else if(  $(window).width() <= 750) {
         if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
       }
       else if( $(window).width() <= 1100) 
         if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -100});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
       else if( $(window).width() <= 1300) {
         //2nd miracle button
         if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -110});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 1.05});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
       }
     break;
     case  'b' :
@@ -1176,7 +1225,6 @@ function gen_target_offset(id, target, event) {
       else if( $(window).width() <= 1300) 
         target.offset( {'left': 2.15* $(id).offset().left, 'top': $(id).offset().top*1.2  });
   }
-  console.log($(id).offset().top);
 }
 $(document).on("click", ".battle", function() {
   var btn = $(this).attr('id');
@@ -1218,12 +1266,12 @@ $(document).on("click", ".sell", function() {
     var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
     switch( id.substr(0, id.length-1)) {
       case 'purchase' :
-        if( vals.clickers[id].amount > 0 ) {
-          vals.clickers[id].amount --;
-          vals.clickers[id].cost =  set_item_cost(vals.clickers[id]);
-          vals.prod -= vals.clickers[id].output;
-          vals.energy += (vals.clickers[id].cost * 0.5);
-          vals.stats.total_energy += (vals.clickers[id].cost * 0.5);
+        if( vals.miracle[id].amount > 0 ) {
+          vals.miracle[id].amount --;
+          vals.miracle[id].cost =  set_item_cost(vals.miracle[id]);
+          vals.prod -= vals.miracle[id].output;
+          vals.energy += (vals.miracle[id].cost * 0.5);
+          vals.stats.total_energy += (vals.miracle[id].cost * 0.5);
         }
       break;
     case 'ascend' :
@@ -1274,15 +1322,26 @@ function perform_miracle() {
   vals.stats.miracle_clicks++;
   vals.stats.miracle_click_energy += vals.click;
 }
-function perform_trans() {
+var perform_trans = function() {
+  var click_amount = 0;
   if( vals.followers > 0 ) {
-    vals.energy += vals.click;
-    vals.stats.total_energy += vals.click;
-    vals.followers -= vals.click;
+
+    if( vals.followers >= vals.click ) {
+      vals.energy += vals.click;
+      vals.stats.total_energy += vals.click;
+      vals.followers -= vals.click;
+      vals.stats.ascension_click_energy += vals.click;
+      click_amount = vals.click;
+    }else {
+      vals.energy += vals.followers;
+      vals.stats.total_energy += vals.followers;
+      vals.stats.ascension_click_energy += vals.followers;  
+      click_amount = vals.followers;
+      vals.followers = 0;
+    }
     vals.stats.ascension_clicks++;
-    vals.stats.ascension_click_energy += vals.click;
   }
-  return;
+  return click_amount;
 }
 //TODO - fix this for when you scroll down screen on achievements etc.
 $(document).on("click", '.miracle', function(event) { 
@@ -1295,11 +1354,12 @@ $(document).on("click", '.miracle', function(event) {
             perform_miracle();
             offset = $(window).height()/4;
           }else {
-            divToAppend = '#miracle2_div'; 
-            target = $('.transcend_click:first').clone();
-            target.html( '-' + truncate_bigint(vals.click));
-            offset = $(window).height()/4;
-            if( can_click() ) perform_trans(); else return;
+            if( can_click() ) {
+              divToAppend = '#miracle2_div'; 
+              target = $('.transcend_click:first').clone();
+              target.html( '-' + truncate_bigint(perform_trans()) ); 
+              offset = $(window).height()/4;
+            }else return;
           }
           $(divToAppend).append(target);
           target.show();

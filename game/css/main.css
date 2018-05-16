@@ -3,7 +3,7 @@ html {
   font-family: 'Helvetica', sans-serif !important;
   font-size: 18px;
   background-color: lightgrey;
-  background-image: url('https://images.pexels.com/photos/289649/pexels-photo-289649.jpeg?cs=srgb&dl=abstract-art-background-289649.jpg&fm=jpg');
+  background-image: url('../data/background.jpg');
 }
 
 .button {
@@ -305,20 +305,39 @@ html {
      -moz-box-shadow: 0 10px 6px -6px #777;
           box-shadow: 0 10px 6px -6px #777;
 }
-}
 #miracle_button, #miracle_button2nd {
     -moz-user-select: none; 
     -webkit-user-select: none; 
     -ms-user-select:none; 
     user-select:none; 
     margin: auto; 
-    padding: 10px;
     width: 220px;
     font-weight: bold;
     font-size: 1.1em;
     color: #fff;
     cursor: pointer;
     border-radius: 10px;
+}
+#Quantum_leap {
+    -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
+    padding: 10px;
+    margin-left: 20%;
+    margin-bottom: 2%;
+    width: 220px;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background-color: #212121;
+}
+#Quantum_leap:hover {
+    color: #212121;
+    border: 2px solid #212121;
+    border-radius: 10px;
+    background-color: #fff;
 }
 .miracle { 
     border: none;

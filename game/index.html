@@ -60,7 +60,7 @@
     </div>
     </div> 
 </div> 
-	<div id = "tab_btns" class = "tabs">
+	<div id = "tab_btns" class = "scroll_tabs">
 		<button class="button button--secondary" id="convert-tab-btn">
 			<span class="button__inner" id="convert-tab-text"></span></button>
 		<button class="button button--secondary" id="ascend-tab-btn">
@@ -78,6 +78,7 @@
 		<button class="button button--secondary" id="stats-tab-btn">
 			<span class="button__inner">Statistics</span></button>
 	</div>
+
 	<div id="tab_divs" class='tabs'>
 	<div id="Conversion" class="tabcontent">
 	
@@ -199,11 +200,11 @@
 			<h3 style="text-align:center">Celestial Pantheon <strong id="boss_num">Boss 1</strong></h3>
 			
 			<div class="button_essence">
-				<strong id="essence_amount">0 </strong><span style="height: 2em;" 
+				<strong id="essence_amount">0 </strong><span
 				class="glyphicon glyphicon-fire" style="padding-right:1%"></span>
 				<button id="boss_upgrades" class="btn btn-lg"
 				data-balloon="Upgrade menu" data-balloon-pos="left">
-				<span style="font-size:1.5em;" class="glyphicon glyphicon-circle-arrow-up"></span></button></span>
+				<span style="font-size:1.5em;" class="glyphicon glyphicon-circle-arrow-up"></span></button>
 			</div>
 		<div class="overlay">	
 		<div class="wrap" id="boss_shop_wrap">
@@ -233,13 +234,13 @@
 					5<span class="glyphicon glyphicon-fire"></span></button></li>
 			</ul>
 			</li>
-			<button class="purchase" disabled="disabled"style="margin: 6px 6px; padding:1% 2.5%">
+		<button class="purchase" disabled="disabled" style=" padding:1% 2.5%;margin: 5% 0;">
 				<span>Unlock Tier Two 50</span><span class="glyphicon glyphicon-fire"></span></button>
 		</ul>
 		</div>
 	</div>
 			<figure style="text-align:center; margin-bottom:2%;" class="boss_img"><input type="image" id="battle_1" class="battle" 
-				src="data/fire_image.png" style="height:30em; width: 22.5em"></input>
+				src="data/fire_image.png" style="height:30em; width: 22.5em">
 			<figcaption><span id="boss_name"> Vengeful spirit: </span> HP <strong id="battle_1_hp">1,000,000</strong><br>Regeneration <strong id='regen'>10 per tick.</strong></figcaption>
 			</figure>
 		</div>
@@ -269,7 +270,7 @@
 				followers
 			</p>
 				<button id="sacrifice_btn_1" class="purchase" data-balloon="Corruption &uarr; 5%." data-balloon-pos="right"
-				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+				disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
 			</div>
 			<div id="sacrifices_div_1" class="tab_div" style="margin-top:0.5em">
 			<h3 id="sacrifice_header_2" class="header_1">Composite sacrifice</h3>
@@ -287,7 +288,7 @@
 
 			</p>
 				<button id="sacrifice_btn_2" class="purchase" data-balloon="Corruption &uarr; 15%." data-balloon-pos="right"
-				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+				disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
 			</div>
 			<div id="sacrifices_div_1" class="tab_div" style="margin-top:0.5em">
 			<h3 id="sacrifice_header_3" class="header_1">Benevolent sacrifice</h3>
@@ -300,7 +301,7 @@
 				Divine energy
 			</p>
 				<button id="sacrifice_btn_3" class="purchase" data-balloon="Corruption &darr; 5%." data-balloon-pos="right"
-				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+				disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
 			</div>
 		</div>
 </div>
@@ -385,7 +386,6 @@
 							<span id="stats_field_10">Minor Deity</span>
 						</b>
 					</h4>
-				</p>
 			</div>
 	</div>
 	<div id="Challenges" class="tabcontent">	
@@ -479,8 +479,7 @@
 			<span>-Use your energy to improve your production</span><br>
 			<span>-Unlock advanced features as you progress</span></p></h3>	
 		</div>
-		<div id="settings_div_1" class="tab_div">
-		</h3><br>
+		<div id="settings_div_1" class="tab_div"><br>
 		<h3 id="settings_header_3">Save your game now.</h3>
 		<button id='make_save' class='purchase'>Save</button>
 		<h3 id="settings_header_2">Delete your save.</h3>

@@ -2,7 +2,7 @@ var last_float = 10;
 var last_saved = 0;
 
 var vals = {
-  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,
+  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,"flame":0,
   "stats" :{
      "time_played":0, 
      "total_energy":0, 
@@ -84,6 +84,16 @@ var vals = {
                 "cost":800000,
                 "unlock_rps":1200.0,
                 "unlocked":false,
+            },
+            "purchase8":{
+                "label":"Random segments of code",
+                "description":"Learning machine language to convert them to your cause.",
+                "amount":0,
+                "output":30000,
+                "base_cost":5000000,
+                "cost":5000000,
+                "unlock_rps":8750.0,
+                "unlocked":false,
             }
     },  "ascend":{
             "ascend1":{
@@ -154,6 +164,16 @@ var vals = {
                 "base_cost":1000000,
                 "cost":1000000,
                 "unlock_loss":1200.0,
+                "unlocked":false,
+            },
+            "ascend8":{
+                "label":"Ascension chip",
+                "description":"A chip allowing followers to ascend through the internet.",
+                "amount":0,
+                "output":30000,
+                "base_cost":6000000,
+                "cost":6000000,
+                "unlock_loss":8750.0,
                 "unlocked":false,
             }
   },
@@ -227,7 +247,14 @@ var vals = {
               "label":"Void gathering",
               "description":"Retrieving power from the void of space.",
               "unlocked":false,
-              "cost":100000000,
+              "cost":70000000,
+              "mul":6
+            },
+            "upgrade11":{
+              "label":"Chaotic ritual",
+              "description":"Harnessing chaos energy to increase your power.",
+              "unlocked":false,
+              "cost":500000000,
               "mul":6
             }
           },
@@ -277,9 +304,16 @@ var vals = {
             },
             "upgrade7":{
                "label":"The Mandela Effect",
-              "description":"Reverse time and change what you wish.",
+              "description":"Reverse time and change what you wish - but only something small.",
               "unlocked":false,
               "cost":250000000,
+              "mul":0.8
+            },
+            "upgrade8":{
+               "label":"Keys to the car",
+              "description":"Stolen keys to a working time machine.",
+              "unlocked":false,
+              "cost":1000000000,
               "mul":0.8
             }
           },
@@ -333,15 +367,23 @@ var vals = {
               "regen":100,
               "reward":1000000,
               "current":true,
-              "name":"Vengeful Spirit"
+              "name":"Arion's Spirit"
             },
             "boss2":{
-              "max_hp": 500000000,
-              "current_hp":500000000,
-              "regen":50000,
+              "max_hp": 125000000,
+              "current_hp":125000000,
+              "regen":10000,
               "reward":50000000,
               "current":false,
-              "name":"Demonic Phantom"
+              "name":"Cursed Harpy"
+            },
+            "boss3":{
+              "max_hp": 750000000,
+              "current_hp":750000000,
+              "regen":1000000,
+              "reward":275000000,
+              "current":false,
+              "name":"Erinys"
             }
 
            }
@@ -355,7 +397,7 @@ var vals = {
               "visible":true,
               "unlocked":false,
               "label":"Your first Miracle",
-              "description":"You performed your first miracle and gained an awe-struck follower.",
+              "description":"You performed your first miracle.",
               "click_req":1,
               },
               "1_1": {
@@ -363,7 +405,7 @@ var vals = {
               "visible":true,  
               "unlocked":false,
               "label":"The first to your cause.",
-              "description":"You've gained 10 followers through performing miracles.",
+              "description":"You've gained 10 followers through your miracles.",
               "val_req":10
               },
               "2" : {
@@ -371,7 +413,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Miracle happy",
-              "description":"You've performed 100 miracles, gaining many followers along the way.",
+              "description":"You've performed 100 miracles.",
               "click_req":100
               },
               "2_2" : {
@@ -387,7 +429,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Qualified exercise",
-              "description":"You've performed 1000 miracles personally.",
+              "description":"You've performed 1000 miracles.",
               "click_req":1000
               },
               "3_3" : {
@@ -397,6 +439,22 @@ var vals = {
               "label":"Ten thousand strong at least!",
               "description":"You've gained 10000 followers through your miracles.",
               "val_req":10000
+              },
+              "4" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Carpal tunnel",
+              "description":"You've performed 15000 miracles.",
+              "click_req":15000
+              },
+              "4_4" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Iceland x 3",
+              "description":"You've gained 1M followers through your miracles.",
+              "val_req":1000000
               }
             },
              "challenge2":{
@@ -406,7 +464,7 @@ var vals = {
                 "visible":true,
                 "unlocked":false,
                 "label":"Your first ascension",
-                "description":"You ascended a follower to a higher plane of existance, increasing your divine energy.", 
+                "description":"You ascended your first follower.", 
                 "click_req":1
               },
                 "1_1": {
@@ -414,7 +472,7 @@ var vals = {
               "visible":true,  
               "unlocked":false,
               "label":"Fast-tracking",
-              "description":"You've gained 10 energy through ascending followers.",
+              "description":"You've gained 10 Divine Energy through ascending followers.",
               "val_req":10
               },
                "2" : {
@@ -422,7 +480,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Highway to heaven",
-              "description":"You've performed 100 acensions to increase your Divine Energy.",
+              "description":"You've performed 100 Acensions.",
               "click_req":100
               },
               "2_2" : {
@@ -430,7 +488,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"It's a long way to Tipperary",
-              "description":"You've gained 500 energy through ascending followers.",
+              "description":"You've gained 500 energy through Ascending followers.",
               "val_req":500
               },
               "3" : {
@@ -438,7 +496,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Children of the cause",
-              "description":"You've performed 1000 ascensions deliberately.",
+              "description":"You've performed 1000 ascensions.",
               "click_req":1000
               },
               "3_3" : {
@@ -446,8 +504,24 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Ascend this.",
-              "description":"You've gained 10000 divine power through ascensions.",
+              "description":"You've gained 10000 Divine Energy through ascensions.",
               "val_req":10000
+              },
+              "4" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"A'int that a click in the head.",
+              "description":"You've performed 15000 ascensions personally.",
+              "click_req":15000
+              },
+              "4_4" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Unlimited power",
+              "description":"You've ascended 1M followers.",
+              "val_req":1000000
               }
 
             },
@@ -468,6 +542,14 @@ var vals = {
               "description":"You've gained your first 4th tier Conversion herald.",
               "req_tier":4,
               "req_num":1
+              },
+              "3" : {
+              "visible":false,  
+              "unlocked":false,
+              "label":"Someday they'll have secrets",
+              "description":"You've gained your first 8th tier Conversion herald.",
+              "req_tier":8,
+              "req_num":1
               }
             },
              "challenge4":{
@@ -487,6 +569,14 @@ var vals = {
                 "description":"You've gained your first 4th tier ascension facilities.",
                 "req_tier":4,
                 "req_num":1
+              },
+              "3" : {
+              "visible":false,  
+              "unlocked":false,
+              "label":"Someday they'll have dreams",
+              "description":"You've gained your first 8th tier Ascension point.",
+              "req_tier":8,
+              "req_num":1
               }
             },
             "challenge5":{
@@ -544,6 +634,7 @@ var upgrade_box_size = 0;
     }
     });
     fix_names(vals);
+    // resolve_mobile_width();
   }});
 
   $(document).ready(function() {
@@ -565,9 +656,17 @@ var upgrade_box_size = 0;
    }
    } );
     $('#settings-tab-btn').click();
+    // resolve_mobile_width();
     start_game(vals);
   });
 
+  // function resolve_mobile_width() { 
+  //   if( $(window).width() <= 750 ) {
+  //     $('#tab_btns').html('<div data-role="navbar" id="nav"><ul><li><button class="button button--secondary" id="convert-tab-btn"> ' +
+  //      '<span class="button__inner" id="convert-tab-text"></span></button></li> <li><button class="button button--secondary" id="ascend-tab-btn"> ' +
+  //      '<span class="button__inner" id="ascend-tab-text"></span></button></li></ul></div>');
+  //   }
+  // }
   function set_up_containers() {
     var width = $(window).width();
     var height = $(window).height();
@@ -656,7 +755,8 @@ var upgrade_box_size = 0;
         'l':vals.loss,
         'c':vals.corruption.toString(16),
         'ac':vals.achievement_multiplier,
-        't':(Math.round(vals.tick)).toString(16)
+        't':(Math.round(vals.tick)).toString(16),
+        'fl':vals.flame.toString(16)
       };
         var unlocks = {
             "miracle":"cl",
@@ -714,6 +814,7 @@ var upgrade_box_size = 0;
         vals.corruption = parseInt(save.c, 16);
         vals.achievement_multiplier = save.ac;
         vals.tick = parseInt(save.t, 16);
+        vals.flame = parseInt(save.fl, 16);
         var unlocks = {
             "miracle":"cl",
             "ascend":"asc"
@@ -969,8 +1070,8 @@ var upgrade_box_size = 0;
         if( vals.ascend[k].unlocked ) unlock_ascend++;
         total_ascend ++;
       }
-    $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/20");
-    $('#augment-tab-text').text("Augment " + unlock_aug + "/21");
+    $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/26");
+    $('#augment-tab-text').text("Augment " + unlock_aug + "/20");
     $('#convert-tab-text').text("Convert " + unlock_conv + "/" + total_conv);
     $('#ascend-tab-text').text("Ascend " + unlock_ascend + "/" + total_ascend);
   }
@@ -1167,7 +1268,6 @@ var upgrade_box_size = 0;
               if( vals.challenges[k][String(parseInt(i)-1)].unlocked) can_clone = true;
             break;
             case 'panth' :
-            console.log(vals.challenges[k][String(parseInt(i)-1)].req_stage);
               if( vals.challenges[k][String(parseInt(i)-1)].unlocked ) can_clone = true;
             break;
           }
@@ -1216,6 +1316,7 @@ var upgrade_box_size = 0;
 
       $('#pantheon_div_1').css('display', 'none');
       $('#pantheon_unlocked').css('display','block');
+      $('#essence_amount').text(vals.flame);
       for( var k in vals.pantheon.bosses ) {
       if( vals.pantheon.bosses[k].current ) {
         $('#battle_1').attr('src', 'data/battle_' + k.substr(k.length-1) + '.png');
@@ -1259,8 +1360,6 @@ $(document).on("click", ".purchase", function() {
     //todo - fix this.
     case 'upgrade' :
       var purchase_type = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
-      console.log(purchase_type[0]);
-      console.log(id);
       if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
         vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
         if( vals.upgrades[purchase_type[0]].type === "Click amount") {
@@ -1380,21 +1479,33 @@ $(document).on("click", ".battle", function() {
   target.animate({ 'top': '-=25', 'opacity':0.8, 'left': '+=4' }, 250);
   target.animate({ 'top': '+=15', 'opacity':0.1, 'left':  '+=15'}, 250, function() {  $(this).remove(); });
   var boss_num = btn.substr(btn.length-1);
+  var new_boss = false;
   for( var k in vals.pantheon.bosses) {
     if( vals.pantheon.bosses[k].current) {
       vals.pantheon.bosses[k].current_hp -= vals.click;
   //process reward for defeating boss
     if( vals.pantheon.bosses[k].current_hp <= 0 ) {
       vals.pantheon.bosses[k].current = false;
+      vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
       var id = k.substr(k.length-1);
-      id++;
-      boss_num++;
-      vals.followers += vals.pantheon.bosses[k].reward;  
-      vals.pantheon.bosses['boss'+(id)].current = true;
-      vals.pantheon.stage++;
+        id++;
+        boss_num++;
+        vals.followers += vals.pantheon.bosses[k].reward;  
+      if( id <= 3 )  {
+        vals.pantheon.bosses['boss'+(id)].current = true;
+        vals.pantheon.stage++;
+      }else {
+        id = 1;
+        vals.pantheon.bosses['boss1'].current = true;
+        vals.pantheon.stage = 1;
+      }
+      vals.flame++;
+      new_boss = true;
     }
+
     }
   } 
+  if( new_boss) vals.pantheon.bosses['boss'+(id)].current_hp = vals.pantheon.bosses['boss'+(id)].max_hp;
   fix_names(vals);
 });
 $(document).on("click", ".sell", function() {
@@ -1552,8 +1663,11 @@ $(document).on("click", '.miracle', function(event) {
       $('#upgrades-box').css("height", upgrade_box_size);
     fix_names(vals);
 }
+
+
 })(jQuery);
 
+$
 //loads a json file asynchronously
 function loadJSON(callback) {   
 

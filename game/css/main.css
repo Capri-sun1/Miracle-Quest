@@ -368,22 +368,43 @@ html {
 #challenges_main_header_div {
   padding-bottom: 4%;
 }
-.tabs {
-  display: block;
-  margin-top: 5px;
+.scroll_tabs::-webkit-scrollbar { 
+    display: none; 
+}
+@-moz-document url-prefix() {
+  .scroll_tabs {
+    overflow: scroll;
+  }
+}
+.scroll_tabs {
+  margin-top: 1%;
+  -ms-overflow-style: none;  
+  white-space: nowrap;
 }
 
-.tabs .button--secondary.active .button__inner {
+.scroll_tabs .button--secondary.active .button__inner {
   background-color : #E1F5FE;
   color: #212121;
 }
-.tabs .button--secondary {
+.scroll_tabs .button--secondary {
   position: relative;
   -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
           box-shadow: 0 10px 6px -6px #777;
   padding-bottom: 5px;
   margin-bottom: 5px;
+    font-size: 0.9em;
+}
+div.scroll_tabs button {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scroll_tabs button:hover {
+    background-color: #777;
 }
 .miracle_click, .transcend_click { 
     display: none;
@@ -615,6 +636,7 @@ nav ul li {
   margin-bottom: 5%;
   margin-left: 5%;
 }
+
 button:disabled, button.disabled {
     background-color: grey;
     color: lightgrey;
@@ -629,6 +651,14 @@ button:disabled, button.disabled {
     .tabs {
       margin-top: 0px;
       margin-bottom: 0px;
+    }
+    .scroll_tabs .button--secondary{
+      width: 100%;
+      font-size: 1em;
+    }
+    .button button--secondary {
+      width: 100%;
+      display: inline-block;
     }
     .tabs .button--secondary .button__inner { 
       font-size: 1.5em;
@@ -654,8 +684,11 @@ button:disabled, button.disabled {
     body {
       background: none;
     }
+    #tab_btns {
+      width: 100%;
+    }
 }
-@media screen and (min-height: 550px) and (min-width: 700px) { 
+@media screen and (min-height: 550px) and (min-width: 750px) { 
     #left_floatable {
         position: fixed; 
         top: 5px;
@@ -686,17 +719,14 @@ button:disabled, button.disabled {
         float: left;
         width: 58%;
     }
-     .tabs .button--secondary { 
-        width: 48%;
-    }
-    .tabs .button--secondary .button__inner { 
-        font-size: 0.7em;
-    }
     #left_wrap { 
         float: left;
         min-width: 250px;
         width: 40%;
         margin-top: 12.5%;
+    }
+    .scroll_tabs .button--secondary {
+      width: 50%;
     }
     #time_played {
       font-size: 0.8em !important;
@@ -707,12 +737,15 @@ button:disabled, button.disabled {
     .tabs .button--secondary {  
         width: 31%;
     }
-    .tabs .button--secondary .button__inner { 
+    .scroll_tabs .button--secondary .button__inner { 
         font-size: 0.6em;
     }
     #left_wrap { 
         width: 30%;
         margin-top: 6%;
+    }
+    .scroll_tabs .button--secondary {
+      width: 50%;
     }
     #tab_divs, #tab_btns { 
         width: 65%;
@@ -723,7 +756,7 @@ button:disabled, button.disabled {
 }
 @media screen and (min-width: 1300px) { 
     .tabs .button--secondary { 
-        width: 22%;
+        width: 33%;
     }
     .tabs .button--secondary .button__inner { 
         font-size: 0.5em;

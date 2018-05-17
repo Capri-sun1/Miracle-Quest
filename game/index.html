@@ -25,7 +25,7 @@
             <span id="power_label">Divine Power </span>
             <strong><span id="click_amount">0</span></strong><br/>
             <span id="god_label">Godly Status </span>
-            <strong><span id="god_status">[ Minor Deity ]</span></strong><br/>
+            <strong><span id="god_status">[ Abstract presence ]</span></strong><br/>
         </p>
     </div>
     <div id="miracle_wrap">
@@ -172,14 +172,74 @@
 		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
 		</div>
 	</div>
+	<div id="upgrade_3">
+		<div id="upgrade_3_1" class="tab_div">
+		<h3 id="upgrade_header_3_1" class="header_1">This is the field for upgrade for option one.
+			<label id="upgrade_lbl_3_1" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<b>
+			<span id="upgrade_cost_3_1">10</span>
+			</b>
+			-
+			<em id="upgrade_text_3_1">Text placeholder</em> 
+		</p>
+		<button id="upgrade_btn_3_1" class="purchase" 
+		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
+		</div>
+	</div>
 	</div>
 	<div id="Pantheon" class="tabcontent">
 		<div id="pantheon_div_1" class="tab_div" style="text-align:center">
 			<h3 class="header_1" >Enter the arena of the Gods.</h3>
-			<span id="pantheon_lbl_1">120 Divine Power is required to begin challenging other deities.</span>
+			<span id="pantheon_lbl_1">You have insufficient divine power to challenge these beings.</span>
 		</div>
-		<div id="pantheon_unlocked" style="display:none" class="tab_div"><h3 style="text-align:center">Celestial Pantheon <strong id="boss_num">Boss 1</strong></h3>
-			<figure style="text-align:center; margin-bottom:5%;" class="boss_img"><input type="image" id="battle_1" class="battle" src="data/fire_image.png"></input>
+		<div id="pantheon_unlocked" style="display:none" class="tab_div">
+
+			<h3 style="text-align:center">Celestial Pantheon <strong id="boss_num">Boss 1</strong></h3>
+			
+			<div class="button_essence">
+				<strong id="essence_amount">0 </strong><span style="height: 2em;" 
+				class="glyphicon glyphicon-fire" style="padding-right:1%"></span>
+				<button id="boss_upgrades" class="btn btn-lg"
+				data-balloon="Upgrade menu" data-balloon-pos="left">
+				<span style="font-size:1.5em;" class="glyphicon glyphicon-circle-arrow-up"></span></button></span>
+			</div>
+		<div class="overlay">	
+		<div class="wrap" id="boss_shop_wrap">
+			<h3 style="color:#34B484">Battle upgrades</h3>
+			<ul class="wrap-nav">
+			<li><span class="upg_header">Damage</span>
+			<ul class="upgrade_field">
+				<li><span>Damage x1.5/click</span><br><button class="purchase" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+				<li><span>Damage +0.05 x Energy Prod</span><br><button class="purchase" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+			</ul>
+			</li>
+			<li class='upgrade_li'><span class="upg_header">Enchantments</span>
+			<ul class="upgrade_field">
+				<li><span>Deal +0.01x Divine Power/Tick.</span><br><button class="purchase" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+				<li><span>Deal +0.1x Energy Prod/Tick</span><br><button class="purchase" style="margin: 6px 6px" disabled="disabled">Purchase 5
+				<span class="glyphicon glyphicon-fire"></span></button></li>
+			</ul>
+			</li>
+			<li><span class="upg_header">Sabotage</span>
+			<ul class="upgrade_field">
+				<li><span>Boss Max Hp &darr;10%</span><br><button class="purchase" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+				<li><span>Boss Regen &darr;20%</span><br><button class="purchase" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+			</ul>
+			</li>
+			<button class="purchase" disabled="disabled"style="margin: 6px 6px; padding:1% 2.5%">
+				<span>Unlock Tier Two 50</span><span class="glyphicon glyphicon-fire"></span></button>
+		</ul>
+		</div>
+	</div>
+			<figure style="text-align:center; margin-bottom:2%;" class="boss_img"><input type="image" id="battle_1" class="battle" 
+				src="data/fire_image.png" style="height:30em; width: 22.5em"></input>
 			<figcaption><span id="boss_name"> Vengeful spirit: </span> HP <strong id="battle_1_hp">1,000,000</strong><br>Regeneration <strong id='regen'>10 per tick.</strong></figcaption>
 			</figure>
 		</div>

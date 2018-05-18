@@ -129,7 +129,7 @@
 			<br>
 			Ascends
 			<b>
-				<span id="ascend_out_1_2">0.1</span>
+				<span id="ascend_out_1_1">0.1</span>
 			</b>
 			per tick
 		</p>
@@ -190,6 +190,7 @@
 		</div>
 	</div>
 	</div>
+
 	<div id="Pantheon" class="tabcontent">
 		<div id="pantheon_div_1" class="tab_div" style="text-align:center">
 			<h3 class="header_1" >Enter the arena of the Gods.</h3>
@@ -240,7 +241,7 @@
 		</div>
 	</div>
 			<figure style="text-align:center; margin-bottom:2%;" class="boss_img"><input type="image" id="battle_1" class="battle" 
-				src="data/fire_image.png" style="height:30em; width: 22.5em">
+				src="data/battle_1.png" style="height:30em; width: 22.5em">
 			<figcaption><span id="boss_name"> Vengeful spirit: </span> HP <strong id="battle_1_hp">1,000,000</strong><br>Regeneration <strong id='regen'>10 per tick.</strong></figcaption>
 			</figure>
 		</div>
@@ -338,11 +339,11 @@
 							<span id="stats_field_5">0.1</span>
 						</b>
 					</h4>
-					<h4 id='time_played'>Current follower Ascension
+					<h4 id='time_played'>Current Follower Prod
 						<b>
 							<span id="stats_field_8">0.1</span>
 						</b>
-						<span id="total_energy3">Max follower Ascension</span>
+						<span id="total_energy3">Max Follower Prod</span>
 						<b>
 							<span id="stats_field_9">0.1</span>
 						</b>
@@ -381,19 +382,29 @@
 							<label id="stats_field_11">0.1</label>
 						</b>
 					</h4>
-					<h4 id='time_played'>Current deity status
+					<h4 id='time_played'>Current deity statuhgkljjjs
 						<b>
-							<span id="stats_field_10">Minor Deity</span>
+							<span id="stats_field_10">Abstract presence</span>
 						</b>
 					</h4>
 			</div>
 	</div>
 	<div id="Challenges" class="tabcontent">	
 		<div id="challenges_main_header_div" class="tab_div" style="text-align:center">
-				<h3 id="challenges_header">Heavenly Trials</h3><br>
+				<h3 id="challenges_header">
+				Heavenly Trials			
+				<div class="btn btn-med" id="achievements_shown" style="background-color:#fff;"
+				data-balloon="See Completed" data-balloon-pos="down">
+				<span style="font-size:1.5em;" class="glyphicon glyphicon-remove">
+				</span></div></h3><br>
 				<span>Track your progress as you continue through the game.</span><br>
 				<span>Each completed challenge increases your follower production by 2%,  Current Multipler: <strong id="prod_mul">1.00x</strong></span>
 		</div>
+		<div class="overlay" id="completed_challenges" style="border-radius: 5px">	
+		<div class="wrap" id="achievements_wrap">
+		</div>
+		</div>
+		<div id="uncompleted" class="uncompleted" >
 		<div id ="challenge1">
 		<div id="challenges_1_1" class="tab_div">
 		<h3 id="challenges_header_1_1" class="header_1">This is the field for upgrade for option one.
@@ -470,6 +481,7 @@
 		</p>
 		</div>
 		</div>
+	</div>
 	</div>
 	<div id="Settings" class="tabcontent">	<div id="settings_1" style="text-align:center">
 		<div id="time_played" style="margin-left:5%;background-color:#E1F5FE;" class="tab_div">

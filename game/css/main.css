@@ -368,9 +368,7 @@ html {
 #challenges_main_header_div {
   padding-bottom: 4%;
 }
-.scroll_tabs::-webkit-scrollbar { 
-    display: none; 
-}
+
 @-moz-document url-prefix() {
   .scroll_tabs {
     overflow: scroll;
@@ -378,7 +376,7 @@ html {
 }
 .scroll_tabs {
   margin-top: 1%;
-  -ms-overflow-style: none;  
+  overflow: scroll;
   white-space: nowrap;
 }
 

@@ -82,7 +82,7 @@ var vals = {
                 "output":7500,
                 "base_cost":800000,
                 "cost":800000,
-                "unlock_rps":1200.0,
+                "unlock_rps":1175.0,
                 "unlocked":false,
             },
             "purchase8":{
@@ -92,7 +92,7 @@ var vals = {
                 "output":30000,
                 "base_cost":5000000,
                 "cost":5000000,
-                "unlock_rps":8750.0,
+                "unlock_rps":8500.0,
                 "unlocked":false,
             }
     },  "ascend":{
@@ -103,7 +103,7 @@ var vals = {
                 "output":0.2,
                 "base_cost":25,
                 "cost":25,
-                "unlock_loss":0,
+                "unlock_rps":0,
                 "unlocked":true,
             },
             "ascend2":{
@@ -113,7 +113,7 @@ var vals = {
                 "output":1,
                 "base_cost":225,
                 "cost":225,
-                "unlock_loss":0.2,
+                "unlock_rps":0.2,
                 "unlocked":false,
             },
             "ascend3":{
@@ -123,7 +123,7 @@ var vals = {
                 "output":5,
                 "base_cost":1350,
                 "cost":1350,
-                "unlock_loss":1.2,
+                "unlock_rps":1.2,
                 "unlocked":false,
             },
             "ascend4":{
@@ -133,7 +133,7 @@ var vals = {
                 "output":25,
                 "base_cost":8000,
                 "cost":8000,
-                "unlock_loss":5.0,
+                "unlock_rps":5.0,
                 "unlocked":false,
             },
             "ascend5":{
@@ -143,7 +143,7 @@ var vals = {
                 "output":150,
                 "base_cost":30000,
                 "cost":30000,
-                "unlock_loss":25.0,
+                "unlock_rps":25.0,
                 "unlocked":false,
             },
             "ascend6":{
@@ -153,7 +153,7 @@ var vals = {
                 "output":1000,
                 "base_cost":160000,
                 "cost":160000,
-                "unlock_loss":175.0,
+                "unlock_rps":175.0,
                 "unlocked":false,
             },
             "ascend7":{
@@ -163,7 +163,7 @@ var vals = {
                 "output":7500,
                 "base_cost":1000000,
                 "cost":1000000,
-                "unlock_loss":1200.0,
+                "unlock_rps":1175.0,
                 "unlocked":false,
             },
             "ascend8":{
@@ -173,7 +173,7 @@ var vals = {
                 "output":30000,
                 "base_cost":6000000,
                 "cost":6000000,
-                "unlock_loss":8750.0,
+                "unlock_rps":8500.0,
                 "unlocked":false,
             }
   },
@@ -189,7 +189,7 @@ var vals = {
             },
             "upgrade2":{
               "label":"Matter Manipulation",
-              "description":"Ability to alter the porperities of being triples your Divine Power.",
+              "description":"A small amount of control over matter triples your Divine Power.",
               "unlocked":false,
               "cost":150,
               "mul":3
@@ -832,7 +832,7 @@ var upgrade_box_size = 0;
                       if( x === item_num[0] ) {
                         vals[k][x].amount = parseInt(item_num[1],16);
                         if( x.substr(x.length-1) < Object.keys(vals[k]).length ) {
-                          vals[k][x.substr(0,x.length-1) + String(parseInt(x.substr(x.length-1))+1)].unlocked = true;    
+                          vals[k][x.substr(0,x.length-1) + String(parseInt(x.substr(x.length-1)))].unlocked = true;    
                         }
                       }
                     }
@@ -1076,16 +1076,18 @@ var upgrade_box_size = 0;
     $('#ascend-tab-text').text("Ascend " + unlock_ascend + "/" + total_ascend);
   }
   function fix_stats(vals) {
-    if( vals.prod > vals.stats.max_prod) vals.stats.max_prod = vals.prod;
-    if( vals.loss > vals.stats.max_loss) vals.stats.max_loss = vals.loss;
+    var corrected_prod = (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100));
+    var corrected_loss = (1+(vals.corruption/100))*vals.loss;
+    if( corrected_prod > vals.stats.max_prod) vals.stats.max_prod = corrected_prod;
+    if( corrected_loss > vals.stats.max_loss) vals.stats.max_loss = corrected_loss;
        $('#stats_field_1').text(truncate_time( Math.round(vals.stats.time_played)));
        $('#stats_field_2').text(truncate_bigint(Math.floor(vals.energy)));
        $('#stats_field_3').text(truncate_bigint(Math.floor(vals.stats.total_energy)));
        $('#stats_field_4').text(truncate_bigint(Math.floor(vals.followers)));
        $('#stats_field_5').text(truncate_bigint(Math.floor(vals.stats.total_followers)));
-       $('#stats_field_6').text(truncate_bigint(vals.loss));
+       $('#stats_field_6').text(truncate_bigint(corrected_loss));
        $('#stats_field_7').text(truncate_bigint(vals.stats.max_loss));
-       $('#stats_field_8').text( truncate_bigint( vals.prod));
+       $('#stats_field_8').text( truncate_bigint( corrected_prod ));
        $('#stats_field_9').text( truncate_bigint( vals.stats.max_prod ));
        $('#stats_field_13').text(vals.stats.miracle_clicks);
        $('#stats_field_11').text(vals.click);
@@ -1097,85 +1099,11 @@ var upgrade_box_size = 0;
        $('#stats_field_16').text(truncate_bigint(vals.stats.miracle_click_energy));
   }
    function fix_names( vals ) {
-    if( vals.current_tab === 'Conversion') {
-    for( var k in vals.miracle ) {
-      var purchase_num = k.substr(k.length -1 );
-      if( vals.prod >= vals.miracle[k].unlock_rps ) {
-        vals.miracle[k].unlocked = true;
-        //dynammically create divs as needed, saves creating all in the html file.
-         if( !document.getElementById('purchase_' + purchase_num) && !document.getElementById('new_purchase') && k != "purchase1" ){
-              var clonedDiv_id = $('#purchase_' + challenge_num + '_' + i);
-              $('<div id="new_purchase" class="tab_div"> ' +
-                '<h3 id="purchase_head_temp" class="header_1">This is the field for upgrade for option one.' +
-                '<label id=purchase_lbl_ class="align_right">0</label></h3><p>' +
-      '<b><span id="purchase_cost_">10</span></b> - <em id="purchase_text_"> Text placeholder</em></p>' +
-      '<p class = "align_right">Produces <b><span id="purchase_out_">0.1</span></b> per tick</p>'+
-      ' <button id="purchase_btn_" class="purchase" disabled="disabled">Purchase</button> '+
-      '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
-      'disabled="disabled" >Sell</button></div>').prependTo($('#Conversion'));
-              //now fix the fields
-              $("#new_purchase").find('#purchase_lbl_').attr('id', "purchase_lbl_" + purchase_num);
-              $("#new_purchase").find('#purchase_text_').attr('id', "purchase_text_" + purchase_num);
-              $("#new_purchase").find('#purchase_btn_').attr('id', "purchase_btn_" + purchase_num);
-              $("#new_purchase").find('#purchase_sell_btn_').attr('id', "purchase_sell_btn_" + purchase_num);
-              $("#new_purchase").find('#purchase_out_').attr('id', "purchase_out_" + purchase_num);
-              $("#new_purchase").find('#purchase_cost_').attr('id', "purchase_cost_" + purchase_num);
-              $("#new_purchase").find('#purchase_head_temp').attr('id', "purchase_header_" + purchase_num);
-              $('#new_purchase').attr('id','purchase_' + purchase_num);
-           }
-        $('#purchase_' + purchase_num).css("display", "block");
-        $("#purchase_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.miracle[k].label);
-        $('#purchase_lbl_' + purchase_num).text(vals.miracle[k].amount);
-        $('#purchase_cost_' + purchase_num).text( '[ ' + truncate_bigint(vals.miracle[k].cost) + ' energy ]');
-        $('#purchase_text_' + purchase_num).text(vals.miracle[k].description);
-        $('#purchase_out_' + purchase_num).text(vals.miracle[k].output + " followers ");
-    }
-    else {
-      $('#purchase_' + purchase_num).css("display", "none");
-    }
-  }
-  }
-  if( vals.current_tab === 'Ascension' ) {
-    for( var k in vals.ascend ) {
-      var purchase_num = k.substr(k.length -1 );
-      if( vals.loss >= vals.ascend[k].unlock_loss ) {
-        vals.ascend[k].unlocked = true;
-        if( !document.getElementById('ascend_' + purchase_num) && !document.getElementById('new_ascend') && k != "ascend1" ){
-              var clonedDiv_id = $('#ascend_' + challenge_num + '_' + i);
-              $('<div id="new_ascend" class="tab_div"> ' +
-                '<h3 id="ascend_head_temp" class="header_1">This is the field for upgrade for option one.' +
-                '<label id=ascend_lbl_ class="align_right">0</label></h3><p>' +
-      '<b><span id="ascend_cost_">10</span></b> - <em id="ascend_text_"> Text placeholder</em></p>' +
-      '<p class = "align_right">Produces <b><span id="ascend_out_">0.1</span></b> per tick<br>Ascends ' +
-      '<b><span id="ascend_out__2">0.1</span></b>per tick</p>'+
-      ' <button id="ascend_btn_" class="purchase" disabled="disabled">Purchase</button> '+
-      '<button id="ascend_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
-      'disabled="disabled" >Sell</button></div>').prependTo($('#Ascension'));
-              //now fix the fields
-              $("#new_ascend").find('#ascend_lbl_').attr('id', "ascend_lbl_" + purchase_num);
-              $("#new_ascend").find('#ascend_text_').attr('id', "ascend_text_" + purchase_num);
-              $("#new_ascend").find('#ascend_btn_').attr('id', "ascend_btn_" + purchase_num);
-              $("#new_ascend").find('#ascend_sell_btn_').attr('id', "ascend_sell_btn_" + purchase_num);
-              $("#new_ascend").find('#ascend_out_').attr('id', "ascend_out_" + purchase_num);
-              $("#new_ascend").find('#ascend_cost_').attr('id', "ascend_cost_" + purchase_num);
-              $("#new_ascend").find('#ascend_head_temp').attr('id', "ascend_header_" + purchase_num);
-              $("#new_ascend").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_2');
-              $('#new_ascend').attr('id','ascend_' + purchase_num);
-           }
-        $('#ascend_' + purchase_num).css("display", "block");
-        $("#ascend_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.ascend[k].label);
-        $('#ascend_lbl_' + purchase_num).text(vals.ascend[k].amount);
-        $('#ascend_cost_' + purchase_num).text('[ ' + truncate_bigint(vals.ascend[k].cost) + ' energy ]');
-        $('#ascend_text_' + purchase_num).text(vals.ascend[k].description);
-        $('#ascend_out_' + purchase_num).text(vals.ascend[k].output + " divine energy ");
-        $('#ascend_out_' + purchase_num + '_2').text(vals.ascend[k].output + " followers ");
-    }
-    else {
-      $('#ascend_' + purchase_num).css("display", "none");
-    }
-   }
-  }
-   if( vals.current_tab === 'Upgrades')
+    //fix conv and asc
+    fix_conv_asc(vals);
+
+    //todo- move this to its own method.
+   if( vals.current_tab === 'Upgrades'){
    for( var k in vals.upgrades ) {
       var purchase_num = k.substr(k.length-1);
 
@@ -1185,7 +1113,7 @@ var upgrade_box_size = 0;
         if( (i.substr(i.indexOf('e') + 1) === '1') || 
           (vals.upgrades[k]["upgrade" + (String(parseInt(i.substr(i.indexOf('e') + 1)) -1))].unlocked && i.substr(i.indexOf('e') + 1) != '1') )  {
           if( !document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)) && !document.getElementById('new_upgrade') && i != "upgrade1" ){
-                var clonedDiv_id = $('#upgrade_' + challenge_num + '_' + i);
+                var clonedDiv_id = $('#upgrade_' + purchase_num + '_' + i);
                 $('<div id="new_upgrade" class="tab_div"> ' +
                 '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
                 '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
@@ -1217,6 +1145,8 @@ var upgrade_box_size = 0;
        }
      }
     }
+  }
+  //fix sacrifices
     if( vals.sacrifice.unlocked && vals.current_tab === 'Sacrifice') {
       if($(window).width() > 750 ){
        $(".dotted").attr('data-balloon', "\u2191 Energy prod, \u2193 Follower prod");
@@ -1236,6 +1166,82 @@ var upgrade_box_size = 0;
         }
       }
     }
+    //fix challenges
+    fix_challenges(vals);
+    $('#corruption_amount').text(vals.corruption + '%');
+
+    //fix pantheon
+   if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
+
+      $('#pantheon_div_1').css('display', 'none');
+      $('#pantheon_unlocked').css('display','block');
+      $('#essence_amount').text(vals.flame);
+      for( var k in vals.pantheon.bosses ) {
+      if( vals.pantheon.bosses[k].current ) {
+        $('#battle_1').attr('src', 'data/battle_' + k.substr(k.length-1) + '.png');
+        $('#boss_num').text(': Boss ' + k.substr(k.length-1));
+        $('#battle_1_hp').text(vals.pantheon.bosses[k].current_hp);
+        $('#regen').text(vals.pantheon.bosses[k].regen);
+        $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
+      }
+    }
+   }
+  }
+//generalised function that handles both asc and conv tabs.
+function fix_conv_asc(vals) {
+  var currentTab = vals.current_tab;
+  if( currentTab != 'Conversion' && currentTab != 'Ascension' ) return;
+  var keyWord;
+  var title;
+    if( currentTab === 'Ascension') { keyWord = 'ascend'; title = 'ascend'; }
+    else { keyWord = 'miracle'; title = 'purchase'; }
+    for( var k in vals[keyWord] ) {
+      var purchase_num = k.substr(k.length -1 );
+      if( (currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab==='Conversion' && vals.prod >= vals[keyWord][k].unlock_rps) ) {
+        vals[keyWord][k].unlocked = true;
+        //dynammically create divs as needed, saves creating all in the html file.
+         if( !document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1") ){
+              var clonedDiv_id = $('#' + title+ '_' + purchase_num + '_' + purchase_num);
+              
+              var html_to_append = '<div id="new_purchase" class="tab_div"> ' +
+                '<h3 id="purchase_head_temp" class="header_1">This is the field for upgrade for option one.' +
+                '<label id=purchase_lbl_ class="align_right">0</label></h3><p>' +
+                '<b><span id="purchase_cost_">10</span></b> - <em id="purchase_text_"> Text placeholder</em></p>' +
+                '<p class = "align_right">Produces <b><span id="purchase_out_">0.1</span></b> per tick';
+
+                if( currentTab != 'Conversion' ) html_to_append += '<br>Ascends <b><span id="ascend_out__2">0.1</span></b>per tick';
+
+                html_to_append += ' </p><button id="purchase_btn_" class="purchase" disabled="disabled">Purchase</button> '+
+                '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
+                'disabled="disabled" >Sell</button></div>';
+                $(html_to_append).prependTo('#' + currentTab);
+              //now fix the fields
+              $("#new_purchase").find('#purchase_lbl_').attr('id', title + "lbl_" + purchase_num);
+              $("#new_purchase").find('#purchase_text_').attr('id', title + "_text_" + purchase_num);
+              $("#new_purchase").find('#purchase_btn_').attr('id', title + "_btn_" + purchase_num);
+              $("#new_purchase").find('#purchase_sell_btn_').attr('id',title + "_sell_btn_" + purchase_num);
+              $("#new_purchase").find('#purchase_out_').attr('id', title + "_out_" + purchase_num);
+              $("#new_purchase").find('#purchase_cost_').attr('id', title + "_cost_" + purchase_num);
+              $("#new_purchase").find('#purchase_head_temp').attr('id',title + "_header_" + purchase_num);
+              if( currentTab != 'Conversion' ) $("#new_purchase").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_' + purchase_num);
+              $('#new_purchase').attr('id', title + '_' + purchase_num);
+           }
+        $('#' + title + '_' + purchase_num).css("display", "block");
+        $('#'+ title + "_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals[keyWord][k].label);
+        $('#'+title + '_lbl_' + purchase_num).text(vals[keyWord][k].amount);
+        $('#'+title + '_cost_' + purchase_num).text( '[ ' + truncate_bigint(vals[keyWord][k].cost) + ' energy ]');
+        $('#'+title + '_text_' + purchase_num).text(vals[keyWord][k].description);
+        $('#'+ title + '_out_' + purchase_num).text(vals[keyWord][k].output + " followers ");
+        if( currentTab != 'Conversion' ) $('#ascend_out_' + purchase_num + '_' + purchase_num).text(vals.ascend[k].output + " followers ");
+    }
+    else {
+      $('#'+ title + '_' + purchase_num).css("display", "none");
+    }
+  }
+}
+
+  //fix all challenge names if you're on the correct page
+function fix_challenges(vals) {
     if( vals.current_tab === 'Challenges') {
       var num_unlocked = 0;
     for( var k in vals.challenges) {
@@ -1299,6 +1305,7 @@ var upgrade_box_size = 0;
           $('#challenges_' + challenge_num + '_' + i).css('background-color', '#212121');
           $('#challenges_' + challenge_num + '_' + i).css('color', '#fff');
           $('#challenges_' + challenge_num + '_' + i).css('border', '2px solid #fff');
+          $('#challenges_' + challenge_num + "_" + i).detach().appendTo('#completed_challenges');
          }
          else {
           $('#challenges_lbl_' + challenge_num + '_' + i).attr('class','glyphicon glyphicon-remove align_right');
@@ -1310,25 +1317,8 @@ var upgrade_box_size = 0;
         }
        }
       }
-    $('#corruption_amount').text(vals.corruption + '%');
 
-   if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
-
-      $('#pantheon_div_1').css('display', 'none');
-      $('#pantheon_unlocked').css('display','block');
-      $('#essence_amount').text(vals.flame);
-      for( var k in vals.pantheon.bosses ) {
-      if( vals.pantheon.bosses[k].current ) {
-        $('#battle_1').attr('src', 'data/battle_' + k.substr(k.length-1) + '.png');
-        $('#boss_num').text(': Boss ' + k.substr(k.length-1));
-        $('#battle_1_hp').text(vals.pantheon.bosses[k].current_hp);
-        $('#regen').text(vals.pantheon.bosses[k].regen);
-        $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
-      }
-    }
-   }
-  }
-
+}
 $(document).on("click", ".purchase", function() {
     var btn = $(this).attr('id');
     if( btn === 'delete_save') {
@@ -1565,9 +1555,18 @@ $(document).on("click", "#boss_upgrades", function(event) {
       $(".overlay").fadeToggle(50);
       $('.boss_img').fadeToggle(50);
       $(this).toggleClass('btn-open').toggleClass('btn-close');
-      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-circle-arrow-up"></span>', 
-        '<span style="font-size:1.5em;" class="glyphicon glyphicon-play"></span>');
+      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove" id="achievements_shown">' ,
+        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok" id="achievements_shown">');
       $(this).toggleBalloon('Upgrade menu', 'Boss fight');
+});
+$(document).on("click", "#achievements_shown", function(event) {
+    console.log('here');
+      $("#completed_challenges").fadeToggle(50);
+      $('#uncompleted').fadeToggle(50);
+      $(this).toggleClass('btn-open').toggleClass('btn-close');
+      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove"></span>', 
+        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
+         $(this).toggleBalloon('See Completed', 'See Incomplete');
 });
 $.fn.extend({
     toggleIcon: function(a, b){

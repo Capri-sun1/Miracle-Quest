@@ -322,7 +322,7 @@ var vals = {
               "label":"Unlock Quantum Leap",
               "description":"To infinity and beyond",
               "unlocked":false,
-              "cost":100000000
+              "cost":1000000000
             }
           }
         },
@@ -367,7 +367,9 @@ var vals = {
               "regen":100,
               "reward":1000000,
               "current":true,
-              "name":"Arion's Spirit"
+              "name":"Arion's Spirit",
+              "reward":0.5,
+              "defeated":false
             },
             "boss2":{
               "max_hp": 125000000,
@@ -375,7 +377,9 @@ var vals = {
               "regen":10000,
               "reward":50000000,
               "current":false,
-              "name":"Cursed Harpy"
+              "name":"Cursed Harpy",
+              "reward":2,
+              "defeated": false
             },
             "boss3":{
               "max_hp": 750000000,
@@ -383,7 +387,9 @@ var vals = {
               "regen":1000000,
               "reward":275000000,
               "current":false,
-              "name":"Erinys"
+              "name":"Erinys",
+              "reward": 5,
+              "defeated":false
             }
 
            }
@@ -660,13 +666,6 @@ var upgrade_box_size = 0;
     start_game(vals);
   });
 
-  // function resolve_mobile_width() { 
-  //   if( $(window).width() <= 750 ) {
-  //     $('#tab_btns').html('<div data-role="navbar" id="nav"><ul><li><button class="button button--secondary" id="convert-tab-btn"> ' +
-  //      '<span class="button__inner" id="convert-tab-text"></span></button></li> <li><button class="button button--secondary" id="ascend-tab-btn"> ' +
-  //      '<span class="button__inner" id="ascend-tab-text"></span></button></li></ul></div>');
-  //   }
-  // }
   function set_up_containers() {
     var width = $(window).width();
     var height = $(window).height();
@@ -1051,7 +1050,26 @@ var upgrade_box_size = 0;
       }
     }
    }
-
+   if( vals.current_tab === 'Pantheon') {
+    if( !vals.pantheon.unlocked ) return;
+      var boss_num = parseInt(vals.pantheon.stage) + 1;
+      if( boss_num > 1 ) {
+        $('#prev_boss').prop('disabled', false);
+        $('#prev_boss').css('display', "inline-block");  
+      }
+      else {
+        $('#prev_boss').prop('disabled', true);
+        $('#prev_boss').css('display', "none");  
+      }
+      if( boss_num < 3 && vals.pantheon.bosses['boss' + String(boss_num)].defeated ) {
+        $('#next_boss').prop('disabled', false);
+        $('#next_boss').css('display', "inline-block");  
+      }
+      else {
+        $('#next_boss').prop('disabled', true);
+        $('#next_boss').css('display', "none");  
+      }
+   }
   }
   function fix_tab_buttons(vals) {
     var unlock_conv = 0, unlock_ascend = 0, unlock_aug = 0;
@@ -1169,24 +1187,35 @@ var upgrade_box_size = 0;
     //fix challenges
     fix_challenges(vals);
     $('#corruption_amount').text(vals.corruption + '%');
+    fix_pantheon(vals);
+  }
 
-    //fix pantheon
+//fix pantheon tabs, accounting for whether you can switch btw tabs
+function fix_pantheon(vals) {
+      //fix pantheon
    if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
 
       $('#pantheon_div_1').css('display', 'none');
       $('#pantheon_unlocked').css('display','block');
-      $('#essence_amount').text(vals.flame);
+      $('#essence_amount').text( Math.round( vals.flame * 10) /10 );
       for( var k in vals.pantheon.bosses ) {
+        var id = k.substr(k.length-1);
+
       if( vals.pantheon.bosses[k].current ) {
-        $('#battle_1').attr('src', 'data/battle_' + k.substr(k.length-1) + '.png');
-        $('#boss_num').text(': Boss ' + k.substr(k.length-1));
-        $('#battle_1_hp').text(vals.pantheon.bosses[k].current_hp);
+        $('#battle_1').attr('src', 'data/battle_' + id + '.png');
+        if( $('#boss_num').text() != ': Upgrades') $('#boss_num').text(': Boss ' + id);
+        $('#battle_1_hp').text( truncate_bigint(vals.pantheon.bosses[k].current_hp));
+        $('#battle_1_max_hp').text( truncate_bigint(vals.pantheon.bosses[k].max_hp));
+        $('#boss_hp_bar').css('width', 100 * ( vals.pantheon.bosses[k].current_hp/vals.pantheon.bosses[k].max_hp ) + '%');
         $('#regen').text(vals.pantheon.bosses[k].regen);
         $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
+        break;
       }
+    
     }
+
    }
-  }
+}
 //generalised function that handles both asc and conv tabs.
 function fix_conv_asc(vals) {
   var currentTab = vals.current_tab;
@@ -1475,27 +1504,21 @@ $(document).on("click", ".battle", function() {
       vals.pantheon.bosses[k].current_hp -= vals.click;
   //process reward for defeating boss
     if( vals.pantheon.bosses[k].current_hp <= 0 ) {
-      vals.pantheon.bosses[k].current = false;
-      vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
-      var id = k.substr(k.length-1);
-        id++;
-        boss_num++;
-        vals.followers += vals.pantheon.bosses[k].reward;  
-      if( id <= 3 )  {
-        vals.pantheon.bosses['boss'+(id)].current = true;
-        vals.pantheon.stage++;
-      }else {
-        id = 1;
-        vals.pantheon.bosses['boss1'].current = true;
-        vals.pantheon.stage = 1;
+      vals.flame+=vals.pantheon.bosses[k].reward;
+      //if the boss is defeated for the first time, change the params for when user fights again
+      if( !vals.pantheon.bosses[k].defeated ) {
+        vals.pantheon.bosses[k].defeated = true;
+        vals.pantheon.bosses[k].max_hp *= 10;
+        vals.pantheon.bosses[k].regen *= 25;
+        vals.pantheon.bosses[k].reward /= 5;
       }
-      vals.flame++;
-      new_boss = true;
+      vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
+      fix_pantheon(vals);
+      break;
     }
 
     }
   } 
-  if( new_boss) vals.pantheon.bosses['boss'+(id)].current_hp = vals.pantheon.bosses['boss'+(id)].max_hp;
   fix_names(vals);
 });
 $(document).on("click", ".sell", function() {
@@ -1551,22 +1574,37 @@ $(document).on("click", "#challenges-tab-btn", function(event) {
 $(document).on("click", "#settings-tab-btn", function(event) {
   openTab(event, 'Settings');
 });
+$(document).on("click", "#prev_boss", function(event) {
+  if( vals.pantheon.stage > 0 ) {
+    vals.pantheon.bosses['boss' + vals.pantheon.stage].current = true;
+    vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = false;
+    vals.pantheon.stage--;
+  }
+});
+$(document).on("click", "#next_boss", function(event) {
+  if( vals.pantheon.stage <= 2 ) {
+    vals.pantheon.stage++;
+    vals.pantheon.bosses['boss' + vals.pantheon.stage].current = false;
+    vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = true;
+  }
+});
 $(document).on("click", "#boss_upgrades", function(event) {
       $(".overlay").fadeToggle(50);
       $('.boss_img').fadeToggle(50);
+      $('.traverse_bosses').fadeToggle(50);
       $(this).toggleClass('btn-open').toggleClass('btn-close');
       $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove" id="achievements_shown">' ,
         '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok" id="achievements_shown">');
       $(this).toggleBalloon('Upgrade menu', 'Boss fight');
+      $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
 });
 $(document).on("click", "#achievements_shown", function(event) {
-    console.log('here');
       $("#completed_challenges").fadeToggle(50);
       $('#uncompleted').fadeToggle(50);
       $(this).toggleClass('btn-open').toggleClass('btn-close');
       $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove"></span>', 
         '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
-         $(this).toggleBalloon('See Completed', 'See Incomplete');
+      $(this).toggleBalloon('See Completed', 'See Incomplete');
 });
 $.fn.extend({
     toggleIcon: function(a, b){
@@ -1574,6 +1612,9 @@ $.fn.extend({
     },
     toggleBalloon: function(a, b) {
       return this.attr('data-balloon', (this.attr('data-balloon') == b ? a : b ) );
+    },
+    toggleText: function(a, b) {
+      return this.text(this.text() == b ? a : b);
     }
 });
 function can_click() {

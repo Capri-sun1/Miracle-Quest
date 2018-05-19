@@ -201,6 +201,12 @@
 			<h3 style="text-align:center">Celestial Pantheon <strong id="boss_num">Boss 1</strong></h3>
 			
 			<div class="button_essence">
+				<div class="traverse_bosses" style="text-align:left; margin-left:1%;">
+					<button class = "btn btn-med" id="prev_boss" style="background-color:#212121; color: #fff; display:none" data-balloon="Prev Boss" data-balloon-pos="down"
+						disabled="disabled" ><span style="font-size:1.5em;" class="glyphicon glyphicon-chevron-left"></span></button>
+					<button class="btn btn-med" id="next_boss" style="background-color:#212121; color: #fff; display:none" data-balloon="Next Boss" data-balloon-pos="down"
+						disabled="disabled" ><span style="font-size:1.5em;" class="glyphicon glyphicon-chevron-right"></span></button>
+				</div>
 				<strong id="essence_amount">0 </strong><span
 				class="glyphicon glyphicon-fire" style="padding-right:1%"></span>
 				<button id="boss_upgrades" class="btn btn-lg"
@@ -240,9 +246,16 @@
 		</ul>
 		</div>
 	</div>
-			<figure style="text-align:center; margin-bottom:2%;" class="boss_img"><input type="image" id="battle_1" class="battle" 
+			<figure style="text-align:center; margin-bottom:10%;" class="boss_img"><input type="image" id="battle_1" class="battle" 
 				src="data/battle_1.png" style="height:30em; width: 22.5em">
-			<figcaption><span id="boss_name"> Vengeful spirit: </span> HP <strong id="battle_1_hp">1,000,000</strong><br>Regeneration <strong id='regen'>10 per tick.</strong></figcaption>
+			<figcaption><span id="boss_name"> Vengeful spirit: </span> Regeneration <strong id='regen'>10 per tick.</strong>
+				<div class="progress" style="margin: 2.5% 10%">
+  				<div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" id="boss_hp_bar"
+  				aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; min-width:10em">
+    			HP <strong id="battle_1_hp">1,000,000</strong>/<strong id="battle_1_max_hp">1000000</strong>
+  				</div>
+				</div>
+			</figcaption>
 			</figure>
 		</div>
 	</div>

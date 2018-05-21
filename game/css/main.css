@@ -3,7 +3,7 @@ html {
   font-family: 'Helvetica', sans-serif !important;
   font-size: 18px;
   background-color: lightgrey;
-  background-image: url('https://images.pexels.com/photos/289649/pexels-photo-289649.jpeg?cs=srgb&dl=abstract-art-background-289649.jpg&fm=jpg');
+  background-image: url('../data/background.jpg');
 }
 
 .button {
@@ -119,26 +119,6 @@ html {
   border-bottom: 1px dashed #fff;
   text-decoration: none; 
 }
-#upgrades-box {
-  position: absolute;
-  margin-left: 50%;
-  margin-right: 0;
-  margin-bottom: 0;
-  padding-top:1%;
-  padding-bottom:1%;
-  width: 65%;
-  overflow: auto;
-}
-.upgrades_box:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-#upgrades {
-  padding-left : 1%;
-  padding-right : 1%;
-  outline: 2px solid #03A9F4;
-}
 #purchase-btn-one {
   margin-left : 15%;
 }
@@ -164,10 +144,6 @@ html {
     width: 100%;
   }
 
-/* Style the tab */
- .tabs .button--secondary { 
-    overflow: hidden;
-}
 
 /* Style the buttons inside the tab */
 .tab button {
@@ -182,6 +158,7 @@ html {
 /* Style the tab content */
 .tabcontent {
     display: none;
+    height: 100%;
     padding-top : 0.5em;
     -webkit-animation: fadeEffect 1s;
     animation: fadeEffect 1s;
@@ -328,14 +305,12 @@ html {
      -moz-box-shadow: 0 10px 6px -6px #777;
           box-shadow: 0 10px 6px -6px #777;
 }
-}
 #miracle_button, #miracle_button2nd {
     -moz-user-select: none; 
     -webkit-user-select: none; 
     -ms-user-select:none; 
     user-select:none; 
     margin: auto; 
-    padding: 10px;
     width: 220px;
     font-weight: bold;
     font-size: 1.1em;
@@ -343,7 +318,6 @@ html {
     cursor: pointer;
     border-radius: 10px;
 }
-
 .miracle { 
     border: none;
     background-color: #1976D2;
@@ -355,6 +329,9 @@ html {
     font-size: 1em;
     border-radius: 2px;
 } 
+ #miracle_button2nd {
+  padding: 10px 20px;
+}
 #miracle_button, #miracle_button2nd {
   background-color: #212121;
 }
@@ -364,24 +341,47 @@ html {
   border: 2px solid  #880E4F;
   padding: 6px 6px;
 }
+#miracle_button2nd:hover {
+  padding: 8px 18px;
+}
 #challenges_main_header_div {
   padding-bottom: 4%;
 }
-.tabs {
-  margin-top: 5px;
 
+@-moz-document url-prefix() {
+  .scroll_tabs {
+    overflow: scroll;
+  }
 }
-.tabs .button--secondary.active .button__inner {
+.scroll_tabs {
+  margin-top: 1%;
+  overflow: scroll;
+  white-space: nowrap;
+}
+
+.scroll_tabs .button--secondary.active .button__inner {
   background-color : #E1F5FE;
   color: #212121;
 }
-.tabs .button--secondary {
+.scroll_tabs .button--secondary {
   position: relative;
   -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
           box-shadow: 0 10px 6px -6px #777;
   padding-bottom: 5px;
   margin-bottom: 5px;
+    font-size: 0.9em;
+}
+div.scroll_tabs button {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scroll_tabs button:hover {
+    background-color: #777;
 }
 .miracle_click, .transcend_click { 
     display: none;
@@ -422,6 +422,189 @@ html {
   background-color: #E3F2FD;
   color: #212121;
   padding: 6px 6px;
+  border: 2px solid  #880E4F;
+}
+.reset {
+    border: none;
+    background-color: #212121;
+    color: white;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    border-radius: 2px;
+}
+.reset:hover {
+  background-color: #E3F2FD;
+  color: #212121;
+  padding: 6px 6px;
+  border: 2px solid  #880E4F;
+}
+.reset[disabled]:hover {
+  background-color: grey;
+  color: lightgrey;
+  border: none;
+  padding: 8px 8px;
+}
+.boss_upgrade {
+    border: none;
+    background-color: #212121;
+    color: white;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    border-radius: 2px;
+}
+.boss_upgrade:hover {
+  background-color: #E3F2FD;
+  color: #212121;
+  padding: 6px 6px;
+  border: 2px solid  #880E4F;
+}
+.boss_upgrade[disabled]:hover {
+  background-color: grey;
+  color: lightgrey;
+  border: none;
+  padding: 8px 8px;
+}
+/***/
+ul {
+  margin:0;
+  padding:0;
+  text-decoration:none;
+  list-style:none;
+}
+li {
+  padding:0;
+  margin:0;
+}
+nav {
+  text-align:center;
+  width:100%;
+  position:relative;
+  height:auto;
+  overflow:hidden;
+  background:none;
+}
+nav ul {
+  text-align:center;
+}
+nav ul li {
+  display:inline-block;
+}
+.upg_header {
+  color:#fff;
+  display:inline-block;
+  text-decoration:none;
+  border-bottom: 2px solid #fff;
+  transition-property:all .2s linear 0s;
+  -moz-transition:all .2s linear 0s;
+  -webkit-transition:all .2s linear 0s;
+  -o-transition:all .2s linear 0s;
+  font-size:0.9em;
+}
+.upgrade_li {
+  margin-left: 1.5%;
+  margin-right: 1.5%;
+}
+/*overlay*/
+.overlay {
+  display:none;
+  position:relative;
+  top:0;
+  height:100%;
+  width:100%;
+  background:#333;
+  overflow:auto;
+  z-index:99;
+}
+.button_essence {
+  display:inline-block;
+  font-size:1.25em;
+  text-align:right;
+  width:100%;
+  margin: 2.5% 0;
+}
+#boss_shop_wrap {
+  text-align: center;
+}
+.wrap ul.wrap-nav {
+  padding: 2% 2%;
+  border-bottom:1px solid #575757;
+  text-transform:capitalize;
+}
+.wrap ul.wrap-nav li {
+  font-size:20px;
+  display:inline-block;
+  vertical-align:top;
+  width:30%;
+  position:relative;
+}
+.wrap ul.wrap-nav li a {
+  color:#34B484;
+  display:block;
+  padding:8px 0;
+  text-decoration:none;
+  transition-property:all .2s linear 0s;
+  -moz-transition:all .2s linear 0s;
+  -webkit-transition:all .2s linear 0s;
+  -o-transition:all .2s linear 0s;
+}
+.wrap ul.wrap-nav li a:hover {
+  color:#f0f0f0;
+}
+.wrap ul.wrap-nav ul {
+  padding:20px 0;
+}
+.wrap ul.wrap-nav ul li {
+  display:block;
+  font-size:13px;
+  width:100%;
+  color:#e9e9e9;
+}
+.wrap ul.wrap-nav ul li a {
+  color:#f0f0f0;
+}
+.wrap ul.wrap-nav ul li a:hover {
+  color:#34B484;
+}
+
+@media screen and (max-width:48em) {
+  .wrap ul.wrap-nav>li {
+    width:100%;
+    padding:20px 0;
+    border-bottom:1px solid #575757;
+  }
+  .wrap ul.wrap-nav {
+    padding:30px 0px 0px;
+  }
+  nav ul {
+    opacity:0;
+    visibility:hidden;
+  }
+}
+
+/**/
+#boss_upgrades {
+    border: none;
+    font-size: 2em;
+    z-index: 100;
+    background-color: #212121;
+    color: white;
+    padding: 14px 14px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    border-radius: 20px;
+}
+#boss_upgrades:hover {
+  background-color: #E3F2FD;
+  color: #880E4F;
+  padding: 12px 12px;
   border: 2px solid  #880E4F;
 }
 #make_save {
@@ -476,13 +659,14 @@ html {
   margin-bottom: 5%;
   margin-left: 5%;
 }
+
 button:disabled, button.disabled {
     background-color: grey;
     color: lightgrey;
     opacity: .8;
 }
 
-@media screen and (max-width: 700px ) {
+@media screen and (max-width: 750px ) {
    #left_wrap {
       margin-top : 0px;
       margin-bottom: 0px;
@@ -491,16 +675,22 @@ button:disabled, button.disabled {
       margin-top: 0px;
       margin-bottom: 0px;
     }
+    .scroll_tabs .button--secondary{
+      width: 100%;
+      font-size: 1em;
+    }
+    .button button--secondary {
+      width: 100%;
+      display: inline-block;
+    }
     .tabs .button--secondary .button__inner { 
       font-size: 1.5em;
     }
     .purchase {
       font-size: 0.8em;
-      padding: 8px 6px;
     }
     .sell {
       font-size: 0.8em;
-      padding: 8px 6px;
     }
     .tabcontent {
       padding-bottom: 10px;
@@ -517,8 +707,11 @@ button:disabled, button.disabled {
     body {
       background: none;
     }
+    #tab_btns {
+      width: 100%;
+    }
 }
-@media screen and (min-height: 550px) and (min-width: 700px) { 
+@media screen and (min-height: 550px) and (min-width: 750px) { 
     #left_floatable {
         position: fixed; 
         top: 5px;
@@ -549,12 +742,6 @@ button:disabled, button.disabled {
         float: left;
         width: 58%;
     }
-     .tabs .button--secondary { 
-        width: 48%;
-    }
-    .tabs .button--secondary .button__inner { 
-        font-size: 0.7em;
-    }
     #left_wrap { 
         float: left;
         min-width: 250px;
@@ -564,14 +751,17 @@ button:disabled, button.disabled {
     #time_played {
       font-size: 0.8em !important;
     }
+    .scroll_tabs .button--secondary {
+      width: 25%;
+    }
+     .scroll_tabs .button--secondary .button__inner {
+      font-size: 0.7em;
+    }
 }
 
 @media screen and (min-width: 1100px) { 
-    .tabs .button--secondary {  
-        width: 31%;
-    }
-    .tabs .button--secondary .button__inner { 
-        font-size: 0.6em;
+     .scroll_tabs .button--secondary .button__inner {
+      font-size: 0.625em;
     }
     #left_wrap { 
         width: 30%;
@@ -583,13 +773,19 @@ button:disabled, button.disabled {
     #time_played {
       font-size: 1.0em !important;
     }
+    .scroll_tabs .button--secondary {
+      width: 19.5%;
+    }
+    .scroll_tabs {
+      white-space: normal;
+    }
 }
 @media screen and (min-width: 1300px) { 
-    .tabs .button--secondary { 
-        width: 22%;
+    .scroll_tabs .button--secondary .button__inner { 
+        font-size: 0.7em;
     }
-    .tabs .button--secondary .button__inner { 
-        font-size: 0.5em;
+    .scroll_tabs .button--secondary {
+      width: 18%;
     }
     #left_wrap { 
         width: 25%;
@@ -603,11 +799,12 @@ button:disabled, button.disabled {
     #time_played {
       font-size: 1.2em !important;
     }
+    .scroll_tabs {
+      overflow: hidden;
+      white-space: normal;
+    }
 }
 @media screen and (min-width: 1600px) { 
-     .tabs .button--secondary { 
-        width: 19%;
-    }
     .tabs .button--secondary .button__inner { 
         font-size: 0.4em;
     }
@@ -620,9 +817,6 @@ button:disabled, button.disabled {
     }
 }
 @media screen and (min-width: 1900px) { 
-     .tabs .button--secondary { 
-        width: 15%;
-    }
     #left_wrap { 
         width: 16%;
     }

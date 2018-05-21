@@ -19,13 +19,13 @@
 
 <div id="left_wrap" class="left_width">
 	<div id="make_sell_spacer"></div>
-    <div id="left_floatable">     
+    <div id="left_floatable">
     <div id="above_div">
     	<p>
             <span id="power_label">Divine Power </span>
             <strong><span id="click_amount">0</span></strong><br/>
             <span id="god_label">Godly Status </span>
-            <strong><span id="god_status">[ Minor Deity ]</span></strong><br/>
+            <strong>[<span id="god_status"> Abstract presence </span>]</strong><br/>
         </p>
     </div>
     <div id="miracle_wrap">
@@ -38,7 +38,12 @@
         </p>
         <button class="miracle" id='miracle_button'>Perform Miracle</button>
     </div>
-
+    <div class="progress" style="margin: 0 10%">
+  		<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" id="superclick_bar"
+  			aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:0%; color:lightgrey">
+  			<strong style="color:#212121; text-align:center; text-transform:uppercase">Charge</strong>
+  		</div>
+	</div>
     <div id="miracle2_div">
         <p>
             <span id="follower_label">Followers</span><br>
@@ -46,21 +51,27 @@
             <small><span id="production_net">0</span> followers per tick(net)</small>
             <br><small><span id="production_gross">0</span> followers per tick(total)</small><br/>
         </p>
-        <button class="miracle" id= "miracle_button2nd">Ascend</button>
+        <button class="miracle" id= "miracle_button2nd">Convert</button>
     </div>
     <div class="clear"></div>
     </div>
     <div id="power_div">
     	<p>
-            <span id="power_label">Corruption </span>
-            <strong><span id="corruption_amount">0%</span></strong><br/>
+            <strong id="power_label">Alignment: </strong><strong><span id="corruption_amount" class=".corruption"></span></strong>
+            	<div class="progress" style="margin: 2.5% 10%">
+  				<div class="progress-bar progress-bar-striped active" role="progressbar" id="corruption_bar"
+  					aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#B0BEC5">
+  				</div>
+				</div>
             <span id="save_title">Nothing saved yet.</span>
             <strong><span id="last_saved"></span></strong><br/>
         </p>
     </div>
     </div> 
 </div> 
-	<div id = "tab_btns" class = "tabs">
+	<div id = "tab_btns" class = "scroll_tabs">
+		<button class="button button--secondary" id="leap-tab-btn" style="display:none">
+			<span class="button__inner">Ascend</span></button>
 		<button class="button button--secondary" id="convert-tab-btn">
 			<span class="button__inner" id="convert-tab-text"></span></button>
 		<button class="button button--secondary" id="ascend-tab-btn">
@@ -78,7 +89,54 @@
 		<button class="button button--secondary" id="stats-tab-btn">
 			<span class="button__inner">Statistics</span></button>
 	</div>
+
 	<div id="tab_divs" class='tabs'>
+
+	<div id="Leap" class="tabcontent">
+
+		<div id="leap_unlocked" class="tab_div">
+
+			<h3 style="text-align:center"><strong>Quantum leap</strong></h3><br>
+			<h4 style="text-align:center">Use your powers to jump into a new Quantum state.
+				<br>This restarts your progress but you may choose to take one Upgrade below.</h4>
+			
+		<div class="overlay" style="display:block">	
+			<div class="wrap" id="leap_upgrades_wrap" style="text-align: center">
+			<h3 style="color:#34B484">Ascension Paths
+				<div class="leap_upgrade_moves">
+				<div class="traverse_upgrades" style="text-align:right; margin-right:1.5%;">
+					<button class="btn btn-med" id="next_tier" style="background-color:#212121; color: #fff;" data-balloon="Tier 2" data-balloon-pos="up"
+					disabled="disabled"><span style="font-size:1.5em;" class="glyphicon glyphicon-chevron-right"></span></button>
+				</div>
+			</div>
+			</h3>
+			<ul class="wrap-nav" id="leap_tier_1">
+			<li id="click_leap" style="padding: 2.5% 2.5%"><span class="upg_header">Path One</span>
+			<ul class="upgrade_field">
+				<li><strong><span id='click_lbl_1'>Test</span></strong><br><br><span id='click_desc_1'>Test2</span></li><br>
+				<li><button class="purchase" id="click_btn_1" style="margin: 6px 6px">Select</button></li>
+			</ul>
+			</li>
+			<li id="tier_leap" style="padding: 2.5% 2.5%"><span class="upg_header">Path Three</span>
+			<ul class="upgrade_field">
+				<li><strong><span id='tier_lbl_1'>Test</span></strong><br><br><span id='tier_desc_1'>Test2</span>
+				<strong id="tier_cost_1">Costs 50 <span class="glyphicon glyphicon-fire"></span></strong></li><br>
+				<li><button class="purchase" id="tier_btn_1" disabled="disabled"
+					data-balloon="Costs 50 Essence" data-balloon-pos="down">Select</button></li>
+			</ul>
+			</li>
+			<li id='boss_leap' style="padding: 2.5% 2.5%"><span class="upg_header">Path Two</span>
+			<ul class="upgrade_field">
+				<li><strong><span id='boss_lbl_1'>Test</span></strong><br><br><span id='boss_desc_1'>Test2</span></li><br>
+				<li><button class="purchase" id="boss_btn_1" style="margin: 6px 6px">Select</button></li>
+			</ul>
+			</li>
+		  <button class="reset" disabled="disabled" data-balloon="Choose a path" data-balloon-pos="up">Quantum leap</button>
+			</ul>
+		</div>
+		</div>
+	</div>
+</div>
 	<div id="Conversion" class="tabcontent">
 	
 		<div id="purchase_1" class="tab_div">
@@ -93,7 +151,7 @@
 			<em id="purchase_text_1">Text placeholder</em> 
 		</p>
 		<p class = "align_right">
-			Produces
+			Creates
 			<b>
 				<span id="purchase_out_1">0.1</span>
 			</b>
@@ -126,9 +184,9 @@
 			</b>
 			per tick
 			<br>
-			Ascends
+			Costs
 			<b>
-				<span id="ascend_out_1_2">0.1</span>
+				<span id="ascend_out_1_1">0.1</span>
 			</b>
 			per tick
 		</p>
@@ -141,6 +199,22 @@
 
 
 	<div id="Upgrades" class="tabcontent">
+
+		<div style="text-align:center; margin-bottom:0.5%" class="tab_div">
+		<h3> Upgrades
+		<div class="btn btn-med" id="upgrades_shown" style="background-color:#fff;"
+				data-balloon="See Purchased" data-balloon-pos="down">
+				<span style="font-size:1.5em;" class="glyphicon glyphicon-remove">
+				</span>
+		</div></h3>
+		<h3>Here you can buy upgrades to progress through the game.</h3><br>
+	</div>
+		<div class="overlay" id="bought_upgrades" style="border-radius: 5px">	
+		<div class="wrap" id="achievements_wrap">
+		</div>
+		</div>
+
+		<div id="uncompleted" class="uncompleted" >
 		<div id="upgrade_1">
 		<div id ="upgrade_1_1" class="tab_div">
 		<h3 id="upgrade_header_1_1" class="header_1">This is the field for upgrade for option one.
@@ -172,15 +246,89 @@
 		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
 		</div>
 	</div>
+	<div id="upgrade_3">
+		<div id="upgrade_3_1" class="tab_div">
+		<h3 id="upgrade_header_3_1" class="header_1">This is the field for upgrade for option one.
+			<label id="upgrade_lbl_3_1" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<b>
+			<span id="upgrade_cost_3_1">10</span>
+			</b>
+			-
+			<em id="upgrade_text_3_1">Text placeholder</em> 
+		</p>
+		<button id="upgrade_btn_3_1" class="purchase" 
+		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
+		</div>
 	</div>
+	</div>
+</div>
 	<div id="Pantheon" class="tabcontent">
 		<div id="pantheon_div_1" class="tab_div" style="text-align:center">
 			<h3 class="header_1" >Enter the arena of the Gods.</h3>
-			<span id="pantheon_lbl_1">120 Divine Power is required to begin challenging other deities.</span>
+			<span id="pantheon_lbl_1">You have insufficient divine power to challenge these beings.</span>
 		</div>
-		<div id="pantheon_unlocked" style="display:none" class="tab_div"><h3 style="text-align:center">Celestial Pantheon <strong id="boss_num">Boss 1</strong></h3>
-			<figure style="text-align:center; margin-bottom:5%;" class="boss_img"><input type="image" id="battle_1" class="battle" src="data/fire_image.png"></input>
-			<figcaption><span id="boss_name"> Vengeful spirit: </span> HP <strong id="battle_1_hp">1,000,000</strong><br>Regeneration <strong id='regen'>10 per tick.</strong></figcaption>
+		<div id="pantheon_unlocked" style="display:none" class="tab_div">
+
+			<h3 style="text-align:center">Celestial Pantheon <strong id="boss_type"></strong><strong id="boss_num">Boss 1</strong></h3>
+			
+			<div class="button_essence">
+				<div class="traverse_bosses" style="text-align:left; margin-left:1%;">
+					<button class = "btn btn-med" id="prev_boss" style="background-color:#212121; color: #fff; display:none" data-balloon="Prev Boss" data-balloon-pos="down"
+						disabled="disabled" ><span style="font-size:1.5em;" class="glyphicon glyphicon-chevron-left"></span></button>
+					<button class="btn btn-med" id="next_boss" style="background-color:#212121; color: #fff; display:none" data-balloon="Next Boss" data-balloon-pos="down"
+						disabled="disabled" ><span style="font-size:1.5em;" class="glyphicon glyphicon-chevron-right"></span></button>
+				</div>
+				<strong id="essence_amount">0 </strong><span
+				class="glyphicon glyphicon-fire" style="padding-right:1%"></span>
+				<button id="boss_upgrades" class="btn btn-lg"
+				data-balloon="Upgrade menu" data-balloon-pos="left">
+				<span style="font-size:1.5em;" class="glyphicon glyphicon-circle-arrow-up"></span></button>
+			</div>
+		<div class="overlay">	
+		<div class="wrap" id="boss_shop_wrap">
+			<h3 style="color:#34B484">Battle upgrades</h3>
+			<ul class="wrap-nav">
+			<li><span class="upg_header">Damage</span>
+			<ul class="upgrade_field">
+				<li><span id="shop_click_1"></span><br><button id="click_1" class="boss_upgrade" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+				<li><span id="shop_prod_1"></span><br><button id="prod_1" class="boss_upgrade" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+			</ul>
+			</li>
+			<li class='upgrade_li'><span class="upg_header">Enchantments</span>
+			<ul class="upgrade_field">
+				<li><span id="shop_click_2"></span><br><button id="click_2" class="boss_upgrade" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+				<li><span id="shop_prod_2"></span><br><button id="prod_2" class="boss_upgrade" style="margin: 6px 6px" disabled="disabled">Purchase 5
+				<span class="glyphicon glyphicon-fire"></span></button></li>
+			</ul>
+			</li>
+			<li><span class="upg_header">Sabotage</span>
+			<ul class="upgrade_field">
+				<li><span id="shop_max_hp"></span><br><button id="max_hp_1" class="boss_upgrade" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+				<li><span id="shop_regen"></span><br><button id="regen_1" class="boss_upgrade" style="margin: 6px 6px" disabled="disabled">Purchase
+					5<span class="glyphicon glyphicon-fire"></span></button></li>
+			</ul>
+			</li>
+		<button class="purchase" disabled="disabled" style=" padding:1% 2.5%;margin: 5% 0;">
+				<span>Unlock Tier Two 50</span><span class="glyphicon glyphicon-fire"></span></button>
+		</ul>
+		</div>
+	</div>
+			<figure style="text-align:center; margin-bottom:10%;" class="boss_img"><input type="image" id="battle_1" class="battle" 
+				src="data/battle_1.png" style="height:30em; width: 22.5em">
+			<figcaption><span id="boss_name"> Vengeful spirit: </span> Regeneration <strong id='regen'>10 per tick.</strong>
+				<br><br><strong>Health Remaining / Max - </strong><strong id='max_hp'></strong><div class="progress" style="margin: 1.5% 7.5% 10% 7.5%">
+  				<div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" id="boss_hp_bar"
+  				aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; min-width:10em">
+    			<strong id="battle_1_hp">1,000,000 </strong>
+  				</div>
+				</div>
+			</figcaption>
 			</figure>
 		</div>
 	</div>
@@ -209,7 +357,7 @@
 				followers
 			</p>
 				<button id="sacrifice_btn_1" class="purchase" data-balloon="Corruption &uarr; 5%." data-balloon-pos="right"
-				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+				disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
 			</div>
 			<div id="sacrifices_div_1" class="tab_div" style="margin-top:0.5em">
 			<h3 id="sacrifice_header_2" class="header_1">Composite sacrifice</h3>
@@ -227,7 +375,7 @@
 
 			</p>
 				<button id="sacrifice_btn_2" class="purchase" data-balloon="Corruption &uarr; 15%." data-balloon-pos="right"
-				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+				disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
 			</div>
 			<div id="sacrifices_div_1" class="tab_div" style="margin-top:0.5em">
 			<h3 id="sacrifice_header_3" class="header_1">Benevolent sacrifice</h3>
@@ -240,7 +388,7 @@
 				Divine energy
 			</p>
 				<button id="sacrifice_btn_3" class="purchase" data-balloon="Corruption &darr; 5%." data-balloon-pos="right"
-				disabled="disabled"  disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
+				disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	
 			</div>
 		</div>
 </div>
@@ -277,11 +425,11 @@
 							<span id="stats_field_5">0.1</span>
 						</b>
 					</h4>
-					<h4 id='time_played'>Current follower Ascension
+					<h4 id='time_played'>Current Follower Prod
 						<b>
 							<span id="stats_field_8">0.1</span>
 						</b>
-						<span id="total_energy3">Max follower Ascension</span>
+						<span id="total_energy3">Max Follower Prod</span>
 						<b>
 							<span id="stats_field_9">0.1</span>
 						</b>
@@ -322,18 +470,27 @@
 					</h4>
 					<h4 id='time_played'>Current deity status
 						<b>
-							<span id="stats_field_10">Minor Deity</span>
+							<span id="stats_field_10">Abstract presence</span>
 						</b>
 					</h4>
-				</p>
 			</div>
 	</div>
 	<div id="Challenges" class="tabcontent">	
 		<div id="challenges_main_header_div" class="tab_div" style="text-align:center">
-				<h3 id="challenges_header">Heavenly Trials</h3><br>
+				<h3 id="challenges_header">
+				Heavenly Trials			
+				<div class="btn btn-med" id="achievements_shown" style="background-color:#fff;"
+				data-balloon="See Completed" data-balloon-pos="down">
+				<span style="font-size:1.5em;" class="glyphicon glyphicon-remove">
+				</span></div></h3><br>
 				<span>Track your progress as you continue through the game.</span><br>
 				<span>Each completed challenge increases your follower production by 2%,  Current Multipler: <strong id="prod_mul">1.00x</strong></span>
 		</div>
+		<div class="overlay" id="completed_challenges" style="border-radius: 5px">	
+		<div class="wrap" id="achievements_wrap">
+		</div>
+		</div>
+		<div id="uncompleted" class="uncompleted" >
 		<div id ="challenge1">
 		<div id="challenges_1_1" class="tab_div">
 		<h3 id="challenges_header_1_1" class="header_1">This is the field for upgrade for option one.
@@ -341,6 +498,14 @@
 		</h3>
 		<p>
 			<em id="challenges_text_1_1">Text placeholder</em> 
+		</p>
+		</div>
+		<div id="challenges_1_1_1" class="tab_div">
+		<h3 id="challenges_header_1_1_1" class="header_1">This is the field for upgrade for option one.
+			<label id="challenges_lbl_1_1_1" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<em id="challenges_text_1_1_1">Text placeholder</em> 
 		</p>
 		</div>
 		</div>
@@ -351,6 +516,14 @@
 		</h3>
 		<p>
 			<em id="challenges_text_2_1">Text placeholder</em> 
+		</p>
+		</div>
+		<div id="challenges_2_1_1" class="tab_div">
+		<h3 id="challenges_header_2_1_1" class="header_1">This is the field for upgrade for option one.
+			<label id="challenges_lbl_2_1_1" class="glyphicon glyphicon-remove align_right"></label>
+		</h3>
+		<p>
+			<em id="challenges_text_2_1_1">Text placeholder</em> 
 		</p>
 		</div>
 		</div>
@@ -395,6 +568,7 @@
 		</div>
 		</div>
 	</div>
+	</div>
 	<div id="Settings" class="tabcontent">	<div id="settings_1" style="text-align:center">
 		<div id="time_played" style="margin-left:5%;background-color:#E1F5FE;" class="tab_div">
 		<h3 id="settings_header_1" style="padding-bottom:1em">Instructions:
@@ -403,8 +577,7 @@
 			<span>-Use your energy to improve your production</span><br>
 			<span>-Unlock advanced features as you progress</span></p></h3>	
 		</div>
-		<div id="settings_div_1" class="tab_div">
-		</h3><br>
+		<div id="settings_div_1" class="tab_div"><br>
 		<h3 id="settings_header_3">Save your game now.</h3>
 		<button id='make_save' class='purchase'>Save</button>
 		<h3 id="settings_header_2">Delete your save.</h3>

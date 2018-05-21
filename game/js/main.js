@@ -2,7 +2,14 @@ var last_float = 10;
 var last_saved = 0;
 
 var vals = {
-  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,
+  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,"flame":0,
+  "events": {
+    "superclick": {
+      "click_num":0,
+      "active":false,
+      "mul": 2
+    }
+  },
   "stats" :{
      "time_played":0, 
      "total_energy":0, 
@@ -12,16 +19,58 @@ var vals = {
      "miracle_clicks":0,
      "ascension_clicks":0,
      "miracle_click_energy":0,
-     "ascension_click_energy":0,
+     "ascension_click_energy":0
   },
-  "clickers":{
+  "god_status": {
+    "current": 1,
+    "1": {
+      "label":"Abstract presence",
+      "mul": 1,
+      "boss_label":"",
+      "max_tier":3
+    },
+    "2":{
+      "label":"Entity",
+      "mul": 2,
+      "boss_label":"Angry",
+      "max_tier":4
+    }
+  },
+  "leap" : {
+    "unlocked":false,
+    "selected":0,
+    //each of these are tiers
+    "1": {
+      "click":{
+        "label":"Improved Power",
+        "description":"Your clicks are twice as powerful.",
+        "amount":0,
+        "mul": 1 // powers of 2 - 2^1 = 2 etc.
+      },
+      "boss":{
+        "label":"Boss Killer",
+        "description":"You do 3x damage to bosses.",
+        "amount":0,
+        "mul": 1
+      },
+      "tier":{
+        "label":"True Ascension",
+        "description":"You Ascend to a new God status, with new unlocks but increased difficulty.",
+        "cost":50,
+        "amount":0,
+        "mul":1, //this is actually addition..
+        "req":125
+      }
+    }
+  },
+  "miracle":{
             "purchase1":{
                 "label":"Online Blogger",
                 "description":"An inspired teenager to spread the word.",
                 "amount":0,
                 "output":0.2,
-                "base_cost":20,
-                "cost":20,
+                "base_cost":15,
+                "cost":15,
                 "unlock_rps":0,
                 "unlocked":true,
             },
@@ -30,8 +79,8 @@ var vals = {
                 "description":"Leaflets for your followers to hand out.",
                 "amount":0,
                 "output":1,
-                "base_cost":210,
-                "cost":210,
+                "base_cost":160,
+                "cost":160,
                 "unlock_rps":0.2,
                 "unlocked":false,
             },
@@ -52,17 +101,47 @@ var vals = {
                 "output":25,
                 "base_cost":5000,
                 "cost":5000,
-                "unlock_rps":2.0,
+                "unlock_rps":5.0,
                 "unlocked":false,
             },
             "purchase5":{
-                "label":"Prophetic manifestation",
-                "description":"An Earthly representative placed to spread your word.",
+                "label":"Qualified priests",
+                "description":"Followers trained to hold services in your name.",
                 "amount":0,
                 "output":150,
-                "base_cost":30000,
-                "cost":30000,
-                "unlock_rps":5.0,
+                "base_cost":22500,
+                "cost":22500,
+                "unlock_rps":25.0,
+                "unlocked":false,
+            },
+            "purchase6":{
+                "label":"Religious Sect",
+                "description":"A new sect started by your followers.",
+                "amount":0,
+                "output":1000,
+                "base_cost":125000,
+                "cost":125000,
+                "unlock_rps":175.0,
+                "unlocked":false,
+            },
+            "purchase7":{
+                "label":"Holy city",
+                "description":"A city dedicated to your being.",
+                "amount":0,
+                "output":7500,
+                "base_cost":800000,
+                "cost":800000,
+                "unlock_rps":1175.0,
+                "unlocked":false,
+            },
+            "purchase8":{
+                "label":"Random segments of code",
+                "description":"Learning machine language to convert them to your cause.",
+                "amount":0,
+                "output":30000,
+                "base_cost":5000000,
+                "cost":5000000,
+                "unlock_rps":8500.0,
                 "unlocked":false,
             }
     },  "ascend":{
@@ -71,9 +150,9 @@ var vals = {
                 "description":"An univiting small booth to slowly process followers.",
                 "amount":0,
                 "output":0.2,
-                "base_cost":35,
-                "cost":35,
-                "unlock_loss":0,
+                "base_cost":25,
+                "cost":25,
+                "unlock_rps":0,
                 "unlocked":true,
             },
             "ascend2":{
@@ -81,9 +160,9 @@ var vals = {
                 "description":"A small, plush lounge holding more followers at a time.",
                 "amount":0,
                 "output":1,
-                "base_cost":375,
-                "cost":375,
-                "unlock_loss":0.2,
+                "base_cost":225,
+                "cost":225,
+                "unlock_rps":0.2,
                 "unlocked":false,
             },
             "ascend3":{
@@ -91,9 +170,9 @@ var vals = {
                 "description":"An entire room where your followers can ascend.",
                 "amount":0,
                 "output":5,
-                "base_cost":1750,
-                "cost":1750,
-                "unlock_loss":1.2,
+                "base_cost":1350,
+                "cost":1350,
+                "unlock_rps":1.2,
                 "unlocked":false,
             },
             "ascend4":{
@@ -103,7 +182,7 @@ var vals = {
                 "output":25,
                 "base_cost":8000,
                 "cost":8000,
-                "unlock_loss":2.0,
+                "unlock_rps":5.0,
                 "unlocked":false,
             },
             "ascend5":{
@@ -111,73 +190,188 @@ var vals = {
                 "description":"An entire Cathedral built to connect with you.",
                 "amount":0,
                 "output":150,
-                "base_cost":40000,
-                "cost":40000,
-                "unlock_loss":5.0,
+                "base_cost":30000,
+                "cost":30000,
+                "unlock_rps":25.0,
+                "unlocked":false,
+            },
+            "ascend6":{
+                "label":"Hallowed grounds",
+                "description":"Sacred grounds where your followers may ascend.",
+                "amount":0,
+                "output":1000,
+                "base_cost":160000,
+                "cost":160000,
+                "unlock_rps":175.0,
+                "unlocked":false,
+            },
+            "ascend7":{
+                "label":"Complex of enlightenment",
+                "description":"A sprawling complex to convert followers.",
+                "amount":0,
+                "output":7500,
+                "base_cost":1000000,
+                "cost":1000000,
+                "unlock_rps":1175.0,
+                "unlocked":false,
+            },
+            "ascend8":{
+                "label":"Ascension chip",
+                "description":"A chip allowing conversion of followers through the internet.",
+                "amount":0,
+                "output":30000,
+                "base_cost":6000000,
+                "cost":6000000,
+                "unlock_rps":8500.0,
                 "unlocked":false,
             }
   },
-  "upgrades": {
+    "upgrades": {
         "1" : {
           "type":"Click amount",
             "upgrade1":{
               "label":"Basic telekinetics",
-              "description":"Limited control of Earthly forces converts twice as many followers for each miracle.",
+              "description":"Limited control of Earthly forces doubles your Divine Power.",
               "unlocked":false,
-              "cost":500,
+              "cost":25,
               "mul":2
             },
             "upgrade2":{
               "label":"Matter Manipulation",
-              "description":"Ability to turn water into wine converts three times as many followers for each miracle.",
+              "description":"A small amount of control over matter triples your Divine Power.",
               "unlocked":false,
-              "cost":5000,
+              "cost":150,
               "mul":3
             },
             "upgrade3":{
               "label":"Transmogrification",
-              "description":"Ability to convert animals of any shape into followers, netting four times as many followers for each miracle.",
+              "description":"Conversion of animals into any shape triples your Divine Power.",
               "unlocked":false,
-              "cost":50000,
-              "mul":4
+              "cost":750,
+              "mul":3
             },
             "upgrade4":{
               "label":"Elementary conjuring",
-              "description":"Ability to summon bolts of lightning, leveraging fear to increase followers per miracle by five times.",
+              "description":"Fledgling control of the elements triples your Divine power.",
               "unlocked":false,
-              "cost":500000,
+              "cost":3500,
+              "mul":3
+            },
+             "upgrade5":{
+              "label":"Studying Holy texts",
+              "description":"Interpreting these ancient writings increases your Divine Power by 4 times.",
+              "unlocked":false,
+              "cost":18500,
+              "mul":4
+            },
+             "upgrade6":{
+              "label":"Burning the Holy texts",
+              "description":"Read them, have you? Page-turners they were not.",
+              "unlocked":false,
+              "cost":80000,
+              "mul":4
+            },
+            "upgrade7":{
+              "label":"Astral projection",
+              "description":"A double of yourself to act on your command.",
+              "unlocked":false,
+              "cost":375000,
               "mul":5
+            },
+            "upgrade8":{
+              "label":"Benign possession",
+              "description":"Controlling some of your followers' forms to further your purpose.",
+              "unlocked":false,
+              "cost":1000000,
+              "mul":5
+            },
+            "upgrade9":{
+              "label":"Power siphoning",
+              "description":"Enhancing your power by extracting it from the World.",
+              "unlocked":false,
+              "cost":9000000,
+              "mul":5
+            },
+            "upgrade10":{
+              "label":"Void gathering",
+              "description":"Retrieving power from the void of space.",
+              "unlocked":false,
+              "cost":70000000,
+              "mul":6
+            },
+            "upgrade11":{
+              "label":"Chaotic ritual",
+              "description":"Harnessing chaos energy to increase your power.",
+              "unlocked":false,
+              "cost":500000000,
+              "mul":6
             }
           },
           "2": {
             "type":"Tick speed",
             "upgrade1":{
-               "label":"Time warp",
-              "description":"You begin to speed up the passage of time..",
+               "label":"Improved reflexes",
+              "description":"Training speeds up your perception of time passing.",
               "unlocked":false,
-              "cost":2500,
+              "cost":500,
               "mul":0.8
             },
             "upgrade2":{
-               "label":"Gravity bending",
-              "description":"Using gravity to change how time flows.",
+               "label":"Mastered reflexes",
+              "description":"Mastering your form speeds up your perception of time passing futher.",
               "unlocked":false,
-              "cost":250000,
+              "cost":7500,
               "mul":0.8
             },
             "upgrade3":{
+               "label":"Shapeshifting",
+              "description":"Transformation allows your perception of time passing to speed up futher.",
+              "unlocked":false,
+              "cost":50000,
+              "mul":0.8
+            },
+            "upgrade4":{
+               "label":"Mind Control",
+              "description":"Convincing your followers that time is passing at a faster rate.",
+              "unlocked":false,
+              "cost":125000,
+              "mul":0.8
+            },
+            "upgrade5":{
+               "label":"Gravity bending",
+              "description":"Using gravity to change how time flows.",
+              "unlocked":false,
+              "cost":1600000,
+              "mul":0.8
+            },
+            "upgrade6":{
                "label":"God's stopwatch",
               "description":"Your newest toy new from the box.",
+              "unlocked":false,
+              "cost":20000000,
+              "mul":0.8
+            },
+            "upgrade7":{
+               "label":"The Mandela Effect",
+              "description":"Reverse time and change what you wish - but only something small.",
               "unlocked":false,
               "cost":250000000,
               "mul":0.8
             },
-            "upgrade4":{
-               "label":"The Mandela Effect",
-              "description":"Reverse time and change what you wish.",
+            "upgrade8":{
+               "label":"Keys to the car",
+              "description":"Stolen keys to a working time machine.",
               "unlocked":false,
-              "cost":250000000000,
+              "cost":1000000000,
               "mul":0.8
+            }
+          },
+          "3" : {
+            "upgrade1":{
+              "label":"Unlock Quantum Leap",
+              "description":"To infinity and beyond",
+              "unlocked":false,
+              "cost":1000000000
             }
           }
         },
@@ -213,6 +407,113 @@ var vals = {
            "pantheon":{
             "unlocked":false,
             "stage":0,
+            "damage":1,
+            "dps":0,
+            "upgrades": {
+              "1":{
+                "click1":{
+                  "label":"Damage x1.5/click",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":1.5,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.15x energy prod",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.15,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.025x Divine Power/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.025,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;10%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.9,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;20%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.8,
+                  "max_amount":5
+                }
+              },
+              //tier 2 upgrades
+              "2":{
+                "click1":{
+                  "label":"Damage x1.5/click",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":1.5,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.05x energy prod",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.01x Divine Power/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.01,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;10%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.9,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;20%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.8,
+                  "max_amount":5
+                }
+              }
+
+            },
+
             "bosses" : {
 
 
@@ -220,19 +521,42 @@ var vals = {
               "max_hp": 1000000,
               "current_hp":1000000,
               "regen":100,
-              "reward":100000,
+              "reward":1000000,
               "current":true,
-              "name":"Vengeful Spirit"
+              "name":"Arion's Spirit",
+              "reward":0.5,
+              "defeated":false
             },
             "boss2":{
-              "max_hp": 500000000,
-              "current_hp":500000000,
-              "regen":50000,
+              "max_hp": 125000000,
+              "current_hp":125000000,
+              "regen":10000,
               "reward":50000000,
               "current":false,
-              "name":"Malignant Phantom"
+              "name":"Banshee",
+              "reward":2,
+              "defeated": false
+            },
+            "boss3":{
+              "max_hp": 1750000000,
+              "current_hp":1750000000,
+              "regen":1000000,
+              "reward":275000000,
+              "current":false,
+              "name":"Erinys",
+              "reward": 5,
+              "defeated":false
+            },
+            "boss4":{
+              "max_hp": 3500000000,
+              "current_hp":3500000000,
+              "regen":75000000,
+              "reward":275000000,
+              "current":false,
+              "name":"Demonic form",
+              "reward": 15,
+              "defeated":false
             }
-
            }
            },
            "challenges": {
@@ -240,36 +564,135 @@ var vals = {
             "challenge1":{
               "required_type":'click_m',
               "1" :{
+              "type":"quantity",
               "visible":true,
               "unlocked":false,
               "label":"Your first Miracle",
-              "description":"You performed your first miracle and gained an awe-struck follower.",
+              "description":"You performed your first miracle.",
               "click_req":1,
-              "cloned":false
+              },
+              "1_1": {
+              "type":"total",
+              "visible":true,  
+              "unlocked":false,
+              "label":"The first to your cause.",
+              "description":"You've gained 10 followers through your miracles.",
+              "val_req":10
               },
               "2" : {
+              "type":"quantity",
               "visible":false,  
               "unlocked":false,
               "label":"Miracle happy",
-              "description":"You've performed 100 miracles, gaining many followers along the way.",
+              "description":"You've performed 100 miracles.",
               "click_req":100
+              },
+              "2_2" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"It's a miracle..!",
+              "description":"You've gained 500 followers through your miracles.",
+              "val_req":500
+              },
+              "3" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Qualified exercise",
+              "description":"You've performed 1000 miracles.",
+              "click_req":1000
+              },
+              "3_3" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Ten thousand strong at least!",
+              "description":"You've gained 10000 followers through your miracles.",
+              "val_req":10000
+              },
+              "4" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Carpal tunnel",
+              "description":"You've performed 15000 miracles.",
+              "click_req":15000
+              },
+              "4_4" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Iceland x 3",
+              "description":"You've gained 1M followers through your miracles.",
+              "val_req":1000000
               }
             },
              "challenge2":{
               "required_type":'click_a',
               "1":{
+                "type":"quantity",
                 "visible":true,
                 "unlocked":false,
-                "label":"Your first ascension",
-                "description":"You ascended a follower to a higher plane of existance, increasing your divine energy.", 
+                "label":"Your first Conversion",
+                "description":"You converted your first follower into energy.", 
                 "click_req":1
               },
+                "1_1": {
+              "type":"total",
+              "visible":true,  
+              "unlocked":false,
+              "label":"Fast-tracking",
+              "description":"You've gained 10 Divine Energy through converting followers.",
+              "val_req":10
+              },
                "2" : {
+              "type":"quantity",
               "visible":false,  
               "unlocked":false,
               "label":"Highway to heaven",
-              "description":"You've performed 100 acensions to increase your Divine Energy.",
+              "description":"You've performed 100 Conversions.",
               "click_req":100
+              },
+              "2_2" : {
+              "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"It's a long way to Tipperary",
+              "description":"You've gained 500 energy through Converting followers.",
+              "val_req":500
+              },
+              "3" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Children of the cause",
+              "description":"You've performed 1000 Conversions.",
+              "click_req":1000
+              },
+              "3_3" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Ascend this.",
+              "description":"You've gained 10000 Divine Energy through Conversions.",
+              "val_req":10000
+              },
+              "4" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"A'int that a click in the head.",
+              "description":"You've performed 15000 Conversions personally.",
+              "click_req":15000
+              },
+              "4_4" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Unlimited power",
+              "description":"You've Converted 1M followers.",
+              "val_req":1000000
               }
 
             },
@@ -290,6 +713,14 @@ var vals = {
               "description":"You've gained your first 4th tier Conversion herald.",
               "req_tier":4,
               "req_num":1
+              },
+              "3" : {
+              "visible":false,  
+              "unlocked":false,
+              "label":"Someday they'll have secrets",
+              "description":"You've gained your first 8th tier Conversion herald.",
+              "req_tier":8,
+              "req_num":1
               }
             },
              "challenge4":{
@@ -298,7 +729,7 @@ var vals = {
                   "visible":true,
                   "unlocked":false,
                   "label":"Jupiter: Ascension",
-                  "description":"You developed the first Earthly Ascension point for your followers.",
+                  "description":"You developed the first Earthly Conversion point for your followers.",
                   "req_tier":1,
                   "req_num":1
                 },
@@ -306,9 +737,17 @@ var vals = {
                 "visible":false,  
                 "unlocked":false,
                 "label":"On the up-and-up",
-                "description":"You've gained your first 4th tier ascension facilities.",
+                "description":"You've gained your first 4th tier Conversion facilities.",
                 "req_tier":4,
                 "req_num":1
+              },
+              "3" : {
+              "visible":false,  
+              "unlocked":false,
+              "label":"Someday they'll have dreams",
+              "description":"You've gained your first 8th tier Conversion point.",
+              "req_tier":8,
+              "req_num":1
               }
             },
             "challenge5":{
@@ -366,6 +805,7 @@ var upgrade_box_size = 0;
     }
     });
     fix_names(vals);
+    // resolve_mobile_width();
   }});
 
   $(document).ready(function() {
@@ -387,6 +827,7 @@ var upgrade_box_size = 0;
    }
    } );
     $('#settings-tab-btn').click();
+    // resolve_mobile_width();
     start_game(vals);
   });
 
@@ -398,6 +839,8 @@ var upgrade_box_size = 0;
     $('#upgrades-box').css("margin-right", width * 0.25);
     $('#upgrades-box').css("width", width * 0.65);
     upgrade_box_size = $('#upgrades-box').css('height');
+    $('.reset').prop('disabled', true);
+    $('#tier_btn_1').prop('disabled', true);
   }
 
   function start_game(vals) {
@@ -405,46 +848,60 @@ var upgrade_box_size = 0;
     game_engine(vals, 0, 0);
   }
     function set_item_cost(item) { 
-        var cost = ((item.amount + 1) * item.base_cost) * (item.amount + 1);
+        var cost =  ((item.amount + 1) * ( vals.god_status[vals.god_status.current].mul * item.base_cost) * (item.amount + 1));
 
         if((item.amount + 1) > 10) { 
             cost *= 2;
         }
-        return cost;
+        return Math.round(cost * 0.9);
     }
 
   function game_engine(vals, iterations, cycles) {
+    var corrected_prod = ((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))) - ((1+(vals.corruption/100))*vals.loss);
+    var total_loss = (vals.loss * (1+(vals.corruption/100)));
+    var mul = vals.god_status[vals.god_status.current].mul;
+    var cost =1;
+    if( mul > 1 ) cost = mul * 0.8;
+    corrected_prod *= cost;
+    total_loss *= cost;
     if( vals.followers < 0 ) vals.followers = 0;
-    $('#click_amount').text( '[ ' + truncate_bigint(vals.click) + ' ]');
+    $('#click_amount').text( '[ ' + truncate_bigint( vals.click) + ' ]');
     $('#counter').text( truncate_bigint(Math.floor(vals.followers)) );
-    if( $('#last_saved').text() != "" )  $('#last_saved').text(last_saved + ' seconds ago.');
+    if( $('#last_saved').text() != "" )  $('#last_saved').text(Math.round(last_saved) + ' seconds ago.');
     $('#power').text(truncate_bigint(vals.energy));
     //production of followers is (production*achievement_multipler) divided by the corruption factor.
-    $('#production_net').text(truncate_bigint(( (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)) - vals.loss)));
+    $('#production_net').text(truncate_bigint(corrected_prod));
     $('#production_gross').text(truncate_bigint(( (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)))));
-    if( ( ((vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100)) - vals.loss) >= 0.0 || vals.followers >= (vals.loss*(1+(vals.corruption/100))) ) 
-      $('#prod_energy').text(truncate_bigint(vals.loss * (1+(vals.corruption/100))));
-    else $('#prod_energy').text(truncate_bigint((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))));
+    
+    if( corrected_prod >= 0.0 || vals.followers >= total_loss )  
+      $('#prod_energy').text(truncate_bigint(total_loss));
+    
+    else $('#prod_energy').text(truncate_bigint( cost * (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))));
+    
     setTimeout(function() {
     checkAchievements(vals);
     setButtonAvailability(vals);  
+
       if( vals.current_tab==="Pantheon" && vals.pantheon.unlocked) {
         for( var k in vals.pantheon.bosses ) {
           if( vals.pantheon.bosses[k].current ) {
-            if( (vals.pantheon.bosses[k].current_hp + vals.pantheon.bosses[k].regen) <= vals.pantheon.bosses[k].max_hp ) {
-              vals.pantheon.bosses[k].current_hp += vals.pantheon.bosses[k].regen;
-            }
+            if( ( (mul * vals.pantheon.bosses[k].current_hp) + (mul * vals.pantheon.bosses[k].regen) ) <= (mul * vals.pantheon.bosses[k].max_hp) ) {
+              vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].current_hp + (mul * vals.pantheon.bosses[k].regen);
+            } else vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
+            vals.pantheon.bosses[k].current_hp -= vals.pantheon.dps;
+            if( vals.pantheon.dps > 0 ) animate_attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
           }
         }
       }
       else if( vals.current_tab==="Stats")fix_stats(vals);
-      if( vals.click >= 120 ) {vals.pantheon.unlocked = true; fix_names(vals);}
-      else if( iterations % 10 === 0 && iterations != 0) {
-        vals.stats.time_played++;
-        last_saved++;
+      if( vals.upgrades['1']['upgrade6'].unlocked && !vals.pantheon.unlocked) {
+        vals.pantheon.unlocked = true; 
+        fix_names(vals); 
       }
+      vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000)/1000;
+      last_saved = (vals.tick + last_saved * 1000)/1000;
       //save every 30 seconds
-      if( (cycles * ( vals.tick * 30 ) >= 30000) ) {
+      if( (cycles * ( vals.tick * 30 ) >= 30000 ) ) {
         saveData();
         cycles = 0;
       }
@@ -454,48 +911,234 @@ var upgrade_box_size = 0;
     else {
       game_engine(vals, ++iterations, cycles);
       //adding production to variables
-      if( vals.followers >= vals.loss || ((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)) - (vals.loss*(1+(vals.corruption/100))) ) > 0)  {
-        vals.followers += ( (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)) - (vals.loss)*(1+(vals.corruption/100)));
-        vals.stats.total_followers += ( (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)) - (vals.loss*(1+(vals.corruption/100))) );
-        vals.energy += vals.loss;
-        vals.stats.total_energy += vals.loss;
+      if( vals.followers >= vals.loss || corrected_prod > 0)  {
+        vals.followers += corrected_prod;
+        vals.stats.total_followers += corrected_prod;
+        vals.energy += ( ( 1+(vals.corruption/100) ) * vals.loss);
+        vals.stats.total_energy += ( ( 1+(vals.corruption/100) ) * vals.loss);
       }
-      else {vals.energy += (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100));
-        vals.stats.total_energy += (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100));
+      else {vals.energy += ( cost * (vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
+        vals.stats.total_energy += (cost *(vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
       }
     }
   
     }, vals.tick);
   }
+  var valsToJSON = function() {
+      var save = {
+        'e':Math.round(vals.energy).toString(16),
+        'p':vals.prod,
+        'cl':vals.click.toString(16),
+        'f':(Math.round(vals.followers)).toString(16),
+        'l':vals.loss,
+        'c':vals.corruption.toString(16),
+        'ac':vals.achievement_multiplier,
+        't':(Math.round(vals.tick)).toString(16),
+        'fl':vals.flame.toString(16),
+        'dam':vals.pantheon.damage.toString(16),
+        "tier":vals.god_status.current.toString(16),
+        "sac":vals.sacrifice.unlocked,
+        'dps':vals.pantheon.dps,
+        "stage":vals.pantheon.stage.toString(16)
+      };
+        var unlocks = {
+            "miracle":"cl",
+            "ascend":"asc"
+        };
+        for(var k in unlocks) { 
+            var items = vals[k];
+            var temp_a = [];
+              for(var i in items) { 
+                if(items[i].unlocked) {
+                    temp_a.push([i] + ":" +items[i].amount.toString(16));
+                  }
+              }
+              save[k] = temp_a.join('|');
+        }
+         for(var k in vals.leap) { 
+            var items = vals.leap[k];
+            var temp_a = [];
+              for(var i in items) { 
+                if(items[i].amount > 0) {
+                    temp_a.push([i] + ":" +items[i].amount.toString(16));
+                  }
+              }
+            if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+        }
+        var tiered = {
+          "upgrades":"up",
+          "challenges":"ch"
+        }
 
+        for(var k in tiered) { 
+            var items_generic = vals[k];
+            var temp_t = [];
+            var temp_arr = [];
+            for( var i in items_generic ) {
+              for( var j in items_generic[i] ) {
+                if(items_generic[i][j].unlocked) 
+                    temp_t.push(items_generic[i][j].label);
+                }
+              }
+            temp_arr.push(temp_t); 
+            save[k] = temp_arr.join('|');
+        }
+
+        var temp_s = {
+          't':vals.stats.time_played.toString(16),
+          't_e':Math.round(vals.stats.total_energy).toString(16),
+          't_f':Math.round(vals.stats.total_followers).toString(16),
+          'm_p':vals.stats.max_prod,
+          'm_l':vals.stats.max_loss,
+          'm_c':vals.stats.miracle_clicks.toString(16),
+          'a_c':vals.stats.ascension_clicks.toString(16),
+          'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
+          'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
+        };
+        save['s'] = temp_s;
+
+        var pantheon = [];
+        for(var k in vals.pantheon.bosses) { 
+            var items = vals.pantheon.bosses[k];
+            var temp_a = [];
+            temp_a.push('max_hp' + ":" +items.max_hp.toString(16));
+            temp_a.push('current_hp' + ":" +items.current_hp.toString(16));
+            temp_a.push('regen' + ":" +items.regen.toString(16));
+            temp_a.push('defeated' + ":" + items.defeated.toString().toLowerCase());
+            temp_a.push('reward' + ":" + items.reward.toString(16));    
+            pantheon.push(temp_a);
+        }
+        save['pantheon'] = pantheon;
+        console.log(save);
+        return save;
+  }
+  function get_valsFromJSON(save) {
+        vals.energy = parseInt(save.e,16);
+        vals.prod = save.p;
+        vals.click = parseInt(save.cl, 16);
+        vals.followers = parseInt(save.f, 16);
+        vals.loss = save.l;
+        vals.corruption = parseInt(save.c, 16);
+        vals.achievement_multiplier = save.ac;
+        vals.tick = parseInt(save.t, 16);
+        vals.flame = parseInt(save.fl, 16);
+        vals.pantheon.damage = parseInt(save.dam,16);
+        vals.sacrifice.unlocked = save.sac;
+        vals.pantheon.dps = save.dps;
+        vals.pantheon.stage = parseInt(save.stage);
+        if( save.tier ) vals.god_status.current = parseInt(save.tier,16);
+
+        for( var k in vals.pantheon.bosses ) {
+          var boss = vals.pantheon.bosses[k];
+          if( boss.current && parseInt(k.substr(k.length-1)) != (parseInt(vals.pantheon.stage) +1) ) boss.current = false;
+          else if( parseInt(k.substr(k.length-1)) === (parseInt(vals.pantheon.stage) +1)  ) boss.current = true;
+        }
+        var unlocks = {
+            "miracle":"cl",
+            "ascend":"asc"
+        }; 
+        var tiered = {
+          "upgrades":"up",
+          "challenges":"ch"
+        }
+        for(var k in unlocks) {
+            if( save[k]) {
+              var t_items = save[k].split('|');
+                for( var i=0; i<t_items.length; i++ ) {
+                  var item_num = t_items[i].split(':');
+                    for( var x in vals[k] ) {
+                      if( x === item_num[0] ) {
+                        vals[k][x].amount = parseInt(item_num[1],16);
+                        if( x.substr(x.length-1) < Object.keys(vals[k]).length ) {
+                          vals[k][x.substr(0,x.length-1) + String(parseInt(x.substr(x.length-1)))].unlocked = true;    
+                        }
+                      }
+                    }
+                }
+            }
+        }
+        for(var k in vals.leap) { 
+          if( save['leap' + k] ) {
+          if( k != 'unlocked' && k != 'selected') {
+            var t_items = save['leap' + k].split('|');
+            for( var i=0; i<t_items.length; i++ ) {
+              var item_num = t_items[i].split(':');
+              for( var x in vals.leap[k] ) {
+                if( x === item_num[0] ) {
+                  vals.leap[k][x].amount = parseInt(item_num[1],16);
+                }
+              }
+            }
+          }
+        }
+      }
+
+        //load challenges and upgrades
+        for(var k in tiered) {
+            if( save[k]) {
+              var t_items = save[k].split('|');
+              t_items += '';
+              var item = t_items.split(',');
+
+                for( var i=0; i< item.length; i++ ) {
+                  
+                  for( var x in vals[k] ) {
+                    for( var y in vals[k][x] ) {
+                      if( vals[k][x][y].label === item[i] ) {
+                        vals[k][x][y].unlocked = true;    
+                      }
+                    }
+                  }
+                }
+            }
+        }
+        if( save['pantheon'] ) {
+            var items = save['pantheon'];
+            for( var i=0; i< items.length; i++ ) {
+              for( var k in items[i] ) {
+                vals.pantheon.bosses['boss' + (i+1)].max_hp = parseInt(items[i][0].split(':')[1], 16);
+                vals.pantheon.bosses['boss' + (i+1)].current_hp = parseInt(items[i][1].split(':')[1], 16);
+                vals.pantheon.bosses['boss' + (i+1)].regen = parseInt(items[i][2].split(':')[1], 16);
+                vals.pantheon.bosses['boss' + (i+1)].defeated = (items[i][3].split(':')[1].toString().toLowerCase() == 'true');
+                vals.pantheon.bosses['boss' + (i+1)].reward = parseInt(items[i][4].split(':')[1], 16);
+              }
+            }
+
+        }
+
+
+        //load data for statistics 
+        if( save.s ) {
+          vals.stats.time_played = parseInt(save.s.t,16);
+          vals.stats.total_energy = parseInt(save.s.t_e,16);
+          vals.stats.total_followers = parseInt(save.s.t_f,16);
+          vals.stats.max_prod = save.s.m_p;
+          vals.stats.max_loss = save.s.m_l;
+          vals.stats.miracle_clicks = parseInt(save.s.m_c,16);
+          vals.stats.ascension_clicks = parseInt(save.s.a_c,16);
+          vals.stats.miracle_click_energy = parseInt(save.s.mc_e,16);
+          vals.stats.ascension_click_energy = parseInt(save.s.ac_e, 16);
+        }
+
+  }
+//change this to localstorage
   function saveData() {
     $('#save_title').html("Last saved ");
     $('#last_saved').text("0 seconds ago.");
-    var output_json_1 = {};
-    var output_json_2 = {};
-    for( var k in vals ) {
-      if( k === 'sacrifice'  || k === 'pantheon' || k==='challenges' )  output_json_2[k] = vals[k];
-      else output_json_1[k] = vals[k];
-    }
-    Cookies.set("data-save1", output_json_1, { expires:7});
-    Cookies.set("data-save2", output_json_2, { expires:7});
+    localStorage.sv1 = btoa(JSON.stringify(valsToJSON()));
     last_saved = 0;
   }
   function loadData() {
     try {
-      var json1 = Cookies.getJSON("data-save1"), json2 = Cookies.getJSON("data-save2");
-      for( var k in vals ) {
-        if( k === 'sacrifice'  || k === 'pantheon' || k==='challenges')  vals[k] = json2[k]; 
-        else vals[k] = json1[k];
-      }
+        get_valsFromJSON(JSON.parse(atob(localStorage.sv1)));
+     }catch(err) {
+      console.log("No saved data to load.");
     }
-     catch( error ) {
-       console.log("No saved data to load!");
-     }
+      fix_tab_buttons(vals);
+      fix_names(vals);
   }
   function deleteSave() {
-    Cookies.remove('data-save1');
-    Cookies.remove('data-save2');
+    localStorage.removeItem("sv1");
     location.reload();
   }
   function set_achievement_multiplier(vals) {
@@ -515,32 +1158,39 @@ var upgrade_box_size = 0;
         case "click_m":
         for( var i in vals.challenges[k]) {
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-          if( vals.stats.miracle_clicks >= vals.challenges[k][i].click_req) {
+            var has_unlocked = false;
+            if( vals.challenges[k][i].type === "total") {if( vals.stats.miracle_click_energy >= vals.challenges[k][i].val_req ) has_unlocked = true; }
+            else {if( vals.stats.miracle_clicks >= vals.challenges[k][i].click_req) has_unlocked = true; }
             //we don't want achievment messages to show unless the user actually unlocks them => not on startup every time.
-            if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved > 2) )
-              $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
-            vals.challenges[k][i].unlocked = true;
+            if( has_unlocked ){
+              if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved > 2) )
+                $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
+              vals.challenges[k][i].unlocked = true;
+            }
             fix_names(vals);
           }
-        }
         }
         break;
         case "click_a":
         for( var i in vals.challenges[k]) {
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-          if( vals.stats.ascension_clicks >= vals.challenges[k][i].click_req) {
+            var has_unlocked = false;
+            if( vals.challenges[k][i].type === "total") {if( vals.stats.ascension_click_energy >= vals.challenges[k][i].val_req ) has_unlocked = true; }
+            else {if( vals.stats.ascension_clicks >= vals.challenges[k][i].click_req) has_unlocked = true; }
+            
+            if(has_unlocked) {
             if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1) )
               $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
             vals.challenges[k][i].unlocked = true;
+            }
             fix_names(vals);
         }
-      }
       }
         break;
         case "conv":
         for( var i in vals.challenges[k]) {
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-          if( vals.clickers['purchase' + vals.challenges[k][i].req_tier].amount >= vals.challenges[k][i].req_num ) {
+          if( vals.miracle['purchase' + vals.challenges[k][i].req_tier].amount >= vals.challenges[k][i].req_num ) {
             if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1) )
               $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
             vals.challenges[k][i].unlocked = true;
@@ -578,7 +1228,10 @@ var upgrade_box_size = 0;
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
           if( vals.pantheon.stage == vals.challenges[k][i].req_stage && vals.pantheon.unlocked ) {
             if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1) )
-             $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
+             {
+              $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
+              if( i === '1') vals.pantheon.damage *= vals.click; 
+            }
             vals.challenges[k][i].unlocked = true;
             fix_names(vals);
           }
@@ -590,14 +1243,16 @@ var upgrade_box_size = 0;
     set_achievement_multiplier(vals);
   }
   function setButtonAvailability(vals) {
+    var mul = vals.god_status[vals.god_status.current].mul;
+
     if( vals.current_tab === 'Conversion' ) {
-    for( var k in vals.clickers ) {
+    for( var k in vals.miracle ) {
       var purchase_num = k.substr(k.length -1 );
-      if( vals.energy >= vals.clickers[k].cost ) 
+      if( vals.energy >= mul * vals.miracle[k].cost ) 
         $('#purchase_btn_' + purchase_num).prop('disabled', false);
       else $('#purchase_btn_' + purchase_num).prop('disabled', true);
 
-      if( vals.clickers[k].amount > 0 ) 
+      if( vals.miracle[k].amount > 0 ) 
         $('#purchase_sell_btn_' + purchase_num).prop('disabled', false);
       else $('#purchase_sell_btn_' + purchase_num).prop('disabled', true);
     }
@@ -605,7 +1260,7 @@ var upgrade_box_size = 0;
   if( vals.current_tab === 'Ascension' ) {
     for( var k in vals.ascend ) {
       var purchase_num = k.substr(k.length -1 );
-      if( vals.energy >= vals.ascend[k].cost ) 
+      if( vals.energy >= mul * vals.ascend[k].cost ) 
         $('#ascend_btn_' + purchase_num).prop('disabled', false);
       else $('#ascend_btn_' + purchase_num).prop('disabled', true);
 
@@ -617,10 +1272,12 @@ var upgrade_box_size = 0;
   if( vals.current_tab === 'Upgrades' ) {
     for( var k in vals.upgrades ) {
       var purchase_num = k.substr(k.length -1 );
+      var cost = 1;
+      if( mul > 1 ) cost = mul * 0.67;
       for( var i in vals.upgrades[k] ) {
-      if( vals.energy >= vals.upgrades[k][i].cost && !vals.upgrades[k][i].unlocked)
-        $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.length-1)).prop('disabled', false);
-      else $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.length-1)).prop('disabled', true);
+      if( vals.energy >= (cost * vals.upgrades[k][i].cost) && !vals.upgrades[k][i].unlocked)
+        $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e')+1)).prop('disabled', false);
+      else $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e')+1)).prop('disabled', true);
       }
     }
   }
@@ -650,7 +1307,48 @@ var upgrade_box_size = 0;
       }
     }
    }
+   if( vals.current_tab === 'Pantheon') {
+    if( !vals.pantheon.unlocked ) return;
+      var boss_num = parseInt(vals.pantheon.stage) + 1;
+      if( boss_num > 1 ) {
+        $('#prev_boss').prop('disabled', false);
+        $('#prev_boss').css('display', "inline-block");  
+      }
+      else {
+        $('#prev_boss').prop('disabled', true);
+        $('#prev_boss').css('display', "none");  
+      }
 
+      var defeated = vals.pantheon.bosses['boss' + String(boss_num)].defeated;
+      if( boss_num >= parseInt(vals.god_status[vals.god_status.current].max_tier) || defeated != true ) {
+        $('#next_boss').prop('disabled', true);
+        $('#next_boss').css('display', "none");  
+      }
+      else {
+        $('#next_boss').prop('disabled', false);
+        $('#next_boss').css('display', "inline-block");  
+      }
+       for( var k in vals.pantheon.upgrades ) {
+           for( var i in vals.pantheon.upgrades[k] ) {
+             var item = vals.pantheon.upgrades[k][i];
+              var id = '#';
+              if( i.includes('hp') || i.includes('regen')  ) id += i + '_' + k.substr(k.length-1);
+              else id += i.substr(0, i.length-1) + '_' + i.substr(i.length-1);
+              if( vals.flame >= item.cost && item.amount < item.max_amount ) {
+                  $(id).prop('disabled', false);
+              }
+              else $(id).prop('disabled', true);
+          }
+        }
+    }
+   if( vals.current_tab === 'Leap' ) {
+    var id = $('.wrap-nav').attr('id');
+    var tier = id.substr(id.length-1);
+      if( vals.flame >= vals.leap[tier]['tier'].req) {
+        $('#tier_btn_' + tier).prop('disabled', false);  
+      }  
+      else $('#tier_btn_' + tier).prop('disabled', true);    
+   }
   }
   function fix_tab_buttons(vals) {
     var unlock_conv = 0, unlock_ascend = 0, unlock_aug = 0;
@@ -661,160 +1359,59 @@ var upgrade_box_size = 0;
           if( vals.upgrades[k][i] != "Click amount" && vals.upgrades[k][i] != "Tick speed" ) total_aug++;
           }
       }
-      for( var k in vals.clickers ) {
-        if( vals.clickers[k].unlocked ) unlock_conv++;
+      for( var k in vals.miracle ) {
+        if( vals.miracle[k].unlocked ) unlock_conv++;
         total_conv ++;
       }
       for( var k in vals.ascend ) {
         if( vals.ascend[k].unlocked ) unlock_ascend++;
         total_ascend ++;
       }
+    $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/26");
+    $('#augment-tab-text').text("Upgrade " + unlock_aug + "/20");
+    $('#convert-tab-text').text("Create " + unlock_conv + "/" + total_conv);
+    $('#ascend-tab-text').text("Convert " + unlock_ascend + "/" + total_ascend);
     
-    $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/" + Object.keys(vals.challenges).length * 2);
-    $('#augment-tab-text').text("Augment " + unlock_aug + "/" + total_aug);
-    $('#convert-tab-text').text("Convert " + unlock_conv + "/" + total_conv);
-    $('#ascend-tab-text').text("Ascend " + unlock_ascend + "/" + total_ascend);
+    if( !vals.leap.unlocked ) $('#leap-tab-btn').css('display', 'none');
+    else $('#leap-tab-btn').css('display', 'inline-block');
   }
   function fix_stats(vals) {
-    if( vals.prod > vals.stats.max_prod) vals.stats.max_prod = vals.prod;
-    if( vals.loss > vals.stats.max_loss) vals.stats.max_loss = vals.loss;
-       $('#stats_field_1').text(truncate_time(vals.stats.time_played));
+    var mul = vals.god_status[vals.god_status.current].mul;
+    var corrected_prod = (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100));
+    var corrected_loss = (1+(vals.corruption/100))*vals.loss;
+    corrected_prod *= (0.8*mul);
+    corrected_loss *= (0.8*mul);
+    if( corrected_prod > vals.stats.max_prod) vals.stats.max_prod = corrected_prod;
+    if( corrected_loss > vals.stats.max_loss) vals.stats.max_loss = corrected_loss;
+       $('#stats_field_1').text(truncate_time( Math.round(vals.stats.time_played)));
        $('#stats_field_2').text(truncate_bigint(Math.floor(vals.energy)));
        $('#stats_field_3').text(truncate_bigint(Math.floor(vals.stats.total_energy)));
        $('#stats_field_4').text(truncate_bigint(Math.floor(vals.followers)));
        $('#stats_field_5').text(truncate_bigint(Math.floor(vals.stats.total_followers)));
-       $('#stats_field_6').text(truncate_bigint(vals.loss));
-       $('#stats_field_7').text(truncate_bigint(vals.stats.max_loss));
-       $('#stats_field_8').text( truncate_bigint( vals.prod));
-       $('#stats_field_9').text( truncate_bigint( vals.stats.max_prod ));
+       $('#stats_field_6').text(truncate_bigint( Math.round(corrected_loss)) );
+       $('#stats_field_7').text(truncate_bigint( Math.round(vals.stats.max_loss)) );
+       $('#stats_field_8').text( truncate_bigint( Math.round(corrected_prod) ));
+       $('#stats_field_9').text( truncate_bigint( Math.round(vals.stats.max_prod) ));
        $('#stats_field_13').text(vals.stats.miracle_clicks);
        $('#stats_field_11').text(vals.click);
        $('#stats_field_14').text(vals.stats.ascension_clicks);
        if( $('#last_saved').text() != "")
-          $('#stats_field_saved').text(last_saved + " seconds ago.");
+          $('#stats_field_saved').text(Math.round(last_saved) + " seconds ago.");
        else $('#stats_field_saved').text(" never");
        $('#stats_field_15').text(truncate_bigint(vals.stats.ascension_click_energy));
        $('#stats_field_16').text(truncate_bigint(vals.stats.miracle_click_energy));
   }
    function fix_names( vals ) {
-    if( vals.current_tab === 'Conversion') {
-    for( var k in vals.clickers ) {
-      var purchase_num = k.substr(k.length -1 );
-      if( vals.prod >= vals.clickers[k].unlock_rps ) {
-        vals.clickers[k].unlocked = true;
-        //dynammically create divs as needed, saves creating all in the html file.
-         if( !document.getElementById('purchase_' + purchase_num) && !document.getElementById('new_purchase') && k != "purchase1" ){
-              var clonedDiv_id = $('#purchase_' + challenge_num + '_' + i);
-              $('<div id="new_purchase" class="tab_div"> ' +
-                '<h3 id="purchase_head_temp" class="header_1">This is the field for upgrade for option one.' +
-                '<label id=purchase_lbl_ class="align_right">0</label></h3><p>' +
-      '<b><span id="purchase_cost_">10</span></b> - <em id="purchase_text_"> Text placeholder</em></p>' +
-      '<p class = "align_right">Produces <b><span id="purchase_out_">0.1</span></b> per tick</p>'+
-      ' <button id="purchase_btn_" class="purchase" disabled="disabled">Purchase</button> '+
-      '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
-      'disabled="disabled" >Sell</button></div>').appendTo($('#Conversion'));
-              //now fix the fields
-              $("#new_purchase").find('#purchase_lbl_').attr('id', "purchase_lbl_" + purchase_num);
-              $("#new_purchase").find('#purchase_text_').attr('id', "purchase_text_" + purchase_num);
-              $("#new_purchase").find('#purchase_btn_').attr('id', "purchase_btn_" + purchase_num);
-              $("#new_purchase").find('#purchase_out_').attr('id', "purchase_out_" + purchase_num);
-              $("#new_purchase").find('#purchase_cost_').attr('id', "purchase_cost_" + purchase_num);
-              $("#new_purchase").find('#purchase_head_temp').attr('id', "purchase_header_" + purchase_num);
-              $('#new_purchase').attr('id','purchase_' + purchase_num);
-           }
-        $('#purchase_' + purchase_num).css("display", "block");
-        $("#purchase_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.clickers[k].label);
-        $('#purchase_lbl_' + purchase_num).text(vals.clickers[k].amount);
-        $('#purchase_cost_' + purchase_num).text( '[ ' + truncate_bigint(vals.clickers[k].cost) + ' energy ]');
-        $('#purchase_text_' + purchase_num).text(vals.clickers[k].description);
-        $('#purchase_out_' + purchase_num).text(vals.clickers[k].output + " followers ");
-    }
-    else {
-      $('#purchase_' + purchase_num).css("display", "none");
-    }
-  }
-  }
-  if( vals.current_tab === 'Ascension' ) {
-    for( var k in vals.ascend ) {
-      var purchase_num = k.substr(k.length -1 );
-      if( vals.loss >= vals.ascend[k].unlock_loss ) {
-        if( !document.getElementById('ascend_' + purchase_num) && !document.getElementById('new_ascend') && k != "ascend1" ){
-              var clonedDiv_id = $('#ascend_' + challenge_num + '_' + i);
-              $('<div id="new_ascend" class="tab_div"> ' +
-                '<h3 id="ascend_head_temp" class="header_1">This is the field for upgrade for option one.' +
-                '<label id=ascend_lbl_ class="align_right">0</label></h3><p>' +
-      '<b><span id="ascend_cost_">10</span></b> - <em id="ascend_text_"> Text placeholder</em></p>' +
-      '<p class = "align_right">Produces <b><span id="ascend_out_">0.1</span></b> per tick<br>Ascends ' +
-      '<b><span id="ascend_out__2">0.1</span></b>per tick</p>'+
-      ' <button id="ascend_btn_" class="purchase" disabled="disabled">Purchase</button> '+
-      '<button id="ascend_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
-      'disabled="disabled" >Sell</button></div>').appendTo($('#Ascension'));
-              //now fix the fields
-              $("#new_ascend").find('#ascend_lbl_').attr('id', "ascend_lbl_" + purchase_num);
-              $("#new_ascend").find('#ascend_text_').attr('id', "ascend_text_" + purchase_num);
-              $("#new_ascend").find('#ascend_btn_').attr('id', "ascend_btn_" + purchase_num);
-              $("#new_ascend").find('#ascend_out_').attr('id', "ascend_out_" + purchase_num);
-              $("#new_ascend").find('#ascend_cost_').attr('id', "ascend_cost_" + purchase_num);
-              $("#new_ascend").find('#ascend_head_temp').attr('id', "ascend_header_" + purchase_num);
-              $("#new_ascend").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_2');
-              $('#new_ascend').attr('id','ascend_' + purchase_num);
-           }
-        vals.ascend[k].unlocked = true;
-        $('#ascend_' + purchase_num).css("display", "block");
-        $("#ascend_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.ascend[k].label);
-        $('#ascend_lbl_' + purchase_num).text(vals.ascend[k].amount);
-        $('#ascend_cost_' + purchase_num).text('[ ' + truncate_bigint(vals.ascend[k].cost) + ' energy ]');
-        $('#ascend_text_' + purchase_num).text(vals.ascend[k].description);
-        $('#ascend_out_' + purchase_num).text(vals.ascend[k].output + " divine energy ");
-        $('#ascend_out_' + purchase_num + '_2').text(vals.ascend[k].output + " followers ");
-    }
-    else {
-      $('#ascend_' + purchase_num).css("display", "none");
-    }
-   }
-  }
-   if( vals.current_tab === 'Upgrades')
-   for( var k in vals.upgrades ) {
-      var purchase_num = k.substr(k.length-1);
-
-      for( var i in vals.upgrades[k] ) {
-        if( i != "type") {
-          //set up new div for same challenge unlock
-        if( (i.substr(i.length-1) === '1') || (vals.upgrades[k]["upgrade" + (String(parseInt(i.substr(i.length-1)) -1))].unlocked
-          && i.substr(i.length-1) != '1') )  {
-          if( !document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.length-1)) && !document.getElementById('new_upgrade') && i != "upgrade1" ){
-                var clonedDiv_id = $('#upgrade_' + challenge_num + '_' + i);
-                $('<div id="new_upgrade" class="tab_div"> ' +
-                '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
-                '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
-                '<b><span id="upgrade_cost__">10</span></b>-<em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
-                ' data-balloon="Tick length - 20%" data-balloon-pos="right" disabled="disabled">Purchase</button></div>').appendTo($('#upgrade_' + purchase_num));
-
-                $('#new_upgrade').find('#upgrade_btn__').attr('id', "upgrade_btn_"+ purchase_num + "_" + i.substr(i.length-1));
-                $("#new_upgrade").find('#upgrade_head_temp').attr('id', "upgrade_header_"+ purchase_num + "_" + i.substr(i.length-1));
-                $("#new_upgrade").find('#upgrade_lbl_').attr('id', "upgrade_lbl_" + purchase_num + "_" + i.substr(i.length-1));
-                $("#new_upgrade").find('#upgrade_text').attr('id', "upgrade_text_" + purchase_num + "_" + i.substr(i.length-1));
-                $('#new_upgrade').find('#upgrade_cost__').attr('id', 'upgrade_cost_' + purchase_num + '_' + i.substr(i.length-1));
-                $('#new_upgrade').attr('id','upgrade_' + purchase_num + '_' + i.substr(i.length-1));
-                vals.upgrades[k][i].visible = true;
-            }
-        $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.length-1)).attr('data-balloon', vals.upgrades[k].type + ' x' + vals.upgrades[k][i].mul); 
-        $('#upgrade_' + purchase_num + "_" + i.substr(i.length-1)).css("display", "block");
-        $("#upgrade_header_" + purchase_num + "_" + i.substr(i.length-1)).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.upgrades[k][i].label);
-        $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.length-1)).text('[ ' + truncate_bigint(vals.upgrades[k][i].cost) + ' energy ]');
-        $('#upgrade_text_' + purchase_num + "_" + i.substr(i.length-1)).text(vals.upgrades[k][i].description);
-        if( vals.upgrades[k][i].unlocked) {
-          $('#upgrade_lbl_' + purchase_num + "_" + i.substr(i.length-1)).attr('class','glyphicon glyphicon-ok align_right');
-          $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.length-1)).remove();
-          $('#upgrade_cost_'+purchase_num + "_" + i.substr(i.length-1)).remove();
-          $('#upgrade_' + purchase_num + "_" + i.substr(i.length-1)).css('background-color', '#212121');
-          $('#upgrade_' +purchase_num + "_" + i.substr(i.length-1)).css('color', '#fff');
-          $('#upgrade_' + purchase_num + "_" + i.substr(i.length-1)).css('border', '2px solid #fff');
-         }
-        }
-       }
-     }
-    }
+    //fix conv and asc
+    fix_conv_asc(vals);
+    fix_corruption_bar(vals);
+    //check on each update cycle for now - later only update once the desired event has occured
+    $('#god_status').text(vals.god_status[vals.god_status.current].label);
+    //todo- move this to its own method.
+    
+    //fix upgrades
+    fix_upgrades(vals);
+    //fix sacrifices
     if( vals.sacrifice.unlocked && vals.current_tab === 'Sacrifice') {
       if($(window).width() > 750 ){
        $(".dotted").attr('data-balloon', "\u2191 Energy prod, \u2193 Follower prod");
@@ -834,20 +1431,252 @@ var upgrade_box_size = 0;
         }
       }
     }
+    //fix challenges
+    fix_challenges(vals);
+    fix_pantheon(vals);
+    fix_leap(vals);
+  }
+function fix_leap(vals) {
+  if( vals.current_tab === 'Leap' && vals.leap.unlocked ) {
+      var id = $('.wrap-nav').attr('id');
+      var tier = id.substr(id.length-1);
+      //$('.wrap-nav').attr('id', 'leap_tier_' + String(parseInt(tier)+1));
+
+      //boss lbl boss desc
+      for( var k in vals.leap[tier] ) {
+        $('#' + k + '_lbl_' + tier).text(vals.leap[tier][k].label);
+        $('#' + k + '_desc_' + tier).text(vals.leap[tier][k].description);
+        if( k === 'tier' ) $('#' + k+ '_cost_' + tier).html('Costs ' + vals.leap[tier][k].cost + '<span class="glyphicon glyphicon-fire"></span>');
+
+        if( vals.leap.selected != 0 ) {
+          $('#' + vals.leap.selected ).css('background-color', '#fff');
+          $('#' + vals.leap.selected ).children().each(function() {
+            $(this).css('color', '#212121');
+            $(this).children().each(function() {
+              $(this).css('color', '#212121');
+            });
+          });
+          $('#' + vals.leap.selected ).css('border', '6px solid #212121');
+          $('#' + vals.leap.selected ).css('border-radius', '6px');
+          $('#' + vals.leap.selected ).css('padding', '2.5% 2.5%');
+        }
+    }
+  }  
+
+}
+
+//fix pantheon tabs, accounting for whether you can switch btw tabs
+function fix_pantheon(vals) {
+      //fix pantheon
+    var mul = vals.god_status[vals.god_status.current].mul;
+    if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
+
+      $('#pantheon_div_1').css('display', 'none');
+      $('#pantheon_unlocked').css('display','block');
+      $('#essence_amount').text( Math.round( vals.flame * 10) /10 );
+      for( var k in vals.pantheon.bosses ) {
+        var id = k.substr(k.length-1);
+      if( vals.pantheon.bosses[k].current ) {
+        $('#battle_1').attr('src', 'data/battle_' + id + '.png');
+        if( $('#boss_num').text() != ': Upgrades') $('#boss_num').text(': ' + vals.god_status[vals.god_status.current].boss_label + ' Boss ' + id);
+        $('#battle_1_hp').text( truncate_bigint( mul * vals.pantheon.bosses[k].current_hp));
+        $('#max_hp').text( truncate_bigint(mul * vals.pantheon.bosses[k].max_hp));
+        $('#boss_hp_bar').css('width', 100 * ( (mul*vals.pantheon.bosses[k].current_hp)/(mul*vals.pantheon.bosses[k].max_hp) ) + '%');
+        $('#regen').text(mul*vals.pantheon.bosses[k].regen);
+        $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
+        break;
+      }
+    }
+
+         for( var k in vals.pantheon.upgrades ) {
+           for( var i in vals.pantheon.upgrades[k] ) {
+             var item = vals.pantheon.upgrades[k][i];
+             if( !i.includes('hp') && !i.includes('regen')) {
+                if( $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '' )
+                 $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
+             }
+             else {
+              if( $('#shop_' + i).html() === '' )
+                 $('#shop_' + i).html(item.label);
+             }
+            }
+          }
+  }
+}
+function fix_corruption_bar(vals) {
+  var cor = vals.corruption;
+  if( cor >= -100 ) $('#corruption_bar').css('background-color', '#0D47A1');
+  if( cor >= -80 && cor < -60 ) $('#corruption_bar').css('background-color', '#1976D2');
+  if( cor >= -60 && cor < -40 ) $('#corruption_bar').css('background-color', '#42A5F5');
+  if( cor >= -40 && cor < -20) $('#corruption_bar').css('background-color', '#90CAF9');
+  if( cor >= -20 && cor < 0) $('#corruption_bar').css('background-color', '#BBDEFB');
+  if( cor == 0 ) $('#corruption_bar').css('background-color', '#B0BEC5');
+  if( cor <= 20 && cor > 0) $('#corruption_bar').css('background-color', '#EF9A9A');
+  if( cor <= 40 && cor > 20) $('#corruption_bar').css('background-color', '#E57373');
+  if( cor <= 60 && cor > 40) $('#corruption_bar').css('background-color', '#F44336');
+  if( cor <= 80 && cor > 60) $('#corruption_bar').css('background-color', '#D32F2F');
+  if( cor <= 100 && cor > 80) $('#corruption_bar').css('background-color', '#B71C1C');
+  var g_e;
+  if( cor < 0 ) {
+    g_e = " Good";
+    cor *= -1
+  }
+  else if( cor > 0 ) 
+    g_e = " Evil";
+  else if( cor === 0 )
+    g_e = " - Neutral";
+
+  $('#corruption_amount').text(cor + '%' + g_e);
+}
+//generalised function that handles both asc and conv tabs.
+function fix_conv_asc(vals) {
+  var currentTab = vals.current_tab;
+  if( currentTab != 'Conversion' && currentTab != 'Ascension' ) return;
+  var keyWord;
+  var title;
+    if( currentTab === 'Ascension') { keyWord = 'ascend'; title = 'ascend'; }
+    else { keyWord = 'miracle'; title = 'purchase'; }
+    for( var k in vals[keyWord] ) {
+      var purchase_num = k.substr(k.length -1 );
+      if( (currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab==='Conversion' && vals.prod >= vals[keyWord][k].unlock_rps) ) {
+        vals[keyWord][k].unlocked = true;
+        //dynammically create divs as needed, saves creating all in the html file.
+         if( !document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1") ){
+              var clonedDiv_id = $('#' + title+ '_' + purchase_num + '_' + purchase_num);
+              
+              var html_to_append = '<div id="new_purchase" class="tab_div"> ' +
+                '<h3 id="purchase_head_temp" class="header_1">This is the field for upgrade for option one.' +
+                '<label id=purchase_lbl_ class="align_right">0</label></h3><p>' +
+                '<b><span id="purchase_cost_">10</span></b> - <em id="purchase_text_"> Text placeholder</em></p>' +
+                '<p class = "align_right">Creates <b><span id="purchase_out_">0.1</span></b> per tick';
+
+                if( currentTab != 'Conversion' ) html_to_append += '<br>Costs <b><span id="ascend_out__2">0.1</span></b>per tick';
+
+                html_to_append += ' </p><button id="purchase_btn_" class="purchase" disabled="disabled">Purchase</button> '+
+                '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
+                'disabled="disabled" >Sell</button></div>';
+                $(html_to_append).prependTo('#' + currentTab);
+              //now fix the fields
+              $("#new_purchase").find('#purchase_lbl_').attr('id', title + "_lbl_" + purchase_num);
+              $("#new_purchase").find('#purchase_text_').attr('id', title + "_text_" + purchase_num);
+              $("#new_purchase").find('#purchase_btn_').attr('id', title + "_btn_" + purchase_num);
+              $("#new_purchase").find('#purchase_sell_btn_').attr('id',title + "_sell_btn_" + purchase_num);
+              $("#new_purchase").find('#purchase_out_').attr('id', title + "_out_" + purchase_num);
+              $("#new_purchase").find('#purchase_cost_').attr('id', title + "_cost_" + purchase_num);
+              $("#new_purchase").find('#purchase_head_temp').attr('id',title + "_header_" + purchase_num);
+              if( currentTab != 'Conversion' ) $("#new_purchase").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_' + purchase_num);
+              $('#new_purchase').attr('id', title + '_' + purchase_num);
+           }
+        $('#' + title + '_' + purchase_num).css("display", "block");
+        $('#'+ title + "_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals[keyWord][k].label);
+        $('#'+title + '_lbl_' + purchase_num).text(vals[keyWord][k].amount);
+        var cost = 1;
+        if( vals.god_status.current > 1 ) cost = vals.god_status[vals.god_status.current].mul * 0.80;
+        $('#'+title + '_cost_' + purchase_num).text( '[ ' + truncate_bigint(Math.round( vals.god_status[vals.god_status.current].mul * vals[keyWord][k].cost)) + ' energy ]');
+        $('#'+title + '_text_' + purchase_num).text(vals[keyWord][k].description);
+        $('#'+ title + '_out_' + purchase_num).text( truncate_bigint(Math.round(cost * vals[keyWord][k].output *10)/10)+ " followers ");
+        if( currentTab != 'Conversion' ) {
+          $('#'+ title + '_out_' + purchase_num).text( truncate_bigint(Math.round(cost  * vals[keyWord][k].output*10)/10) + " energy ");
+          $('#ascend_out_' + purchase_num + '_' + purchase_num).text(truncate_bigint(Math.round(cost  * vals.ascend[k].output*10)/10) + " followers ");
+        }
+    }
+    else {
+      $('#'+ title + '_' + purchase_num).css("display", "none");
+    }
+  }
+}
+//fix all the upgrades
+function fix_upgrades(vals) {
+  if( vals.current_tab === 'Upgrades'){
+   for( var k in vals.upgrades ) {
+      var purchase_num = k.substr(k.length-1);
+
+      for( var i in vals.upgrades[k] ) {
+        if( i != "type") {
+          //set up new div for same challenge unlock
+        if( (i.substr(i.indexOf('e') + 1) === '1') || 
+          (vals.upgrades[k]["upgrade" + (String(parseInt(i.substr(i.indexOf('e') + 1)) -1))].unlocked && i.substr(i.indexOf('e') + 1) != '1') )  {
+          if( !document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)) && !document.getElementById('new_upgrade') && i != "upgrade1" ){
+                var clonedDiv_id = $('#upgrade_' + purchase_num + '_' + i);
+                $('<div id="new_upgrade" class="tab_div"> ' +
+                '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
+                '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
+                '<b><span id="upgrade_cost__">10</span></b> - <em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
+                ' data-balloon="Tick length - 20%" data-balloon-pos="right" disabled="disabled">Purchase</button></div>').prependTo($('#upgrade_' + purchase_num));
+
+                $('#new_upgrade').find('#upgrade_btn__').attr('id', "upgrade_btn_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+                $("#new_upgrade").find('#upgrade_head_temp').attr('id', "upgrade_header_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+                $("#new_upgrade").find('#upgrade_lbl_').attr('id', "upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+                $("#new_upgrade").find('#upgrade_text').attr('id', "upgrade_text_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+                $('#new_upgrade').find('#upgrade_cost__').attr('id', 'upgrade_cost_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
+                $('#new_upgrade').attr('id','upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
+                vals.upgrades[k][i].visible = true;
+            }
+        $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).attr('data-balloon', vals.upgrades[k].type + ' x' + vals.upgrades[k][i].mul); 
+        $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css("display", "block");
+        $("#upgrade_header_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.upgrades[k][i].label);
+        var cost = 1;
+        if( vals.god_status.current > 1 ) cost = vals.god_status[vals.god_status.current].mul * 0.67;
+        $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text('[ ' + truncate_bigint(cost * vals.upgrades[k][i].cost) + ' energy ]');
+        $('#upgrade_text_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].description);
+        if( vals.upgrades[k][i].unlocked) {
+          $('#upgrade_lbl_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).attr('class','glyphicon glyphicon-ok align_right');
+          $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).remove();
+          $('#upgrade_cost_'+purchase_num + "_" + i.substr(i.indexOf('e') + 1)).remove();
+          $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('background-color', '#212121');
+          $('#upgrade_' +purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('color', '#fff');
+          $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('border', '2px solid #fff');
+          $('#upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1)).detach().appendTo('#bought_upgrades');
+         }
+        }
+       }
+     }
+    }
+  }
+}
+  //fix all challenge names if you're on the correct page
+function fix_challenges(vals) {
     if( vals.current_tab === 'Challenges') {
       var num_unlocked = 0;
     for( var k in vals.challenges) {
       var challenge_num = k.substr(k.length-1);
       for( var i in vals.challenges[k] ) {
          if( vals.challenges[k][i] != vals.challenges[k].required_type) {
-         if( !document.getElementById('challenges_' + challenge_num + '_' + i) && !document.getElementById('new_challenge') && i != "1" ){
-          if( vals.challenges[k][(String(parseInt(i) -1))].unlocked )  {
-              
+         if( !document.getElementById('challenges_' + challenge_num + '_' + i) && !document.getElementById('new_challenge') && i.substr(i.length-1) != "1" ){
+          var can_clone = false;
+          //check for click challenges - go through each group
+          switch( vals.challenges[k].required_type) {
+            case 'click_m' : case 'click_a' :
+              if( ( vals.challenges[k][i].type === 'quantity' ) ){
+                if( vals.challenges[k][(String(parseInt(i) -1))].unlocked) can_clone = true;
+              } 
+              else if ( vals.challenges[k][i].type === 'total' ) {
+                if( vals.challenges[k][ String(parseInt(i.substr(i.length-1)) -1) + '_' + String(parseInt(i.substr(i.length-1)) -1)].unlocked ) can_clone = true;
+              } 
+            break;
+            case 'conv' : case 'asc' :
+              var keyWord;
+              if(vals.challenges[k].required_type ==='conv' && 
+                vals.miracle['purchase' + vals.challenges[k][String(parseInt(i)-1)].req_tier].amount >= vals.challenges[k][String(parseInt(i)-1)].req_num) 
+                can_clone = true;
+              else {
+                if( vals.ascend['ascend' + vals.challenges[k][String(parseInt(i)-1)].req_tier].amount >= vals.challenges[k][String(parseInt(i)-1)].req_num) 
+                  can_clone = true;
+              }
+            break;
+            case 'sac' :
+              if( vals.challenges[k][String(parseInt(i)-1)].unlocked) can_clone = true;
+            break;
+            case 'panth' :
+              if( vals.challenges[k][String(parseInt(i)-1)].unlocked ) can_clone = true;
+            break;
+          }
+          if( can_clone) {
               var clonedDiv_id = $('#challenges_' + challenge_num + '_' + i);
               $('<div id="new_challenge" class="tab_div"> ' +
                 '<h3 id="challenge_head_temp" class="header_1">This is the field for upgrade for option one.' +
                 '<label id=challenges_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
-                '<em id="challenges_text">Text placeholder</em> </p></div>').appendTo($('#challenge' + challenge_num));
+                '<em id="challenges_text">Text placeholder</em> </p></div>').prependTo($('#challenge' + challenge_num));
               $("#new_challenge").find('#challenges_lbl_').attr('id', "challenges_lbl_" + challenge_num + '_' + i);
               $("#new_challenge").find('#challenges_text').attr('id', "challenges_text_" + challenge_num + '_' + i);
               $('#new_challenge').children().each(function() {
@@ -870,6 +1699,7 @@ var upgrade_box_size = 0;
           $('#challenges_' + challenge_num + '_' + i).css('background-color', '#212121');
           $('#challenges_' + challenge_num + '_' + i).css('color', '#fff');
           $('#challenges_' + challenge_num + '_' + i).css('border', '2px solid #fff');
+          $('#challenges_' + challenge_num + "_" + i).detach().appendTo('#completed_challenges');
          }
          else {
           $('#challenges_lbl_' + challenge_num + '_' + i).attr('class','glyphicon glyphicon-remove align_right');
@@ -881,24 +1711,75 @@ var upgrade_box_size = 0;
         }
        }
       }
-    $('#corruption_amount').text(vals.corruption + '%');
+}
+function doLeap(vals) {
+  //reset all the stats, buildings etc - will need to alter json file
 
-   if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
+      var selected = vals.leap.selected.substr(0, vals.leap.selected.indexOf('_'));
+      var chosen = vals.leap[$('.wrap-nav').attr('id').substr($('.wrap-nav').attr('id').length -1)][selected];
+      chosen.amount ++;
 
-      $('#pantheon_div_1').css('display', 'none');
-      $('#pantheon_unlocked').css('display','block');
-      for( var k in vals.pantheon.bosses ) {
-      if( vals.pantheon.bosses[k].current ) {
-        $('#battle_1').attr('src', 'data/battle_' + k.substr(k.length-1) + '.png');
-        $('#boss_num').text(': Boss ' + k.substr(k.length-1));
-        $('#battle_1_hp').text(vals.pantheon.bosses[k].current_hp);
-        $('#regen').text(vals.pantheon.bosses[k].regen);
-        $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
+      var total_click_mul = 0;
+      for( var k in vals.leap ) {
+        if( k != 'unlocked' && k!='selected') {
+          total_click_mul += (vals.leap[k]['click'].mul * vals.leap[k]['click'].amount);
+        }
       }
-    }
-   }
+      var total_damage_mul = 0;
+       for( var k in vals.leap ) {
+        if( k != 'unlocked' && k!='selected') {
+          total_damage_mul += (vals.leap[k]['boss'].mul * vals.leap[k]['boss'].amount);
+        }
+      }
+      var tier = 1;
+      for( var k in vals.leap ) {
+        if( k != 'unlocked' && k!='selected') {
+          tier += (vals.leap[k]['tier'].mul * vals.leap[k]['tier'].amount);
+        }
+      }
+      var temp_s = {
+          't':vals.stats.time_played.toString(16),
+          't_e':Math.round(vals.stats.total_energy).toString(16),
+          't_f':Math.round(vals.stats.total_followers).toString(16),
+          'm_p':vals.stats.max_prod,
+          'm_l':vals.stats.max_loss,
+          'm_c':vals.stats.miracle_clicks.toString(16),
+          'a_c':vals.stats.ascension_clicks.toString(16),
+          'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
+          'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
+      };
+      var save = {
+        'e':0,
+        'p':0,
+        'cl':Math.pow(2, total_click_mul).toString(16),
+        'f':0,
+        'l':0,
+        'c':0,
+        'ac':1,
+        't':(500).toString(16),
+        'fl':0,
+        'dam':Math.pow(3, total_damage_mul).toString(16),
+        "tier":(tier).toString(16)
+      };
+      save['s'] = temp_s;
+        for(var k in vals.leap) { 
+            var items = vals.leap[k];
+            var temp_a = [];
+              for(var i in items) { 
+                if(items[i].amount > 0) {
+                    temp_a.push([i] + ":" +items[i].amount.toString(16));
+                  }
+              }
+            if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+        }
+        localStorage.sv1 = btoa(JSON.stringify(save));
   }
-
+$(document).on("click", ".reset", function() {
+  if( confirm("Are you sure you want to Quantum leap?") ) {
+    doLeap(vals);
+    location.reload();
+  }
+});
 $(document).on("click", ".purchase", function() {
     var btn = $(this).attr('id');
     if( btn === 'delete_save') {
@@ -909,14 +1790,14 @@ $(document).on("click", ".purchase", function() {
       saveData();
       $.toaster({message:"Successfully saved game.", title:"Saved"});  
     }
-    var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
-    switch( id.substr(0, id.length-1)) {
+    var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1);
+    switch( id.substr(0, id.search(/\d/))) {
       case 'purchase':
-        if( vals.energy >= vals.clickers[id].cost ) {
-          vals.energy-= vals.clickers[id].cost;
-          vals.clickers[id].amount ++;
-          vals.clickers[id].cost =  set_item_cost(vals.clickers[id]);
-          vals.prod += vals.clickers[id].output;
+        if( vals.energy >= vals.miracle[id].cost ) {
+          vals.energy-= vals.miracle[id].cost;
+          vals.miracle[id].amount ++;
+          vals.miracle[id].cost =  set_item_cost(vals.miracle[id]);
+          vals.prod += vals.miracle[id].output;
         }
       break;
     case 'ascend' :
@@ -927,18 +1808,21 @@ $(document).on("click", ".purchase", function() {
         vals.loss += vals.ascend[id].output;
       }
     break;
-    //todo - fix this.
     case 'upgrade' :
       var purchase_type = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
       if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
         vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
-        console.log('here');
-        console.log(vals.upgrades[purchase_type[0]].type);
         if( vals.upgrades[purchase_type[0]].type === "Click amount") {
+          var origClick = vals.click;
           vals.click *= vals.upgrades[purchase_type[0]][id].mul;
-          console.log('purchase here');
+          if( vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick );
         }
-        else vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
+        else if( vals.upgrades[purchase_type[0]].type === 'Tick speed' )
+          vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
+        else {
+          vals.leap.unlocked = true;
+          $.toaster({message:"Don't go quietly into the good night.",title:"Quantum leap unlocked"})
+        }
         vals.upgrades[purchase_type[0]][id].unlocked = true;
       }
       break;
@@ -957,7 +1841,7 @@ $(document).on("click", ".purchase", function() {
           vals.followers-= vals.sacrifice[id].cost;
           processed = true;
         }
-        else $.toaster({message:"Your power is maxed.",title:"Sacrifice rejected"})
+        else $.toaster({message:"Your power is maxed.",title:"Sacrifice rejected"});
       }
       else if( id.substr(id.length-1) === '2' ) {
         if( Math.abs(vals.corruption) <= 85 ) {
@@ -984,37 +1868,69 @@ $(document).on("click", ".purchase", function() {
         vals.sacrifice[id].cost = set_item_cost(vals.sacrifice[id]);
       }
     break;
+    case 'click' : case 'tier' : case 'boss' :
+      if(  vals.leap.selected === (id.substr(0, id.search(/\d/)) + '_leap') ) {
+          $('#' + vals.leap.selected ).css('background-color', '');
+          $('#' + vals.leap.selected ).children().each(function() {
+            $(this).css('color', '');
+            $(this).children().each(function() {
+              $(this).css('color', '');
+            });
+          });
+          $('#' + vals.leap.selected ).css('border', '');
+          $('#' + vals.leap.selected ).css('border-radius', '');
+          vals.leap.selected = 0;
+          $('.reset').prop('disabled', true);
+      }
+      else {
+        $('#' + vals.leap.selected ).css('background-color', '');
+          $('#' + vals.leap.selected ).children().each(function() {
+            $(this).css('color', '');
+            $(this).children().each(function() {
+              $(this).css('color', '');
+            });
+          });
+          $('#' + vals.leap.selected ).css('border', '');
+          $('#' + vals.leap.selected ).css('border-radius', '');
+        vals.leap.selected = (id.substr(0, id.search(/\d/)) + '_leap');
+        $('.reset').prop('disabled', false); 
+      }
+    break;
   }
   fix_tab_buttons(vals);
   fix_names(vals);
   });
-function gen_target_offset(id, target) {
+function gen_target_offset(id, target, event) {
   switch(id.substr(1,1)) {
-    //generate offsets for miracle click animations
+    //generate offsets for miracle click animation
     case  'm' :
-      if( $(window).width() > 1300 )  
+      if( $(window).width() > 1300 )  {
         //2nd miracle button
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.8});
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY - 125  });
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.15});
-      else if( $(window).width() <= 700) 
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.65});
+        else target.offset({left: 1.2 * $(id).offset().left, top:  event.pageY + 10 });
+        }
+        else if( $(window).width() <= 700) {
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.25});
+        else target.offset({left: 1.2 * $(id).offset().left, top:event.pageY + 10});
       //want a less aggressive offset
-      else if(  $(window).width() <= 750) 
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.7});
+      }
+      else if(  $(window).width() <= 750) {
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.2});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
+      }
       else if( $(window).width() <= 1100) 
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.8});
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -100});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.15});
-      else if( $(window).width() <= 1300) 
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
+      else if( $(window).width() <= 1300) {
         //2nd miracle button
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *0.8});
+        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -110});
         //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: $(id).offset().top *1.15});
+        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
+      }
     break;
     case  'b' :
     //generate offsets for boss click animation
@@ -1032,11 +1948,14 @@ function gen_target_offset(id, target) {
   }
 }
 $(document).on("click", ".battle", function() {
-  var btn = $(this).attr('id');
+  animate_attack(vals.pantheon.damage, $(this).attr('id'));
+});
+
+function animate_attack(damage, id) {  
+  var btn = id;
   var divToAppend, target, offset;
   target = $('.miracle_click:first').clone();
-  target.html( '-' + truncate_bigint(vals.click));
-  perform_miracle();
+  target.html( '-' + truncate_bigint(damage));
   offset = $(window).height()/8;
   $('.boss_img').append(target);
   target.show();
@@ -1047,42 +1966,54 @@ $(document).on("click", ".battle", function() {
   gen_target_offset('.boss_img', target);
   //two animations to create a more smooth curve
   target.animate({ 'top': '-=25', 'opacity':0.8, 'left': '+=4' }, 250);
-  target.animate({ 'top': '+=15', 'opacity':0.1, 'left':  '+=15'}, 250, function() {  $(this).remove(); });
+  target.animate({ 'top': '+=15', 'opacity':0.1, 'left':  '+=15'}, 250, function() {  
+    target.remove(); 
+  });
   var boss_num = btn.substr(btn.length-1);
   for( var k in vals.pantheon.bosses) {
     if( vals.pantheon.bosses[k].current) {
-      vals.pantheon.bosses[k].current_hp -= vals.click;
+      vals.pantheon.bosses[k].current_hp -= damage;
   //process reward for defeating boss
     if( vals.pantheon.bosses[k].current_hp <= 0 ) {
-      vals.pantheon.bosses[k].current = false;
-      var id = k.substr(k.length-1);
-      id++;
-      boss_num++;
-      vals.followers += vals.pantheon.bosses[k].reward;  
-      vals.pantheon.bosses['boss'+(id)].current = true;
+      vals.flame+=vals.pantheon.bosses[k].reward;
+      //if the boss is defeated for the first time, change the params for when user fights again
+      if( vals.pantheon.bosses[k].defeated  != true) {
+        vals.pantheon.bosses[k].defeated = true;
+        vals.pantheon.bosses[k].max_hp *= 10;
+        vals.pantheon.bosses[k].regen *= 25;
+        vals.pantheon.bosses[k].reward /= 5;
+      }
+      else {
+        vals.pantheon.bosses[k].max_hp *= 1.5;
+        vals.pantheon.bosses[k].regen *= 4;
+      }
+      vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
+      fix_pantheon(vals);
+      break;
     }
     }
   } 
-  vals.followers -= vals.click;
   fix_names(vals);
-});
+}
 $(document).on("click", ".sell", function() {
     var btn = $(this).attr('id');
     var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
     switch( id.substr(0, id.length-1)) {
       case 'purchase' :
-        if( vals.clickers[id].amount > 0 ) {
-          vals.clickers[id].amount --;
-          vals.clickers[id].cost =  set_item_cost(vals.clickers[id]);
-          vals.prod -= vals.clickers[id].output;
-          vals.energy += (vals.clickers[id].cost * 0.5);
-          vals.stats.total_energy += (vals.clickers[id].cost * 0.5);
+        if( vals.miracle[id].amount > 0 ) {
+          vals.miracle[id].amount --;
+          if( vals.miracle[id].amount === 0 ) vals.miracle[id].cost = vals.miracle[id].base_cost;
+          else vals.miracle[id].cost =  set_item_cost(vals.miracle[id]);
+          vals.prod -= vals.miracle[id].output;
+          vals.energy += (vals.miracle[id].cost * 0.5);
+          vals.stats.total_energy += (vals.miracle[id].cost * 0.5);
         }
       break;
     case 'ascend' :
       if( vals.ascend[id].amount > 0 ) {
           vals.ascend[id].amount --;
-          vals.ascend[id].cost =  set_item_cost(vals.ascend[id]);
+          if( vals.ascend[id].amount === 0 ) vals.ascend[id].cost = vals.ascend[id].base_cost;
+          else vals.ascend[id].cost =  set_item_cost(vals.ascend[id]);
           vals.prod -= vals.ascend[id].output;
           vals.loss -= vals.ascend[id].output;
           vals.energy += (vals.ascend[id].cost * 0.5);
@@ -1117,62 +2048,222 @@ $(document).on("click", "#challenges-tab-btn", function(event) {
 $(document).on("click", "#settings-tab-btn", function(event) {
   openTab(event, 'Settings');
 });
-function can_click() {
-  if( vals.followers >= 1 ) return true;
+$(document).on("click", "#leap-tab-btn", function(event) {
+  openTab(event, 'Leap');
+});
+$(document).on("click", "#prev_boss", function(event) {
+  if( vals.pantheon.stage > 0 ) {
+    vals.pantheon.bosses['boss' + vals.pantheon.stage].current = true;
+    vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = false;
+    vals.pantheon.stage--;
+  }
+});
+$(document).on("click", "#next_boss", function(event) {
+  if( vals.pantheon.stage <= 2 ) {
+    vals.pantheon.stage++;
+    vals.pantheon.bosses['boss' + vals.pantheon.stage].current = false;
+    vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = true;
+  }
+});
+$(document).on("click", "#boss_upgrades", function(event) {
+      $(".overlay").fadeToggle(50);
+      $('.boss_img').fadeToggle(50);
+      $('.traverse_bosses').fadeToggle(50);
+      $(this).toggleClass('btn-open').toggleClass('btn-close');
+      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove" id="achievements_shown">' ,
+        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok" id="achievements_shown">');
+      $(this).toggleBalloon('Upgrade menu', 'Boss fight');
+      $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
+});
+$(document).on("click", "#upgrades_shown", function(event) {
+      $("#bought_upgrades").fadeToggle(50);
+      $('#uncompleted').fadeToggle(50);
+      $(this).toggleClass('btn-open').toggleClass('btn-close');
+      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove"></span>', 
+        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
+      $(this).toggleBalloon('See Purchased', 'See Available');
+});
+$(document).on("click", "#achievements_shown", function(event) {
+      $("#completed_challenges").fadeToggle(50);
+      $('#uncompleted').fadeToggle(50);
+      $(this).toggleClass('btn-open').toggleClass('btn-close');
+      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove"></span>', 
+        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
+      $(this).toggleBalloon('See Completed', 'See Incomplete');
+});
+$.fn.extend({
+    toggleIcon: function(a, b){
+        return this.html(this.html() == b ? a : b);
+    },
+    toggleBalloon: function(a, b) {
+      return this.attr('data-balloon', (this.attr('data-balloon') == b ? a : b ) );
+    },
+    toggleText: function(a, b) {
+      return this.text(this.text() == b ? a : b);
+    }
+});
+//check if followers >= click amount and > 0
+function can_click(superclick) {
+  var click = vals.click;
+  if( superclick ) click *= vals.events.superclick.mul;
+  if( vals.followers >= 1 && vals.followers >= click ) return true;
   return false;
 }
-function perform_miracle() {
-  vals.followers += vals.click;
-  vals.stats.total_followers += vals.click;
+//this performs a miracle
+var perform_miracle = function(superclick) {
+  var click = vals.click;
+  if( superclick ) click *= vals.events.superclick.mul;
+
+  vals.followers += click;
+  vals.stats.total_followers += click;
   vals.stats.miracle_clicks++;
-  vals.stats.miracle_click_energy += vals.click;
+  vals.stats.miracle_click_energy += click;
+
+  return click
 }
-function perform_trans() {
-  if( vals.followers > 0 ) {
-    vals.energy += vals.click;
-    vals.stats.total_energy += vals.click;
-    vals.followers -= vals.click;
-    vals.stats.ascension_clicks++;
-    vals.stats.ascension_click_energy += vals.click;
+//this transfers followers into energy
+var perform_trans = function(superclick) {
+  click = vals.click;
+  if( superclick ) click *= vals.events.superclick.mul;
+
+    if( vals.followers >= click ) {
+      vals.energy += click;
+      vals.stats.total_energy += click;
+      vals.followers -= click;
+      vals.stats.ascension_click_energy += click;
+      click_amount = click;
+      vals.stats.ascension_clicks++;
+    }
+  return click;
+}
+$(document).on("click", '.boss_upgrade', function(event) { 
+  var id= $(this).attr('id');
+  var type = id.substr(0, id.search(/\d/) -1);
+  var tier = id.substr(id.search(/\d/));
+  if( type === 'regen' || type === 'max_hp') upg = vals.pantheon.upgrades['1'][type];
+  else upg = vals.pantheon.upgrades[tier][type + id.substr(id.search(/\d/))];
+  switch( type ) {
+    case "click":
+      if( tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost ) {
+        upg.amount++;
+        vals.flame-=upg.cost; 
+        vals.pantheon.damage *= upg.mul;
+        upg.cost = set_item_cost(upg);
+      }
+      else if( tier === '2' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
+        console.log('hre');
+        upg.amount++;
+        vals.flame-=upg.cost; 
+        vals.pantheon.dps += (vals.click * upg.mul);
+        upg.cost = set_item_cost(upg);
+      }
+    break;
+    case "prod":
+      if( tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
+        upg.amount++;
+        vals.flame-=upg.cost; 
+        vals.pantheon.damage += (vals.loss * upg.mul);
+        upg.cost = set_item_cost(upg);
+      }
+      else if( tier === '2' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
+        upg.amount++;
+        vals.flame-=upg.cost; 
+        vals.pantheon.dps += (vals.loss * upg.mul);
+        upg.cost = set_item_cost(upg);
+      }
+    break;
+    case 'max_hp':
+      if( upg.amount < upg.max_amount && vals.flame >= upg.cost) {
+        upg.amount++;
+        vals.flame-=upg.cost; 
+        for( var k in vals.pantheon.bosses ) {
+          var boss = vals.pantheon.bosses[k];
+          boss.max_hp *= upg.mul;
+          if( boss.current_hp > boss.max_hp ) boss.current_hp = boss.max_hp;
+        }
+        upg.cost = set_item_cost(upg);
+      }
+    break;
+    case 'regen':
+      if( upg.amount < upg.max_amount && vals.flame >= upg.cost) {
+        upg.amount++;
+        vals.flame-=upg.cost; 
+        for( var k in vals.pantheon.bosses ) {
+          var boss = vals.pantheon.bosses[k];
+          boss.regen *= upg.mul;
+        }
+         upg.cost = set_item_cost(upg);
+      }
+    break;
   }
-  return;
-}
-//TODO - fix this for variable screen size!
+    $(this).html('Purchase ' + upg.cost + '<span class="glyphicon glyphicon-fire"></span>');
+});
+//TODO - fix this for when you scroll down screen on achievements etc.
 $(document).on("click", '.miracle', function(event) { 
           var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
-          var divToAppend, target, offset;
+          var divToAppend, target, offset, color = '#212121';
+
+          if( vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
+            vals.events.superclick.click_num++;
+            $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
+          }
+          else if( vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
+            $('#superclick_bar').css('background-color', '#FFC400');
+            process_superclick(vals, 0);
+          } 
+          if( vals.events.superclick.active) color = '#FFC400';
           if( used_id === 'button') {
             target = $('.miracle_click:first').clone();
-            target.html( '+' + truncate_bigint(vals.click));
+            target.html( '+' + truncate_bigint(perform_miracle(vals.events.superclick.active)));
             divToAppend = '#miracle_div';
-            perform_miracle();
             offset = $(window).height()/4;
           }else {
-            divToAppend = '#miracle2_div'; 
-            target = $('.transcend_click:first').clone();
-            target.html( '-' + truncate_bigint(vals.click));
-            offset = $(window).height()/4;
-            if( can_click() ) perform_trans(); else return;
+            if( can_click(vals.events.superclick.active) ) {
+              divToAppend = '#miracle2_div'; 
+              target = $('.transcend_click:first').clone();
+              target.html( '-' + truncate_bigint(perform_trans(vals.events.superclick.active)) ); 
+              offset = $(window).height()/4;
+            }else return;
           }
+          target.css('color', color);
           $(divToAppend).append(target);
           target.show();
           //handle unique animations for each click
-          gen_target_offset( '#' + $(this).attr('id'), target); 
-            //target.offset({left:event.pageX-30, top:$('#miracle_button').offset().top * 1.1});;
-           // }else target.offset({left:offset * 1.1, top:$('#counter').offset().top});
+          gen_target_offset( '#' + $(this).attr('id'), target, event); 
           target.css('opacity',100);
-
-          if( used_id === 'button') { target.animate({ 'top': '+=' + $(window).height()/12, 'opacity':0.1, 'left':target.offset.left+ 'px'}, 750, function() { 
+          if( used_id === 'button') 
+            { target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left':target.offset.left+ 'px'}, 750, function() { 
             $(this).remove();
           });
           }
-          else {target.animate({ 'top':'-=' + $(window).height()/8, 'opacity':0.1, 'left': '-=10'}, 750, function() { 
+          else {target.animate({ 'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '-=10'}, 750, function() { 
             $(this).remove();
           });
           }
 
 });
 
+var bar_timer;
+
+function process_superclick(vals, iterations) {
+    
+    if( iterations === 9 ) {
+      $('#superclick_bar').css('background-color', '');
+      vals.events.superclick.click_num = 0;
+      $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
+      vals.events.superclick.active = false;
+      return;
+    }
+    clearTimeout(bar_timer);
+    $('#superclick_bar').css('width', (100 - 10 * (iterations) )+ '%');
+    vals.events.superclick.active = true;
+    if( iterations < 9 ) {
+      bar_timer = setTimeout(function() {
+        process_superclick(vals,iterations);
+      }, vals.tick);
+      iterations++;
+    }
+}
   function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -1191,8 +2282,11 @@ $(document).on("click", '.miracle', function(event) {
       $('#upgrades-box').css("height", upgrade_box_size);
     fix_names(vals);
 }
+
+
 })(jQuery);
 
+$
 //loads a json file asynchronously
 function loadJSON(callback) {   
 

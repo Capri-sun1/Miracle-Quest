@@ -889,7 +889,7 @@ var upgrade_box_size = 0;
               vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].current_hp + (mul * vals.pantheon.bosses[k].regen);
             } else vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
             vals.pantheon.bosses[k].current_hp -= vals.pantheon.dps;
-            animate_attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
+            if( vals.pantheon.dps > 0 ) animate_attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
           }
         }
       }
@@ -1004,12 +1004,12 @@ var upgrade_box_size = 0;
             temp_a.push('max_hp' + ":" +items.max_hp.toString(16));
             temp_a.push('current_hp' + ":" +items.current_hp.toString(16));
             temp_a.push('regen' + ":" +items.regen.toString(16));
-            temp_a.push('defeated' + ":" + items.defeated);
-                
+            temp_a.push('defeated' + ":" + items.defeated.toString().toLowerCase());
+            temp_a.push('reward' + ":" + items.reward.toString(16));    
             pantheon.push(temp_a);
         }
         save['pantheon'] = pantheon;
-
+        console.log(save);
         return save;
   }
   function get_valsFromJSON(save) {
@@ -1099,10 +1099,11 @@ var upgrade_box_size = 0;
                 vals.pantheon.bosses['boss' + (i+1)].max_hp = parseInt(items[i][0].split(':')[1], 16);
                 vals.pantheon.bosses['boss' + (i+1)].current_hp = parseInt(items[i][1].split(':')[1], 16);
                 vals.pantheon.bosses['boss' + (i+1)].regen = parseInt(items[i][2].split(':')[1], 16);
-                vals.pantheon.bosses['boss' + (i+1)].defeated = items[i][3].split(':')[1];
-                
+                vals.pantheon.bosses['boss' + (i+1)].defeated = (items[i][3].split(':')[1].toString().toLowerCase() == 'true');
+                vals.pantheon.bosses['boss' + (i+1)].reward = parseInt(items[i][4].split(':')[1], 16);
               }
             }
+
         }
 
 
@@ -1319,7 +1320,7 @@ var upgrade_box_size = 0;
       }
 
       var defeated = vals.pantheon.bosses['boss' + String(boss_num)].defeated;
-      if( boss_num >= parseInt(vals.god_status[vals.god_status.current].max_tier) || vals.pantheon.bosses['boss' + String(boss_num)].defeated!= true ) {
+      if( boss_num >= parseInt(vals.god_status[vals.god_status.current].max_tier) || defeated != true ) {
         $('#next_boss').prop('disabled', true);
         $('#next_boss').css('display', "none");  
       }
@@ -1387,10 +1388,10 @@ var upgrade_box_size = 0;
        $('#stats_field_3').text(truncate_bigint(Math.floor(vals.stats.total_energy)));
        $('#stats_field_4').text(truncate_bigint(Math.floor(vals.followers)));
        $('#stats_field_5').text(truncate_bigint(Math.floor(vals.stats.total_followers)));
-       $('#stats_field_6').text(truncate_bigint(corrected_loss));
-       $('#stats_field_7').text(truncate_bigint(vals.stats.max_loss));
-       $('#stats_field_8').text( truncate_bigint( corrected_prod ));
-       $('#stats_field_9').text( truncate_bigint( vals.stats.max_prod ));
+       $('#stats_field_6').text(truncate_bigint( Math.round(corrected_loss)) );
+       $('#stats_field_7').text(truncate_bigint( Math.round(vals.stats.max_loss)) );
+       $('#stats_field_8').text( truncate_bigint( Math.round(corrected_prod) ));
+       $('#stats_field_9').text( truncate_bigint( Math.round(vals.stats.max_prod) ));
        $('#stats_field_13').text(vals.stats.miracle_clicks);
        $('#stats_field_11').text(vals.click);
        $('#stats_field_14').text(vals.stats.ascension_clicks);
@@ -1812,10 +1813,16 @@ $(document).on("click", ".purchase", function() {
       if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
         vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
         if( vals.upgrades[purchase_type[0]].type === "Click amount") {
+          var origClick = vals.click;
           vals.click *= vals.upgrades[purchase_type[0]][id].mul;
-          vals.pantheon.damage *=  vals.upgrades[purchase_type[0]][id].mul;
+          if( vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick );
         }
-        else vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
+        else if( vals.upgrades[purchase_type[0]].type === 'Tick speed' )
+          vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
+        else {
+          vals.leap.unlocked = true;
+          $.toaster({message:"Don't go quietly into the good night.",title:"Quantum leap unlocked"})
+        }
         vals.upgrades[purchase_type[0]][id].unlocked = true;
       }
       break;
@@ -1834,7 +1841,7 @@ $(document).on("click", ".purchase", function() {
           vals.followers-= vals.sacrifice[id].cost;
           processed = true;
         }
-        else $.toaster({message:"Your power is maxed.",title:"Sacrifice rejected"})
+        else $.toaster({message:"Your power is maxed.",title:"Sacrifice rejected"});
       }
       else if( id.substr(id.length-1) === '2' ) {
         if( Math.abs(vals.corruption) <= 85 ) {
@@ -1970,11 +1977,15 @@ function animate_attack(damage, id) {
     if( vals.pantheon.bosses[k].current_hp <= 0 ) {
       vals.flame+=vals.pantheon.bosses[k].reward;
       //if the boss is defeated for the first time, change the params for when user fights again
-      if( !vals.pantheon.bosses[k].defeated ) {
+      if( vals.pantheon.bosses[k].defeated  != true) {
         vals.pantheon.bosses[k].defeated = true;
         vals.pantheon.bosses[k].max_hp *= 10;
         vals.pantheon.bosses[k].regen *= 25;
         vals.pantheon.bosses[k].reward /= 5;
+      }
+      else {
+        vals.pantheon.bosses[k].max_hp *= 1.5;
+        vals.pantheon.bosses[k].regen *= 4;
       }
       vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
       fix_pantheon(vals);
@@ -2133,13 +2144,13 @@ $(document).on("click", '.boss_upgrade', function(event) {
   else upg = vals.pantheon.upgrades[tier][type + id.substr(id.search(/\d/))];
   switch( type ) {
     case "click":
-      if( tier === '1' && upg.amount < upg.max_amount ) {
+      if( tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost ) {
         upg.amount++;
         vals.flame-=upg.cost; 
         vals.pantheon.damage *= upg.mul;
         upg.cost = set_item_cost(upg);
       }
-      else if( tier === '2' && upg.amount < upg.max_amount) {
+      else if( tier === '2' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
         console.log('hre');
         upg.amount++;
         vals.flame-=upg.cost; 
@@ -2148,13 +2159,13 @@ $(document).on("click", '.boss_upgrade', function(event) {
       }
     break;
     case "prod":
-      if( tier === '1' && upg.amount < upg.max_amount) {
+      if( tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
         upg.amount++;
         vals.flame-=upg.cost; 
         vals.pantheon.damage += (vals.loss * upg.mul);
         upg.cost = set_item_cost(upg);
       }
-      else if( tier === '2' && upg.amount < upg.max_amount) {
+      else if( tier === '2' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
         upg.amount++;
         vals.flame-=upg.cost; 
         vals.pantheon.dps += (vals.loss * upg.mul);
@@ -2162,7 +2173,7 @@ $(document).on("click", '.boss_upgrade', function(event) {
       }
     break;
     case 'max_hp':
-      if( upg.amount < upg.max_amount ) {
+      if( upg.amount < upg.max_amount && vals.flame >= upg.cost) {
         upg.amount++;
         vals.flame-=upg.cost; 
         for( var k in vals.pantheon.bosses ) {
@@ -2174,7 +2185,7 @@ $(document).on("click", '.boss_upgrade', function(event) {
       }
     break;
     case 'regen':
-      if( upg.amount < upg.max_amount ) {
+      if( upg.amount < upg.max_amount && vals.flame >= upg.cost) {
         upg.amount++;
         vals.flame-=upg.cost; 
         for( var k in vals.pantheon.bosses ) {

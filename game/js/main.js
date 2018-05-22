@@ -939,7 +939,8 @@ var upgrade_box_size = 0;
         "tier":vals.god_status.current.toString(16),
         "sac":vals.sacrifice.unlocked,
         'dps':vals.pantheon.dps,
-        "stage":vals.pantheon.stage.toString(16)
+        "stage":vals.pantheon.stage.toString(16),
+        "leap":vals.leap.unlocked
       };
         var unlocks = {
             "miracle":"cl",
@@ -1009,7 +1010,6 @@ var upgrade_box_size = 0;
             pantheon.push(temp_a);
         }
         save['pantheon'] = pantheon;
-        console.log(save);
         return save;
   }
   function get_valsFromJSON(save) {
@@ -1027,6 +1027,7 @@ var upgrade_box_size = 0;
         vals.pantheon.dps = save.dps;
         vals.pantheon.stage = parseInt(save.stage);
         if( save.tier ) vals.god_status.current = parseInt(save.tier,16);
+        vals.leap.unlocked = (save.leap.toString().toLowerCase() == 'true');
 
         for( var k in vals.pantheon.bosses ) {
           var boss = vals.pantheon.bosses[k];
@@ -1482,7 +1483,7 @@ function fix_pantheon(vals) {
         $('#battle_1_hp').text( truncate_bigint( mul * vals.pantheon.bosses[k].current_hp));
         $('#max_hp').text( truncate_bigint(mul * vals.pantheon.bosses[k].max_hp));
         $('#boss_hp_bar').css('width', 100 * ( (mul*vals.pantheon.bosses[k].current_hp)/(mul*vals.pantheon.bosses[k].max_hp) ) + '%');
-        $('#regen').text(mul*vals.pantheon.bosses[k].regen);
+        $('#regen').text(truncate_bigint(mul*vals.pantheon.bosses[k].regen));
         $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
         break;
       }
@@ -1985,7 +1986,7 @@ function animate_attack(damage, id) {
       }
       else {
         vals.pantheon.bosses[k].max_hp *= 1.5;
-        vals.pantheon.bosses[k].regen *= 4;
+        vals.pantheon.bosses[k].regen *= 2;
       }
       vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
       fix_pantheon(vals);
@@ -2199,9 +2200,13 @@ $(document).on("click", '.boss_upgrade', function(event) {
     $(this).html('Purchase ' + upg.cost + '<span class="glyphicon glyphicon-fire"></span>');
 });
 //TODO - fix this for when you scroll down screen on achievements etc.
-$(document).on("click", '.miracle', function(event) { 
-          var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
-          var divToAppend, target, offset, color = '#212121';
+
+var timeoutId = 0;
+var click_left = false;
+
+function do_click(id, event) {
+   var used_id = id.substr(id.indexOf('_') + 1);
+   var divToAppend, target, offset, color = '#212121';
 
           if( vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
             vals.events.superclick.click_num++;
@@ -2229,7 +2234,7 @@ $(document).on("click", '.miracle', function(event) {
           $(divToAppend).append(target);
           target.show();
           //handle unique animations for each click
-          gen_target_offset( '#' + $(this).attr('id'), target, event); 
+          gen_target_offset( '#' + id, target, event); 
           target.css('opacity',100);
           if( used_id === 'button') 
             { target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left':target.offset.left+ 'px'}, 750, function() { 
@@ -2239,12 +2244,29 @@ $(document).on("click", '.miracle', function(event) {
           else {target.animate({ 'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '-=10'}, 750, function() { 
             $(this).remove();
           });
-          }
-
+      }
+}
+$(document).ready(function() {
+  $('.miracle').on("click", function(event) { 
+      do_click($(this).attr('id'), event);
+  }).on('mousedown', function(event) {
+      click_left = false;
+      process_click_hold(vals, $(this).attr('id'), event);
+    })
+    .on('mouseup mouseleave', function() {
+    click_left = true;
+    });
 });
-
 var bar_timer;
-
+var timeout_timer;
+function process_click_hold(vals, timeoutId, event) {
+  clearTimeout(timeout_timer);
+  if( click_left == true ) return;
+  do_click(timeoutId, event)
+  timeout_timer = setTimeout( function() {
+    process_click_hold(vals, timeoutId, event);
+  }, vals.tick/2);
+}
 function process_superclick(vals, iterations) {
     
     if( iterations === 9 ) {

@@ -1712,6 +1712,7 @@ function fix_challenges(vals) {
        }
       }
 }
+
 function doLeap(vals) {
   //reset all the stats, buildings etc - will need to alter json file
 
@@ -1773,13 +1774,15 @@ function doLeap(vals) {
             if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
         }
         localStorage.sv1 = btoa(JSON.stringify(save));
-  }
+}
+
 $(document).on("click", ".reset", function() {
   if( confirm("Are you sure you want to Quantum leap?") ) {
     doLeap(vals);
     location.reload();
   }
 });
+
 $(document).on("click", ".purchase", function() {
     var btn = $(this).attr('id');
     if( btn === 'delete_save') {
@@ -1900,6 +1903,7 @@ $(document).on("click", ".purchase", function() {
   fix_tab_buttons(vals);
   fix_names(vals);
   });
+
 function gen_target_offset(id, target, event) {
   switch(id.substr(1,1)) {
     //generate offsets for miracle click animation
@@ -1947,6 +1951,7 @@ function gen_target_offset(id, target, event) {
         target.offset( {'left': 2.15* $(id).offset().left, 'top': $(id).offset().top*1.2  });
   }
 }
+
 $(document).on("click", ".battle", function() {
   animate_attack(vals.pantheon.damage, $(this).attr('id'));
 });
@@ -1995,6 +2000,7 @@ function animate_attack(damage, id) {
   } 
   fix_names(vals);
 }
+
 $(document).on("click", ".sell", function() {
     var btn = $(this).attr('id');
     var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
@@ -2024,33 +2030,43 @@ $(document).on("click", ".sell", function() {
   fix_tab_buttons(vals);
   fix_names(vals);
 });
+
 $(document).on("click", "#convert-tab-btn", function(event) {
   openTab(event, 'Conversion');
 });
+
 $(document).on("click", "#ascend-tab-btn", function(event) {
   openTab(event, 'Ascension');
 });
+
 $(document).on("click", "#upgrade-tab-btn", function(event) {
   openTab(event, 'Upgrades');
 });
+
 $(document).on("click", "#pantheon-tab-btn", function(event) {
   openTab(event, 'Pantheon');
 });
+
 $(document).on("click", "#sacrifice-tab-btn", function(event) {
   openTab(event, 'Sacrifice');
 });
+
 $(document).on("click", "#stats-tab-btn", function(event) {
   openTab(event, 'Stats');
 });
+
 $(document).on("click", "#challenges-tab-btn", function(event) {
   openTab(event, 'Challenges');
 });
+
 $(document).on("click", "#settings-tab-btn", function(event) {
   openTab(event, 'Settings');
 });
+
 $(document).on("click", "#leap-tab-btn", function(event) {
   openTab(event, 'Leap');
 });
+
 $(document).on("click", "#prev_boss", function(event) {
   if( vals.pantheon.stage > 0 ) {
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = true;
@@ -2058,6 +2074,7 @@ $(document).on("click", "#prev_boss", function(event) {
     vals.pantheon.stage--;
   }
 });
+
 $(document).on("click", "#next_boss", function(event) {
   if( vals.pantheon.stage <= 2 ) {
     vals.pantheon.stage++;
@@ -2065,6 +2082,7 @@ $(document).on("click", "#next_boss", function(event) {
     vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = true;
   }
 });
+
 $(document).on("click", "#boss_upgrades", function(event) {
       $(".overlay").fadeToggle(50);
       $('.boss_img').fadeToggle(50);
@@ -2075,6 +2093,7 @@ $(document).on("click", "#boss_upgrades", function(event) {
       $(this).toggleBalloon('Upgrade menu', 'Boss fight');
       $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
 });
+
 $(document).on("click", "#upgrades_shown", function(event) {
       $("#bought_upgrades").fadeToggle(50);
       $('#uncompleted').fadeToggle(50);
@@ -2083,6 +2102,7 @@ $(document).on("click", "#upgrades_shown", function(event) {
         '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
       $(this).toggleBalloon('See Purchased', 'See Available');
 });
+
 $(document).on("click", "#achievements_shown", function(event) {
       $("#completed_challenges").fadeToggle(50);
       $('#uncompleted').fadeToggle(50);
@@ -2091,6 +2111,7 @@ $(document).on("click", "#achievements_shown", function(event) {
         '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
       $(this).toggleBalloon('See Completed', 'See Incomplete');
 });
+
 $.fn.extend({
     toggleIcon: function(a, b){
         return this.html(this.html() == b ? a : b);
@@ -2102,18 +2123,46 @@ $.fn.extend({
       return this.text(this.text() == b ? a : b);
     }
 });
+
+var bar_timer;
+
+function process_superclick(vals, iterations) {
+    
+    if( iterations === 9 ) {
+      $('#superclick_bar').css('background-color', '');
+      vals.events.superclick.click_num = 0;
+      $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
+      vals.events.superclick.active = false;
+      return;
+    }
+    clearTimeout(bar_timer);
+    $('#superclick_bar').css('width', (100 - 10 * (iterations) )+ '%');
+    vals.events.superclick.active = true;
+    if( iterations < 9 ) {
+      bar_timer = setTimeout(function() {
+        process_superclick(vals,iterations);
+      }, vals.tick);
+      iterations++;
+    }
+}
+
 //check if followers >= click amount and > 0
 function can_click(superclick) {
   var click = vals.click;
-  if( superclick ) click *= vals.events.superclick.mul;
-  if( vals.followers >= 1 && vals.followers >= click ) return true;
+  if( superclick ) {
+    click *= vals.events.superclick.mul;
+  }
+  if( vals.followers >= 1 && vals.followers >= click ) {
+    return true;
+  }
   return false;
 }
 //this performs a miracle
 var perform_miracle = function(superclick) {
   var click = vals.click;
-  if( superclick ) click *= vals.events.superclick.mul;
-
+  if(superclick) {
+    click *= vals.events.superclick.mul;
+  }
   vals.followers += click;
   vals.stats.total_followers += click;
   vals.stats.miracle_clicks++;
@@ -2124,9 +2173,9 @@ var perform_miracle = function(superclick) {
 //this transfers followers into energy
 var perform_trans = function(superclick) {
   click = vals.click;
-  if( superclick ) click *= vals.events.superclick.mul;
+  if(superclick) click *= vals.events.superclick.mul;
 
-    if( vals.followers >= click ) {
+    if(vals.followers >= click) {
       vals.energy += click;
       vals.stats.total_energy += click;
       vals.followers -= click;
@@ -2134,70 +2183,70 @@ var perform_trans = function(superclick) {
       click_amount = click;
       vals.stats.ascension_clicks++;
     }
+
   return click;
 }
+
 $(document).on("click", '.boss_upgrade', function(event) { 
   var id= $(this).attr('id');
-  var type = id.substr(0, id.search(/\d/) -1);
-  var tier = id.substr(id.search(/\d/));
-  if( type === 'regen' || type === 'max_hp') upg = vals.pantheon.upgrades['1'][type];
-  else upg = vals.pantheon.upgrades[tier][type + id.substr(id.search(/\d/))];
-  switch( type ) {
-    case "click":
-      if( tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost ) {
-        upg.amount++;
-        vals.flame-=upg.cost; 
-        vals.pantheon.damage *= upg.mul;
-        upg.cost = set_item_cost(upg);
-      }
-      else if( tier === '2' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
-        console.log('hre');
-        upg.amount++;
-        vals.flame-=upg.cost; 
-        vals.pantheon.dps += (vals.click * upg.mul);
-        upg.cost = set_item_cost(upg);
-      }
-    break;
-    case "prod":
-      if( tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
-        upg.amount++;
-        vals.flame-=upg.cost; 
-        vals.pantheon.damage += (vals.loss * upg.mul);
-        upg.cost = set_item_cost(upg);
-      }
-      else if( tier === '2' && upg.amount < upg.max_amount && vals.flame >= upg.cost) {
-        upg.amount++;
-        vals.flame-=upg.cost; 
-        vals.pantheon.dps += (vals.loss * upg.mul);
-        upg.cost = set_item_cost(upg);
-      }
-    break;
-    case 'max_hp':
-      if( upg.amount < upg.max_amount && vals.flame >= upg.cost) {
-        upg.amount++;
-        vals.flame-=upg.cost; 
-        for( var k in vals.pantheon.bosses ) {
-          var boss = vals.pantheon.bosses[k];
-          boss.max_hp *= upg.mul;
-          if( boss.current_hp > boss.max_hp ) boss.current_hp = boss.max_hp;
-        }
-        upg.cost = set_item_cost(upg);
-      }
-    break;
-    case 'regen':
-      if( upg.amount < upg.max_amount && vals.flame >= upg.cost) {
-        upg.amount++;
-        vals.flame-=upg.cost; 
-        for( var k in vals.pantheon.bosses ) {
-          var boss = vals.pantheon.bosses[k];
-          boss.regen *= upg.mul;
-        }
-         upg.cost = set_item_cost(upg);
-      }
-    break;
-  }
-    $(this).html('Purchase ' + upg.cost + '<span class="glyphicon glyphicon-fire"></span>');
+
+  processBossUpgrade(id);
+  $(this).html('Purchase ' + upg.cost + '<span class="glyphicon glyphicon-fire"></span>');
 });
+
+var upg;
+
+function processBossUpgrade(id) {
+  var bossUpgrade = id.substr(0, id.search(/\d/) -1);
+  var tier = id.substr(id.search(/\d/));
+  upg = vals.pantheon.upgrades[vals.god_status.current][bossUpgrade+tier];
+
+  if(isUpgradeAvailable(bossUpgrade, tier)) {
+    upg.amount++;
+    vals.flame-=upg.cost; 
+    processHealthUpgrade(bossUpgrade, tier);
+    processDamageUpgrade(bossUpgrade, tier);
+    upg.cost = set_item_cost(upg);
+  }
+}
+
+function processHealthUpgrade(bossUpgrade, tier) {
+  pg = vals.pantheon.upgrades[tier][bossUpgrade];
+
+  for( var k in vals.pantheon.bosses ) {
+    var boss = vals.pantheon.bosses[k];
+
+    if(bossUpgrade === 'max_hp') {
+      boss.max_hp *= upg.mul;
+
+      if( boss.current_hp > boss.max_hp ) {
+        boss.current_hp = boss.max_hp;
+      }
+    } else {
+        boss.regen *= upg.mul;
+    }
+  }
+}
+
+function processDamageUpgrade(type, tier) {
+  pg = vals.pantheon.upgrades[tier][type + tier];
+
+  if(type === "click") {
+    tier === '1' ? vals.pantheon.damage *= upg.mul : vals.pantheon.dps += (vals.click * upg.mul);
+  } else if (type === "prod") {
+    tier === '1' ? vals.pantheon.damage += (vals.loss * upg.mul) : vals.pantheon.dps += (vals.loss * upg.mul);
+  }
+}
+
+function isUpgradeAvailable(bossUpgrade, tier) {
+    if( bossUpgrade === 'regen' || bossUpgrade === 'max_hp') {
+      return upg.amount < upg.max_amount && vals.flame >= upg.cost;
+    } else {
+      return tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost
+          || tier === '2' && upg.amount < upg.max_amount && vals.flame >= upg.cost;
+    }
+}
+
 //TODO - fix this for when you scroll down screen on achievements etc.
 $(document).on("click", '.miracle', function(event) { 
           var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
@@ -2243,28 +2292,7 @@ $(document).on("click", '.miracle', function(event) {
 
 });
 
-var bar_timer;
-
-function process_superclick(vals, iterations) {
-    
-    if( iterations === 9 ) {
-      $('#superclick_bar').css('background-color', '');
-      vals.events.superclick.click_num = 0;
-      $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
-      vals.events.superclick.active = false;
-      return;
-    }
-    clearTimeout(bar_timer);
-    $('#superclick_bar').css('width', (100 - 10 * (iterations) )+ '%');
-    vals.events.superclick.active = true;
-    if( iterations < 9 ) {
-      bar_timer = setTimeout(function() {
-        process_superclick(vals,iterations);
-      }, vals.tick);
-      iterations++;
-    }
-}
-  function openTab(evt, tabName) {
+function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -2278,44 +2306,25 @@ function process_superclick(vals, iterations) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
     vals.current_tab = tabName;
-    if( upgrade_box_size != 0 ) 
+    if( upgrade_box_size != 0 ) {
       $('#upgrades-box').css("height", upgrade_box_size);
+    }
     fix_names(vals);
 }
 
 
 })(jQuery);
 
-$
-//loads a json file asynchronously
-function loadJSON(callback) {   
-
-    var xobj = new XMLHttpRequest();
-        xobj.overrideMimeType("application/json");
-    xobj.open('GET', 'data/my_data.json', true); 
-    xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a energy but simply returns undefined in asynchronous mode
-            callback(xobj.responseText);
-          }
-    };
-    xobj.send(null);  
- }
-
-function truncate_seconds(num) {
-    var message = " seconds";
-    if( num == 1 ) message = message.substr(0,message.length-1);
-    return num + message + '.';
-}
-function truncate_minutes(num) {
+function truncate_time(num) {
     var output_string = '';
-    var remainder = Math.floor(num / 60);
-    num -= (60 * remainder);
+    var remainder = Math.floor(num / 86400);
+    num -= (86400 * remainder);
     if( remainder >= 1 )
-      output_string = output_string + remainder + ' minutes, ';
-    if( remainder == 1 ) output_string = output_string.substr(0,output_string.length-3) +', ';
-    return output_string + truncate_seconds(num);
+      output_string = output_string + remainder + ' days, ';
+    if( remainder == 1 ) output_string = output_string.substr(0,output_string.length-3) + ', ';
+    return output_string + truncate_hours(num);
 }
+
 function truncate_hours(num) {
     var output_string = '';
     var remainder = Math.floor(num / 3600);
@@ -2325,14 +2334,21 @@ function truncate_hours(num) {
     if( remainder == 1 ) output_string = output_string.substr(0,output_string.length-3) + ', ';
     return output_string + truncate_minutes(num);
 }
-function truncate_time(num) {
+
+function truncate_minutes(num) {
     var output_string = '';
-    var remainder = Math.floor(num / 86400);
-    num -= (86400 * remainder);
+    var remainder = Math.floor(num / 60);
+    num -= (60 * remainder);
     if( remainder >= 1 )
-      output_string = output_string + remainder + ' days, ';
-    if( remainder == 1 ) output_string = output_string.substr(0,output_string.length-3) + ', ';
-    return output_string + truncate_hours(num);
+      output_string = output_string + remainder + ' minutes, ';
+    if( remainder == 1 ) output_string = output_string.substr(0,output_string.length-3) +', ';
+    return output_string + truncate_seconds(num);
+}
+
+function truncate_seconds(num) {
+    var message = " seconds";
+    if( num == 1 ) message = message.substr(0,message.length-1);
+    return num + message + '.';
 }
 
 function truncate_bigint(num) { 

@@ -1904,58 +1904,11 @@ $(document).on("click", ".purchase", function() {
   fix_names(vals);
   });
 
-function gen_target_offset(id, target, event) {
-  switch(id.substr(1,1)) {
-    //generate offsets for miracle click animation
-    case  'm' :
-      if( $(window).width() > 1300 )  {
-        //2nd miracle button
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY - 125  });
-        //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top:  event.pageY + 10 });
-        }
-        else if( $(window).width() <= 700) {
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
-        //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top:event.pageY + 10});
-      //want a less aggressive offset
-      }
-      else if(  $(window).width() <= 750) {
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY * 0.75});
-        //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
-      }
-      else if( $(window).width() <= 1100) 
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -100});
-        //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
-      else if( $(window).width() <= 1300) {
-        //2nd miracle button
-        if( id.substr(id.length-1) === 'd') target.offset({left: 1.2 * $(id).offset().left, top: event.pageY -110});
-        //first miracle button
-        else target.offset({left: 1.2 * $(id).offset().left, top: event.pageY + 10});
-      }
-    break;
-    case  'b' :
-    //generate offsets for boss click animation
-      if( $(window).width() > 1300 )  
-        target.offset({left: 2.6 * $(id).offset().left, top: $(id).offset().top * 1.5 });
-      else if( $(window).width() <= 700) 
-        target.offset( {'top': $(id).offset().top* 1.05, 'left': $(window).width()/1.7,   });
-      //want a less aggressive offset
-      else if(  $(window).width() <= 750) 
-        target.offset( {'top': $(id).offset().top*1.05, 'left': $(window).width()/1.75,   });
-      else if( $(window).width() <= 1100) 
-        target.offset( {'left': 1.75* $(id).offset().left, 'top': $(id).offset().top*1.1  });
-      else if( $(window).width() <= 1300) 
-        target.offset( {'left': 2.15* $(id).offset().left, 'top': $(id).offset().top*1.2  });
-  }
-}
-
 $(document).on("click", ".battle", function() {
   animate_attack(vals.pantheon.damage, $(this).attr('id'));
 });
 
+//TODO - refactor this method - it should ONLY animate the attack, not carry it out!
 function animate_attack(damage, id) {  
   var btn = id;
   var divToAppend, target, offset;
@@ -1968,7 +1921,7 @@ function animate_attack(damage, id) {
   target.css('opacity',100);
   target.css('color', '#880E4F');
   //process the animation - we need to consider screen size here to obtain the correct offsets.
-  gen_target_offset('.boss_img', target);
+  gen_boss_offset('.boss_img', target);
   //two animations to create a more smooth curve
   target.animate({ 'top': '-=25', 'opacity':0.8, 'left': '+=4' }, 250);
   target.animate({ 'top': '+=15', 'opacity':0.1, 'left':  '+=15'}, 250, function() {  
@@ -2002,70 +1955,52 @@ function animate_attack(damage, id) {
 }
 
 $(document).on("click", ".sell", function() {
-    var btn = $(this).attr('id');
-    var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
-    switch( id.substr(0, id.length-1)) {
-      case 'purchase' :
-        if( vals.miracle[id].amount > 0 ) {
-          vals.miracle[id].amount --;
-          if( vals.miracle[id].amount === 0 ) vals.miracle[id].cost = vals.miracle[id].base_cost;
-          else vals.miracle[id].cost =  set_item_cost(vals.miracle[id]);
-          vals.prod -= vals.miracle[id].output;
-          vals.energy += (vals.miracle[id].cost * 0.5);
-          vals.stats.total_energy += (vals.miracle[id].cost * 0.5);
-        }
-      break;
-    case 'ascend' :
-      if( vals.ascend[id].amount > 0 ) {
-          vals.ascend[id].amount --;
-          if( vals.ascend[id].amount === 0 ) vals.ascend[id].cost = vals.ascend[id].base_cost;
-          else vals.ascend[id].cost =  set_item_cost(vals.ascend[id]);
-          vals.prod -= vals.ascend[id].output;
-          vals.loss -= vals.ascend[id].output;
-          vals.energy += (vals.ascend[id].cost * 0.5);
-          vals.stats.total_energy += (vals.ascend[id].cost * 0.5);
-        }
-      break;
-  }
+  var btn = $(this).attr('id');
+  var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
+  var type = id.substr(0, id.length-1);
+
+  sell(type);
   fix_tab_buttons(vals);
   fix_names(vals);
 });
 
-$(document).on("click", "#convert-tab-btn", function(event) {
-  openTab(event, 'Conversion');
+function sell(type) {
+  var valsType;
+  if(type === 'purchase') {
+    valsType = vals.miracle[id];
+  } else {
+    valsType = vals.ascend[id];
+  }
+  valsType.amount --;
+  var newCost = valsType.cost * 0.5;
+
+  if( valsType.amount === 0 ) {
+    valsType.cost = valsType.base_cost;
+  } else {
+    valsType.cost =  set_item_cost(valsType);
+  }
+  vals.prod -= valsType.output;
+  vals.energy += newCost;
+  vals.stats.total_energy += newCost;
+}
+
+$(document).on("click", '#tab_btns .button', function(event) {
+  var id = $(this).attr('id');
+  var tabName = resolveTabName(id);
+
+  openTab(event, tabName);
 });
 
-$(document).on("click", "#ascend-tab-btn", function(event) {
-  openTab(event, 'Ascension');
-});
-
-$(document).on("click", "#upgrade-tab-btn", function(event) {
-  openTab(event, 'Upgrades');
-});
-
-$(document).on("click", "#pantheon-tab-btn", function(event) {
-  openTab(event, 'Pantheon');
-});
-
-$(document).on("click", "#sacrifice-tab-btn", function(event) {
-  openTab(event, 'Sacrifice');
-});
-
-$(document).on("click", "#stats-tab-btn", function(event) {
-  openTab(event, 'Stats');
-});
-
-$(document).on("click", "#challenges-tab-btn", function(event) {
-  openTab(event, 'Challenges');
-});
-
-$(document).on("click", "#settings-tab-btn", function(event) {
-  openTab(event, 'Settings');
-});
-
-$(document).on("click", "#leap-tab-btn", function(event) {
-  openTab(event, 'Leap');
-});
+function resolveTabName(id) {
+   var tabName = id[0].toUpperCase() + id.substr(1, id.indexOf('-') -1);
+   if(id==='upgrade-tab-btn') {
+     tabName += 's';
+   }
+   else if (id==='ascend-tab-btn' || id==='convert-tab-btn') {
+      tabName = tabName.substr(0,tabName.length-1) + 'sion';
+   }
+   return tabName;
+}
 
 $(document).on("click", "#prev_boss", function(event) {
   if( vals.pantheon.stage > 0 ) {
@@ -2124,39 +2059,6 @@ $.fn.extend({
     }
 });
 
-var bar_timer;
-
-function process_superclick(vals, iterations) {
-    
-    if( iterations === 9 ) {
-      $('#superclick_bar').css('background-color', '');
-      vals.events.superclick.click_num = 0;
-      $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
-      vals.events.superclick.active = false;
-      return;
-    }
-    clearTimeout(bar_timer);
-    $('#superclick_bar').css('width', (100 - 10 * (iterations) )+ '%');
-    vals.events.superclick.active = true;
-    if( iterations < 9 ) {
-      bar_timer = setTimeout(function() {
-        process_superclick(vals,iterations);
-      }, vals.tick);
-      iterations++;
-    }
-}
-
-//check if followers >= click amount and > 0
-function can_click(superclick) {
-  var click = vals.click;
-  if( superclick ) {
-    click *= vals.events.superclick.mul;
-  }
-  if( vals.followers >= 1 && vals.followers >= click ) {
-    return true;
-  }
-  return false;
-}
 //this performs a miracle
 var perform_miracle = function(superclick) {
   var click = vals.click;
@@ -2247,50 +2149,180 @@ function isUpgradeAvailable(bossUpgrade, tier) {
     }
 }
 
+$(document).on('contextmenu', '.miracle', function(event) {
+  event.preventDefault();
+  $(this).click();
+});
+
 //TODO - fix this for when you scroll down screen on achievements etc.
 $(document).on("click", '.miracle', function(event) { 
-          var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
-          var divToAppend, target, offset, color = '#212121';
-
-          if( vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
-            vals.events.superclick.click_num++;
-            $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
-          }
-          else if( vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
-            $('#superclick_bar').css('background-color', '#FFC400');
-            process_superclick(vals, 0);
-          } 
-          if( vals.events.superclick.active) color = '#FFC400';
-          if( used_id === 'button') {
-            target = $('.miracle_click:first').clone();
-            target.html( '+' + truncate_bigint(perform_miracle(vals.events.superclick.active)));
-            divToAppend = '#miracle_div';
-            offset = $(window).height()/4;
-          }else {
-            if( can_click(vals.events.superclick.active) ) {
-              divToAppend = '#miracle2_div'; 
-              target = $('.transcend_click:first').clone();
-              target.html( '-' + truncate_bigint(perform_trans(vals.events.superclick.active)) ); 
-              offset = $(window).height()/4;
-            }else return;
-          }
-          target.css('color', color);
-          $(divToAppend).append(target);
-          target.show();
-          //handle unique animations for each click
-          gen_target_offset( '#' + $(this).attr('id'), target, event); 
-          target.css('opacity',100);
-          if( used_id === 'button') 
-            { target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left':target.offset.left+ 'px'}, 750, function() { 
-            $(this).remove();
-          });
-          }
-          else {target.animate({ 'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '-=10'}, 750, function() { 
-            $(this).remove();
-          });
-          }
-
+  var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
+  
+  handleMiracleClick(used_id, event);
 });
+
+class Click {
+
+  constructor(event, target) {
+    this.event = event;
+    this.target = target;
+  }
+
+  setTargetColor(color) {
+    this.target.css('color', color);
+  }
+
+  revealTarget(divToAppend) {
+    this.target.css('opacity', 100);
+    $(divToAppend).append(this.target);
+    this.target.show();
+  }
+
+  resolveVerticalOffset() {
+    var width = $(window).width();
+
+    if(width > 1300)  {
+        return this.event.pageY + 40;
+    } else if(width <= 700) {
+        return this.event.pageY * 1.1;
+    } else if(width <= 1100) {
+        return this.event.pageY + 25;
+    } else if(width <= 1300) {
+        return this.event.pageY + 25;
+    }
+  }
+
+  generateOffset(id) {
+    var yOffset = this.resolveVerticalOffset();
+    if(id === '#miracle2_div') {
+      yOffset *= 0.75;
+    }
+    var xOffset = 5 * $(id).offset().left;
+    this.target.offset({left: xOffset, top: yOffset});
+  }
+}
+
+class MiracleClick extends Click {
+
+  animate() {
+      this.target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': this.target.offset.left+ 'px'}, 750,
+       function() { 
+        $(this).remove();
+      });
+    }
+}
+
+class TranscendClick extends Click {
+
+  animate() {
+    this.target.animate({'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '-=10'}, 750, 
+      function() { 
+        $(this).remove();
+      });
+  }
+}
+
+function handleMiracleClick(used_id, event) {
+  var miracle = used_id === 'button';
+  var click = resolveClick(miracle, event);
+  var divToAppend = resolveDivFor(miracle); 
+  processSuperClick();
+  click.setTargetColor(resolveColor);
+  click.revealTarget(divToAppend);
+  click.generateOffset(divToAppend);
+  click.animate();
+}
+
+function gen_boss_offset(id, target, event) {
+    var width = $(window).width();
+    if( width > 1300 )  
+      target.offset({left: 2.6 * $(id).offset().left, top: $(id).offset().top * 1.5});
+    else if( width <= 700) 
+      target.offset( {'top': $(id).offset().top* 1.05, 'left': $(window).width()/1.7});
+    else if( width <= 750) 
+      target.offset( {'top': $(id).offset().top*1.05, 'left': $(window).width()/1.75});
+    else if( width <= 1100) 
+      target.offset( {'left': 1.75* $(id).offset().left, 'top': $(id).offset().top*1.1});
+    else if( width <= 1300) 
+      target.offset( {'left': 2.15* $(id).offset().left, 'top': $(id).offset().top*1.2});
+}
+
+function resolveClick(miracle, event) {
+  var target = resolveTargetFor(miracle);
+
+  return miracle === true ? new MiracleClick(event, target) : new TranscendClick(event, target);
+}
+
+function resolveTargetFor(miracle) {
+  var target, html;
+
+  if(miracle === true) {
+    target = $('.miracle_click:first').clone();
+    html = '+' + truncate_bigint(perform_miracle(vals.events.superclick.active));
+  } else if(can_click(vals.events.superclick.active)) {
+    target = $('.transcend_click:first').clone();
+    html = '-' + truncate_bigint(perform_trans(vals.events.superclick.active)); 
+  } 
+  target.html(html);
+
+  return target;
+}
+
+function resolveDivFor(miracle) {
+  return miracle === true ? '#miracle_div' : '#miracle2_div';  
+}
+
+function processSuperClick() {
+  if( vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
+    vals.events.superclick.click_num++;
+    $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
+  }
+  else if( vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
+    $('#superclick_bar').css('background-color', '#FFC400');
+    process_superclick(vals, 0);
+  } 
+}
+
+function resolveColor() {
+  return vals.events.superclick.active ? "#FFC400" : "#212121";
+}
+
+var bar_timer;
+
+function process_superclick(vals, iterations) {
+    
+    if( iterations === 9 ) {
+      $('#superclick_bar').css('background-color', '');
+      vals.events.superclick.click_num = 0;
+      $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
+      vals.events.superclick.active = false;
+      
+      return;
+    }
+    clearTimeout(bar_timer);
+
+    $('#superclick_bar').css('width', (100 - 10 * (iterations) )+ '%');
+    vals.events.superclick.active = true;
+
+    if( iterations < 9 ) {
+      bar_timer = setTimeout(function() {
+        process_superclick(vals,iterations);
+      }, vals.tick);
+      iterations++;
+    }
+}
+
+//check if followers >= click amount and > 0
+function can_click(superclick) {
+  var click = vals.click;
+  if( superclick ) {
+    click *= vals.events.superclick.mul;
+  }
+  if( vals.followers >= 1 && vals.followers >= click ) {
+    return true;
+  }
+  return false;
+}
 
 function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
@@ -2392,4 +2424,3 @@ function truncate_int(num) {
     var num_str = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
     return num_str;
 }
-

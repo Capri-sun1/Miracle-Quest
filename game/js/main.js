@@ -862,8 +862,8 @@ var upgrade_box_size = 0;
     var corrected_prod = adjustProduction(cost);
     var total_loss = adjustLoss(cost);
 
-    handleFollowerCount();
-    handleUiUpdate(corrected_prod, total_loss);
+    handleNegativeValues();
+    handleUiUpdate([corrected_prod, total_loss, cost]);
 
     setTimeout(function() {
       checkAchievements(vals);
@@ -871,7 +871,7 @@ var upgrade_box_size = 0;
 
       handlePantheon(mul);
       handleStats();
-      cycles = handleSaveData(cycles);
+      cycles = handleSaveData(cycles, false);
       handleGameLoop(iterations, cycles);
       handleGameLogic(corrected_prod, cost);
 
@@ -894,13 +894,22 @@ var upgrade_box_size = 0;
     return initialCost * costMultiplier;
   }
 
-  function handleFollowerCount() {
-    if(vals.followers <= 0) {
-      vals.followers = 0;
-    }
+  function handleNegativeValues() {
+    vals.followers = handleNegative(vals.followers);
+    vals.prod = handleNegative(vals.prod);
+    vals.loss = handleNegative(vals.loss);
   }
 
-  function handleUiUpdate(corrected_prod, total_loss) {
+  function handleNegative(value) {
+    if(value <= 0) return 0;
+    return value;
+  }
+
+  function handleUiUpdate(values) {
+    const corrected_prod = values[0];
+    const total_loss = values[1];
+    const cost = values[2];
+
     $('#click_amount').text('[ ' + truncate_bigint(vals.click) + ' ]');
     $('#counter').text(truncate_bigint(Math.floor(vals.followers)));
     
@@ -923,23 +932,32 @@ var upgrade_box_size = 0;
   }
 
   function handlePantheon(mul) {
-    if( vals.current_tab==="Pantheon" && vals.pantheon.unlocked) {
-      for( var k in vals.pantheon.bosses ) {
-        if( vals.pantheon.bosses[k].current ) {
-          if( ( (mul * vals.pantheon.bosses[k].current_hp) + (mul * vals.pantheon.bosses[k].regen) ) <= (mul * vals.pantheon.bosses[k].max_hp) ) {
-            vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].current_hp + (mul * vals.pantheon.bosses[k].regen);
-          } else vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
-            vals.pantheon.bosses[k].current_hp -= vals.pantheon.dps;
-            if( vals.pantheon.dps > 0 ) {
-              attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
-            }
-          }
+    if(vals.current_tab === "Pantheon" && vals.pantheon.unlocked === true) {
+      for(const k in vals.pantheon.bosses ) {
+        if(vals.pantheon.bosses[k].current ) {
+          handleCurrentBoss(vals.pantheon.bosses[k]);
+          break;
         }
       }
-      if( vals.upgrades['1']['upgrade6'].unlocked && !vals.pantheon.unlocked) {
-        vals.pantheon.unlocked = true; 
-        fix_names(vals); 
-      }
+    } else if(vals.pantheon.unlocked === false && vals.upgrades['1']['upgrade6'].unlocked) {
+      vals.pantheon.unlocked = true; 
+      fix_names(vals); 
+    }
+  }
+
+  function handleCurrentBoss(currentBoss) {
+    const bossHpPlusRegen = (mul * currentBoss.current_hp) + (mul * currentBoss.regen);
+    const bossHpMax = mul * currentBoss.max_hp;
+
+    if(bossHpPlusRegen <= bossHpMax) {
+      currentBoss.current_hp += (mul * currentBoss.regen);
+    } else {
+      currentBoss.current_hp = currentBoss.max_hp;
+    }
+    if( vals.pantheon.dps > 0 ) {
+      currentBoss.current_hp -= vals.pantheon.dps;
+      attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
+    }
   }
 
   function handleStats() {
@@ -950,8 +968,8 @@ var upgrade_box_size = 0;
     last_saved = (vals.tick + last_saved * 1000)/1000;
   }
 
-  function handleSaveData(cycles) {
-    if( (cycles * ( vals.tick * 30 ) >= 30000 ) ) {
+  function handleSaveData(cycles, override) {
+    if( (cycles * ( vals.tick * 30 ) >= 30000 ) || override) {
       $('#save_title').html("Last saved ");
       $('#last_saved').text("0 seconds ago.");
       localStorage.sv1 = btoa(JSON.stringify(valsToJSON()));
@@ -1208,6 +1226,7 @@ var upgrade_box_size = 0;
     fix_tab_buttons(vals);
   }
 
+  //TODO:- fix this disgusting mess => extract into objects & use polymorphism.
   function checkAchievements(vals) {
     for( var k in vals.challenges ) {
       switch( vals.challenges[k].required_type) {
@@ -1602,7 +1621,8 @@ function fix_conv_asc(vals) {
     else { keyWord = 'miracle'; title = 'purchase'; }
     for( var k in vals[keyWord] ) {
       var purchase_num = k.substr(k.length -1 );
-      if( (currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab==='Conversion' && vals.prod >= vals[keyWord][k].unlock_rps) ) {
+      if( (currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && 
+        (vals.prod >= vals[keyWord][k].unlock_rps) ) ) {
         vals[keyWord][k].unlocked = true;
         //dynammically create divs as needed, saves creating all in the html file.
          if( !document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1") ){
@@ -1849,35 +1869,104 @@ $(document).on("click", ".reset", function() {
   }
 });
 
+class Action {
+
+  constructor(id) {
+    this.id = id;
+  }
+
+  action() {
+    console.log("Super class should never be instantiated!");
+  }
+}
+
+class Deleter extends Action {
+
+  action() {
+    if(confirm("Are you sure you want to delete your save?")) deleteSave();
+  }
+}
+
+class Saver extends Action {
+
+  action() {
+    handleSaveData(0, true);
+    $.toaster({message:"Successfully saved game.", title:"Saved"});  
+  }
+}
+
+class Producer extends Action {
+
+  constructor(id) {
+    super(id);
+    this.object = generateUseableId(id) === 'purchase' ? vals.miracle[id] : vals.ascend[id];
+  }
+
+  action() {
+    if(vals.energy >= this.object.cost) {
+      vals.energy -= this.object.cost;
+      this.object.amount ++;
+      this.object.cost =  set_item_cost(this.object);
+      this.handleProduction();
+    }
+  }
+
+  handleProduction() {
+    if(generateUseableId(this.id) === 'purchase') {
+        vals.prod += this.object.output;
+      } else {
+        vals.loss += this.object.output;
+    }
+  }
+}
+
+class Upgrader extends Action {
+
+}
+
+class Unlocker extends Action {
+
+}
+
+class Sacrificer extends Action {
+
+}
+
+class Clicker extends Action {
+
+}
+
+function resolveClass(btn) {
+  if(btn === 'delete_save') return new Deleter(btn);
+  if(btn === 'make_save') return new Saver(btn);
+  const valsEntry = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1);
+  const id = generateUseableId(valsEntry);
+
+  switch(id) {
+    case 'purchase' : case 'ascend' : return new Producer(valsEntry); 
+    case 'upgrade' : return new Upgrader(btn);
+    case 'entry' : return new Unlocker(btn);
+    case 'sacrifice' : return new Sacrificer(btn);
+    case 'click' : case 'tier' : case 'boss' : return new Clicker(btn);
+  }
+}
+
+function generateUseableId(id) {
+    return id.substr(0, id.search(/\d/));
+}
+
 $(document).on("click", ".purchase", function() {
     var btn = $(this).attr('id');
-    if( btn === 'delete_save') {
-      if( confirm("Are you sure you want to delete your save?") ) deleteSave();
-      return;
+    let event = resolveClass(btn);
+    try {
+      event.action();
     }
-    else if ( btn === 'make_save') {
-      saveData();
-      $.toaster({message:"Successfully saved game.", title:"Saved"});  
+    catch(err) {
+      console.log("Error occured performing action.");
     }
     var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1);
     switch( id.substr(0, id.search(/\d/))) {
-      case 'purchase':
-        if( vals.energy >= vals.miracle[id].cost ) {
-          vals.energy-= vals.miracle[id].cost;
-          vals.miracle[id].amount ++;
-          vals.miracle[id].cost =  set_item_cost(vals.miracle[id]);
-          vals.prod += vals.miracle[id].output;
-        }
-      break;
-    case 'ascend' :
-      if( vals.energy >= vals.ascend[id].cost ) {
-        vals.energy -= vals.ascend[id].cost;
-        vals.ascend[id].amount ++;
-        vals.ascend[id].cost =  set_item_cost(vals.ascend[id]);
-        vals.loss += vals.ascend[id].output;
-      }
-    break;
-    case 'upgrade' :
+      case 'upgrade' :
       var purchase_type = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
       if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
         vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
@@ -2062,6 +2151,7 @@ function toggleUi(element, toggles) {
     toggleIcon(element);
     toggleBalloon(element, toggles);
 }
+
 function toggleButton(element) {
   $(element).toggleClass('btn-open').toggleClass('btn-close');
 }
@@ -2093,7 +2183,6 @@ $.fn.extend({
     }
 });
 
-//this performs a miracle
 var perform_miracle = function(superclick) {
   var click = vals.click;
   if(superclick) {
@@ -2106,7 +2195,7 @@ var perform_miracle = function(superclick) {
 
   return click
 }
-//this transfers followers into energy
+
 var perform_trans = function(superclick) {
   click = vals.click;
   if(superclick) click *= vals.events.superclick.mul;
@@ -2192,7 +2281,11 @@ $(document).on('contextmenu', '.miracle', function(event) {
 $(document).on("click", '.miracle', function(event) { 
   var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
 
-  handleMiracleClick(used_id, event);
+  try {
+    handleMiracleClick(used_id, event);
+  } catch(cannotClickException) {
+    console.log("Cannot convert when there are no followers.");
+  }
 });
 
 function handleMiracleClick(used_id, event) {

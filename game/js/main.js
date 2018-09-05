@@ -2325,11 +2325,19 @@ function updatePlayerStats(boss) {
 
 function updateBossStats(boss) {
   const firstVictory = boss.defeated != true;
-  let generalMultiplier = firstVictory === true ? 2.5 : 1.5;
+  boss.defeated = true;
+  let generalMultiplier = handleBossMultiplier(firstVictory);
 
-  boss.max_hp = Math.pow(boss.max_hp, generalMultiplier);
+  boss.max_hp *= generalMultiplier;
   boss.current_hp = boss.max_hp;
-  boss.regen *= Math.pow(boss.max_hp, (generalMultiplier + 0.5);
+  boss.regen *= (generalMultiplier + 0.5);
+}
+
+function handleBossMultiplier(firstVictory) {
+  let generalMultiplier = firstVictory === true ? 2.5 : 1.5;
+  generalMultiplier += 1 + vals.god_status.current/5.0;
+
+  return generalMultiplier;
 }
 
 class MiracleClick extends Click {

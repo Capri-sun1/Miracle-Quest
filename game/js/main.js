@@ -805,7 +805,6 @@ var upgrade_box_size = 0;
     }
     });
     fix_names(vals);
-    // resolve_mobile_width();
   }});
 
   $(document).ready(function() {
@@ -843,73 +842,136 @@ var upgrade_box_size = 0;
     $('#tier_btn_1').prop('disabled', true);
   }
 
-  function start_game(vals) {
+  function start_game() {
     fix_names(vals);
-    game_engine(vals, 0, 0);
+    game_engine(0, 0);
   }
-    function set_item_cost(item) { 
-        var cost =  ((item.amount + 1) * ( vals.god_status[vals.god_status.current].mul * item.base_cost) * (item.amount + 1));
 
-        if((item.amount + 1) > 10) { 
-            cost *= 2;
-        }
-        return Math.round(cost * 0.9);
+  function set_item_cost(item) {
+    var amount_multipler = item.amount === 1 ? 2.0 : item.amount * (item.amount*0.3);  
+    var status_multiplier = vals.god_status[vals.god_status.current].mul;
+
+    var newCost = amount_multipler * (status_multiplier * item.base_cost);
+
+    return Math.round(newCost * 0.9);
+  }
+
+  function game_engine(iterations, cycles) {
+    var mul = vals.god_status[vals.god_status.current].mul;
+    var cost = adjustForGodStatus(mul);
+    var corrected_prod = adjustProduction(cost);
+    var total_loss = adjustLoss(cost);
+
+    handleFollowerCount();
+    handleUiUpdate(corrected_prod, total_loss);
+
+    setTimeout(function() {
+      checkAchievements(vals);
+      setButtonAvailability(vals);  
+
+      handlePantheon(mul);
+      handleStats();
+      cycles = handleSaveData(cycles);
+      handleGameLoop(iterations, cycles);
+      handleGameLogic(corrected_prod, cost);
+
+    }, vals.tick);
+  }
+
+  function adjustForGodStatus(mul) {
+    return mul > 1 ? mul * 0.8 : 1;
+  }
+
+  function adjustProduction(costMultiplier) {
+    let initialCost =  ((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))) - ((1+(vals.corruption/100))*vals.loss);
+
+    return initialCost * costMultiplier;
+  }
+
+  function adjustLoss(costMultiplier) {
+    let initialCost = (vals.loss * (1+(vals.corruption/100)));
+
+    return initialCost * costMultiplier;
+  }
+
+  function handleFollowerCount() {
+    if(vals.followers <= 0) {
+      vals.followers = 0;
+    }
+  }
+
+  function handleUiUpdate(corrected_prod, total_loss) {
+    $('#click_amount').text('[ ' + truncate_bigint(vals.click) + ' ]');
+    $('#counter').text(truncate_bigint(Math.floor(vals.followers)));
+    
+    if( $('#last_saved').text() != "" )  {
+      $('#last_saved').text(Math.round(last_saved) + ' seconds ago.');
     }
 
-  function game_engine(vals, iterations, cycles) {
-    var corrected_prod = ((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))) - ((1+(vals.corruption/100))*vals.loss);
-    var total_loss = (vals.loss * (1+(vals.corruption/100)));
-    var mul = vals.god_status[vals.god_status.current].mul;
-    var cost =1;
-    if( mul > 1 ) cost = mul * 0.8;
-    corrected_prod *= cost;
-    total_loss *= cost;
-    if( vals.followers < 0 ) vals.followers = 0;
-    $('#click_amount').text( '[ ' + truncate_bigint( vals.click) + ' ]');
-    $('#counter').text( truncate_bigint(Math.floor(vals.followers)) );
-    if( $('#last_saved').text() != "" )  $('#last_saved').text(Math.round(last_saved) + ' seconds ago.');
     $('#power').text(truncate_bigint(vals.energy));
     //production of followers is (production*achievement_multipler) divided by the corruption factor.
     $('#production_net').text(truncate_bigint(corrected_prod));
-    $('#production_gross').text(truncate_bigint(( (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)))));
+    $('#production_gross').text(truncate_bigint(((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)))));
     
-    if( corrected_prod >= 0.0 || vals.followers >= total_loss )  
-      $('#prod_energy').text(truncate_bigint(total_loss));
-    
-    else $('#prod_energy').text(truncate_bigint( cost * (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))));
-    
-    setTimeout(function() {
-    checkAchievements(vals);
-    setButtonAvailability(vals);  
+    let netLoss = 0;
+    if( corrected_prod >= 0.0 || vals.followers >= total_loss )  {
+      netLoss = total_loss;
+    } else {
+      netLoss = cost * (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100));
+    }
+    $('#prod_energy').text(truncate_bigint(netLoss));
+  }
 
-      if( vals.current_tab==="Pantheon" && vals.pantheon.unlocked) {
-        for( var k in vals.pantheon.bosses ) {
-          if( vals.pantheon.bosses[k].current ) {
-            if( ( (mul * vals.pantheon.bosses[k].current_hp) + (mul * vals.pantheon.bosses[k].regen) ) <= (mul * vals.pantheon.bosses[k].max_hp) ) {
-              vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].current_hp + (mul * vals.pantheon.bosses[k].regen);
-            } else vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
+  function handlePantheon(mul) {
+    if( vals.current_tab==="Pantheon" && vals.pantheon.unlocked) {
+      for( var k in vals.pantheon.bosses ) {
+        if( vals.pantheon.bosses[k].current ) {
+          if( ( (mul * vals.pantheon.bosses[k].current_hp) + (mul * vals.pantheon.bosses[k].regen) ) <= (mul * vals.pantheon.bosses[k].max_hp) ) {
+            vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].current_hp + (mul * vals.pantheon.bosses[k].regen);
+          } else vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
             vals.pantheon.bosses[k].current_hp -= vals.pantheon.dps;
-            if( vals.pantheon.dps > 0 ) animate_attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
+            if( vals.pantheon.dps > 0 ) {
+              animate_attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
+            }
           }
         }
       }
-      else if( vals.current_tab==="Stats")fix_stats(vals);
       if( vals.upgrades['1']['upgrade6'].unlocked && !vals.pantheon.unlocked) {
         vals.pantheon.unlocked = true; 
         fix_names(vals); 
       }
-      vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000)/1000;
-      last_saved = (vals.tick + last_saved * 1000)/1000;
-      //save every 30 seconds
-      if( (cycles * ( vals.tick * 30 ) >= 30000 ) ) {
-        saveData();
-        cycles = 0;
-      }
-    if( iterations >= 30 ) {
-        game_engine(vals, 0, ++cycles);
+  }
+
+  function handleStats() {
+    if( vals.current_tab==="Stats")
+      fix_stats(vals);
+    
+    vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000)/1000;
+    last_saved = (vals.tick + last_saved * 1000)/1000;
+  }
+
+  function handleSaveData(cycles) {
+    if( (cycles * ( vals.tick * 30 ) >= 30000 ) ) {
+      $('#save_title').html("Last saved ");
+      $('#last_saved').text("0 seconds ago.");
+      localStorage.sv1 = btoa(JSON.stringify(valsToJSON()));
+      last_saved = 0;
+      cycles = 0;
     }
-    else {
-      game_engine(vals, ++iterations, cycles);
+    return cycles;
+  }
+
+  function handleGameLoop(iterations, cycles) {
+    if( iterations >= 30 ) {
+      let newLoop = 0;
+
+      game_engine(newLoop, ++cycles);
+    } else {
+      game_engine(++iterations, cycles);
+    }
+  }
+
+  function handleGameLogic(corrected_prod, cost) {
       //adding production to variables
       if( vals.followers >= vals.loss || corrected_prod > 0)  {
         vals.followers += corrected_prod;
@@ -920,10 +982,8 @@ var upgrade_box_size = 0;
       else {vals.energy += ( cost * (vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
         vals.stats.total_energy += (cost *(vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
       }
-    }
-  
-    }, vals.tick);
   }
+
   var valsToJSON = function() {
       var save = {
         'e':Math.round(vals.energy).toString(16),
@@ -1121,26 +1181,22 @@ var upgrade_box_size = 0;
         }
 
   }
-//change this to localstorage
-  function saveData() {
-    $('#save_title').html("Last saved ");
-    $('#last_saved').text("0 seconds ago.");
-    localStorage.sv1 = btoa(JSON.stringify(valsToJSON()));
-    last_saved = 0;
-  }
+
   function loadData() {
     try {
         get_valsFromJSON(JSON.parse(atob(localStorage.sv1)));
-     }catch(err) {
+    } catch(err) { //TODO - work on designing meaningful exceptions
       console.log("No saved data to load.");
     }
-      fix_tab_buttons(vals);
-      fix_names(vals);
+    fix_tab_buttons(vals);
+    fix_names(vals);
   }
+
   function deleteSave() {
     localStorage.removeItem("sv1");
     location.reload();
   }
+
   function set_achievement_multiplier(vals) {
     var out = 1.00;
     for( var k in vals.challenges ) {
@@ -1151,6 +1207,7 @@ var upgrade_box_size = 0;
     $('#prod_mul').text(Math.round(vals.achievement_multiplier * 100)/100 + 'x');
     fix_tab_buttons(vals);
   }
+
   function checkAchievements(vals) {
     for( var k in vals.challenges ) {
       switch( vals.challenges[k].required_type) {
@@ -1242,6 +1299,7 @@ var upgrade_box_size = 0;
     }
     set_achievement_multiplier(vals);
   }
+
   function setButtonAvailability(vals) {
     var mul = vals.god_status[vals.god_status.current].mul;
 
@@ -1350,6 +1408,7 @@ var upgrade_box_size = 0;
       else $('#tier_btn_' + tier).prop('disabled', true);    
    }
   }
+
   function fix_tab_buttons(vals) {
     var unlock_conv = 0, unlock_ascend = 0, unlock_aug = 0;
     var total_conv = 0, total_ascend = 0, total_aug = 0;
@@ -1375,6 +1434,7 @@ var upgrade_box_size = 0;
     if( !vals.leap.unlocked ) $('#leap-tab-btn').css('display', 'none');
     else $('#leap-tab-btn').css('display', 'inline-block');
   }
+
   function fix_stats(vals) {
     var mul = vals.god_status[vals.god_status.current].mul;
     var corrected_prod = (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100));
@@ -1401,6 +1461,7 @@ var upgrade_box_size = 0;
        $('#stats_field_15').text(truncate_bigint(vals.stats.ascension_click_energy));
        $('#stats_field_16').text(truncate_bigint(vals.stats.miracle_click_energy));
   }
+
    function fix_names( vals ) {
     //fix conv and asc
     fix_conv_asc(vals);
@@ -1436,6 +1497,7 @@ var upgrade_box_size = 0;
     fix_pantheon(vals);
     fix_leap(vals);
   }
+
 function fix_leap(vals) {
   if( vals.current_tab === 'Leap' && vals.leap.unlocked ) {
       var id = $('.wrap-nav').attr('id');
@@ -1503,6 +1565,7 @@ function fix_pantheon(vals) {
           }
   }
 }
+
 function fix_corruption_bar(vals) {
   var cor = vals.corruption;
   if( cor >= -100 ) $('#corruption_bar').css('background-color', '#0D47A1');
@@ -1528,6 +1591,7 @@ function fix_corruption_bar(vals) {
 
   $('#corruption_amount').text(cor + '%' + g_e);
 }
+
 //generalised function that handles both asc and conv tabs.
 function fix_conv_asc(vals) {
   var currentTab = vals.current_tab;
@@ -1585,6 +1649,7 @@ function fix_conv_asc(vals) {
     }
   }
 }
+
 //fix all the upgrades
 function fix_upgrades(vals) {
   if( vals.current_tab === 'Upgrades'){
@@ -1634,6 +1699,7 @@ function fix_upgrades(vals) {
     }
   }
 }
+
   //fix all challenge names if you're on the correct page
 function fix_challenges(vals) {
     if( vals.current_tab === 'Challenges') {
@@ -1710,7 +1776,7 @@ function fix_challenges(vals) {
         }
         }
        }
-      }
+    }
 }
 
 function doLeap(vals) {
@@ -1957,15 +2023,14 @@ function animate_attack(damage, id) {
 $(document).on("click", ".sell", function() {
   var btn = $(this).attr('id');
   var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
-  var type = id.substr(0, id.length-1);
 
-  sell(type);
+  sell(id);
   fix_tab_buttons(vals);
   fix_names(vals);
 });
 
-function sell(type) {
-  var valsType;
+function sell(id) {
+  var valsType, type = id.substr(0, id.length-1);
   if(type === 'purchase') {
     valsType = vals.miracle[id];
   } else {
@@ -2019,33 +2084,52 @@ $(document).on("click", "#next_boss", function(event) {
 });
 
 $(document).on("click", "#boss_upgrades", function(event) {
-      $(".overlay").fadeToggle(50);
-      $('.boss_img').fadeToggle(50);
-      $('.traverse_bosses').fadeToggle(50);
-      $(this).toggleClass('btn-open').toggleClass('btn-close');
-      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove" id="achievements_shown">' ,
-        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok" id="achievements_shown">');
-      $(this).toggleBalloon('Upgrade menu', 'Boss fight');
-      $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
+    toggleElements([".overlay", ".boss_img", ".traverse_bosses"]);
+    toggleUi('#' + $(this).attr('id'), ['Upgrade menu', 'Boss fight']);
+    $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
 });
 
 $(document).on("click", "#upgrades_shown", function(event) {
-      $("#bought_upgrades").fadeToggle(50);
-      $('#uncompleted').fadeToggle(50);
-      $(this).toggleClass('btn-open').toggleClass('btn-close');
-      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove"></span>', 
-        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
-      $(this).toggleBalloon('See Purchased', 'See Available');
+  toggleElements(["#bought_upgrades", "#uncompleted"]);
+  toggleUi('#' + $(this).attr('id'), ['See Purchased', 'See Available']);
 });
 
 $(document).on("click", "#achievements_shown", function(event) {
-      $("#completed_challenges").fadeToggle(50);
-      $('#uncompleted').fadeToggle(50);
-      $(this).toggleClass('btn-open').toggleClass('btn-close');
-      $(this).toggleIcon('<span style="font-size:1.5em;" class="glyphicon glyphicon-remove"></span>', 
-        '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
-      $(this).toggleBalloon('See Completed', 'See Incomplete');
-});
+    toggleElements(["#completed_challenges", "#uncompleted"]);
+    toggleUi('#' + $(this).attr('id'), ['See Completed', 'See Incomplete']);
+  });
+
+function toggleElements(elements) {
+  for(let index = 0; index < elements.length; index++) {
+    let element = elements[index];
+
+    $(element).fadeToggle(50);
+  }
+}
+
+function toggleUi(element, toggles) {
+    toggleButton(element);
+    toggleIcon(element);
+    toggleBalloon(element, toggles);
+}
+function toggleButton(element) {
+  $(element).toggleClass('btn-open').toggleClass('btn-close');
+}
+
+function toggleIcon(element) {
+  let html = "<span style='font-size:1.5em;' class='glyphicon glyphicon-remove'";
+  html += handleBossUpgrade(element);
+  
+  $(element).toggleIcon(html, '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
+}
+
+function handleBossUpgrade(element) {
+  return element === "#boss_upgrades" ? 'id="achievements_shown">' : '>,';
+}
+
+function toggleBalloon(id, toggles) {
+  $(id).toggleBalloon(toggles[0], toggles[1]);
+}
 
 $.fn.extend({
     toggleIcon: function(a, b){
@@ -2157,9 +2241,25 @@ $(document).on('contextmenu', '.miracle', function(event) {
 //TODO - fix this for when you scroll down screen on achievements etc.
 $(document).on("click", '.miracle', function(event) { 
   var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
-  
+
   handleMiracleClick(used_id, event);
 });
+
+function handleMiracleClick(used_id, event) {
+  var miracle = used_id === 'button';
+  var click = resolveClick(miracle, event);
+  if(click.canClick()) {
+    var divToAppend = resolveDivFor(miracle); 
+    processSuperClick();
+    click.setTargetColor(resolveColor);
+    click.revealTarget(divToAppend);
+    click.generateOffset(divToAppend);
+    click.animate();
+  }
+  else {
+    handleError();
+  }
+}
 
 class Click {
 
@@ -2204,6 +2304,10 @@ class Click {
 
 class MiracleClick extends Click {
 
+  canClick() {
+    return true;
+  }
+
   animate() {
       this.target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': this.target.offset.left+ 'px'}, 750,
        function() { 
@@ -2214,6 +2318,10 @@ class MiracleClick extends Click {
 
 class TranscendClick extends Click {
 
+  canClick() {
+    return can_click(false);
+  }
+
   animate() {
     this.target.animate({'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '-=10'}, 750, 
       function() { 
@@ -2222,17 +2330,11 @@ class TranscendClick extends Click {
   }
 }
 
-function handleMiracleClick(used_id, event) {
-  var miracle = used_id === 'button';
-  var click = resolveClick(miracle, event);
-  var divToAppend = resolveDivFor(miracle); 
-  processSuperClick();
-  click.setTargetColor(resolveColor);
-  click.revealTarget(divToAppend);
-  click.generateOffset(divToAppend);
-  click.animate();
+function handleError() {
+  if(last_saved % 5 === 0) {
+      $.toaster( {message: "Insufficient followers to convert!", title:"Can't convert." } );
+  }
 }
-
 function gen_boss_offset(id, target, event) {
     var width = $(window).width();
     if( width > 1300 )  
@@ -2263,6 +2365,9 @@ function resolveTargetFor(miracle) {
     target = $('.transcend_click:first').clone();
     html = '-' + truncate_bigint(perform_trans(vals.events.superclick.active)); 
   } 
+  else {
+    return;
+  }
   target.html(html);
 
   return target;

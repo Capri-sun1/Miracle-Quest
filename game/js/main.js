@@ -931,7 +931,7 @@ var upgrade_box_size = 0;
           } else vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
             vals.pantheon.bosses[k].current_hp -= vals.pantheon.dps;
             if( vals.pantheon.dps > 0 ) {
-              animate_attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
+              attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
             }
           }
         }
@@ -1970,56 +1970,6 @@ $(document).on("click", ".purchase", function() {
   fix_names(vals);
   });
 
-$(document).on("click", ".battle", function() {
-  animate_attack(vals.pantheon.damage, $(this).attr('id'));
-});
-
-//TODO - refactor this method - it should ONLY animate the attack, not carry it out!
-function animate_attack(damage, id) {  
-  var btn = id;
-  var divToAppend, target, offset;
-  target = $('.miracle_click:first').clone();
-  target.html( '-' + truncate_bigint(damage));
-  offset = $(window).height()/8;
-  $('.boss_img').append(target);
-  target.show();
-  //handle unique animations for each click
-  target.css('opacity',100);
-  target.css('color', '#880E4F');
-  //process the animation - we need to consider screen size here to obtain the correct offsets.
-  gen_boss_offset('.boss_img', target);
-  //two animations to create a more smooth curve
-  target.animate({ 'top': '-=25', 'opacity':0.8, 'left': '+=4' }, 250);
-  target.animate({ 'top': '+=15', 'opacity':0.1, 'left':  '+=15'}, 250, function() {  
-    target.remove(); 
-  });
-  var boss_num = btn.substr(btn.length-1);
-  for( var k in vals.pantheon.bosses) {
-    if( vals.pantheon.bosses[k].current) {
-      vals.pantheon.bosses[k].current_hp -= damage;
-  //process reward for defeating boss
-    if( vals.pantheon.bosses[k].current_hp <= 0 ) {
-      vals.flame+=vals.pantheon.bosses[k].reward;
-      //if the boss is defeated for the first time, change the params for when user fights again
-      if( vals.pantheon.bosses[k].defeated  != true) {
-        vals.pantheon.bosses[k].defeated = true;
-        vals.pantheon.bosses[k].max_hp *= 10;
-        vals.pantheon.bosses[k].regen *= 25;
-        vals.pantheon.bosses[k].reward /= 5;
-      }
-      else {
-        vals.pantheon.bosses[k].max_hp *= 1.5;
-        vals.pantheon.bosses[k].regen *= 4;
-      }
-      vals.pantheon.bosses[k].current_hp = vals.pantheon.bosses[k].max_hp;
-      fix_pantheon(vals);
-      break;
-    }
-    }
-  } 
-  fix_names(vals);
-}
-
 $(document).on("click", ".sell", function() {
   var btn = $(this).attr('id');
   var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
@@ -2302,6 +2252,86 @@ class Click {
   }
 }
 
+$(document).on('contextmenu', '.battle', function(event) {
+  event.preventDefault();
+  $(this).click();
+});
+
+$(document).on("click", ".battle", function() {
+  attack(vals.pantheon.damage, $(this).attr('id'));
+});
+
+function attack(damage, id) {  
+  let btn = id, divToAppend = '.boss_img';
+  let bossClick = new BossClick(null, setAttackTarget(damage));
+  
+  bossClick.revealTarget(divToAppend);
+  bossClick.setTargetColor('#880E4F');
+  bossClick.generateOffset(divToAppend);
+  bossClick.animate();
+
+  handleBossLogic(damage);
+  fix_names(vals);
+}
+
+class BossClick extends Click {
+
+  generateOffset(divToAppend) {
+    gen_boss_offset(divToAppend, this.target);
+  }
+
+  animate() {
+    this.target.animate({ 'top': '-=25', 'opacity':0.8, 'left': '+=4' }, 250);
+    this.target.animate({ 'top': '+=15', 'opacity':0.1, 'left':  '+=15'}, 250, function() {  
+      $(this).remove(); 
+    });
+  }
+}
+
+function setAttackTarget(damage) {
+  let target = $('.miracle_click:first').clone();
+  target.html( '-' + truncate_bigint(damage));
+
+  return target;
+}
+//TODO - model each boss as an object, the current method is highly inefficient.
+function handleBossLogic(damage) {
+    for(const k in vals.pantheon.bosses) {
+      if(vals.pantheon.bosses[k].current) {
+        let currentBoss = vals.pantheon.bosses[k];
+        currentBoss.current_hp -= damage;
+
+        if(bossIsDefeated(currentBoss)) {
+          handleVictory(currentBoss);
+          fix_pantheon(vals);
+          break;
+        }
+      }
+    } 
+}
+
+function bossIsDefeated(current) {
+  return current.current_hp <= 0 ? true : false;
+}
+
+function handleVictory(boss) {
+  updatePlayerStats(boss);
+  updateBossStats(boss);
+}
+
+function updatePlayerStats(boss) {
+   vals.flame+=boss.reward;
+}
+
+function updateBossStats(boss) {
+  const firstVictory = boss.defeated != true;
+  let generalMultiplier = firstVictory === true ? 2.5 : 1.5;
+
+  boss.max_hp = Math.pow(boss.max_hp, generalMultiplier);
+  boss.current_hp = boss.max_hp;
+  boss.regen *= Math.pow(boss.max_hp, (generalMultiplier + 0.5);
+}
+
 class MiracleClick extends Click {
 
   canClick() {
@@ -2335,7 +2365,8 @@ function handleError() {
       $.toaster( {message: "Insufficient followers to convert!", title:"Can't convert." } );
   }
 }
-function gen_boss_offset(id, target, event) {
+
+function gen_boss_offset(id, target) {
     var width = $(window).width();
     if( width > 1300 )  
       target.offset({left: 2.6 * $(id).offset().left, top: $(id).offset().top * 1.5});
@@ -2381,8 +2412,7 @@ function processSuperClick() {
   if( vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
     vals.events.superclick.click_num++;
     $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
-  }
-  else if( vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
+  } else if( vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
     $('#superclick_bar').css('background-color', '#FFC400');
     process_superclick(vals, 0);
   } 

@@ -1921,6 +1921,43 @@ class Producer extends Action {
 }
 
 class Upgrader extends Action {
+      
+      // var purchase_type = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
+      // if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
+      //   vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
+      //   if( vals.upgrades[purchase_type[0]].type === "Click amount") {
+      //     var origClick = vals.click;
+      //     vals.click *= vals.upgrades[purchase_type[0]][id].mul;
+      //     if( vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick );
+      //   }
+      //   else if( vals.upgrades[purchase_type[0]].type === 'Tick speed' )
+      //     vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
+      //   else {
+      //     vals.leap.unlocked = true;
+      //     $.toaster({message:"Don't go quietly into the good night.",title:"Quantum leap unlocked"})
+      //   }
+      //   vals.upgrades[purchase_type[0]][id].unlocked = true;
+      // }
+
+  constructor(id) {
+    super(id);
+
+  }
+  
+  action() {
+    this.type.action();
+  }
+
+  generateUpgradeOfType(btn) {
+    let purchaseType = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
+    if(purchaseType === "Click amount") return new ClickUpgrade();
+    else if(purchaseType === "Tick speed") return new TickUpgrade();
+    else return new LeapUpgrade();
+  }
+}
+//TODO - generalise to include achievements?
+
+class Upgrade {
 
 }
 

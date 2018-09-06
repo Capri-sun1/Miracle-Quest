@@ -1681,7 +1681,7 @@ function fix_upgrades(vals) {
           //set up new div for same challenge unlock
         if( (i.substr(i.indexOf('e') + 1) === '1') || 
           (vals.upgrades[k]["upgrade" + (String(parseInt(i.substr(i.indexOf('e') + 1)) -1))].unlocked && i.substr(i.indexOf('e') + 1) != '1') )  {
-          if( !document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)) && !document.getElementById('new_upgrade') && i != "upgrade1" ){
+          if(!document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)) && !document.getElementById('new_upgrade') && i != "upgrade1"){
                 var clonedDiv_id = $('#upgrade_' + purchase_num + '_' + i);
                 $('<div id="new_upgrade" class="tab_div"> ' +
                 '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
@@ -1701,7 +1701,9 @@ function fix_upgrades(vals) {
         $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css("display", "block");
         $("#upgrade_header_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.upgrades[k][i].label);
         var cost = 1;
-        if( vals.god_status.current > 1 ) cost = vals.god_status[vals.god_status.current].mul * 0.67;
+        if( vals.god_status.current > 1 ) {
+          cost = vals.god_status[vals.god_status.current].mul * 0.67;
+        }
         $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text('[ ' + truncate_bigint(cost * vals.upgrades[k][i].cost) + ' energy ]');
         $('#upgrade_text_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].description);
         if( vals.upgrades[k][i].unlocked) {
@@ -1801,7 +1803,6 @@ function fix_challenges(vals) {
 
 function doLeap(vals) {
   //reset all the stats, buildings etc - will need to alter json file
-
       var selected = vals.leap.selected.substr(0, vals.leap.selected.indexOf('_'));
       var chosen = vals.leap[$('.wrap-nav').attr('id').substr($('.wrap-nav').attr('id').length -1)][selected];
       chosen.amount ++;
@@ -1922,43 +1923,70 @@ class Producer extends Action {
 
 class Upgrader extends Action {
       
-      // var purchase_type = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
-      // if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
-      //   vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
-      //   if( vals.upgrades[purchase_type[0]].type === "Click amount") {
-      //     var origClick = vals.click;
-      //     vals.click *= vals.upgrades[purchase_type[0]][id].mul;
-      //     if( vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick );
-      //   }
-      //   else if( vals.upgrades[purchase_type[0]].type === 'Tick speed' )
-      //     vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
-      //   else {
-      //     vals.leap.unlocked = true;
-      //     $.toaster({message:"Don't go quietly into the good night.",title:"Quantum leap unlocked"})
-      //   }
-      //   vals.upgrades[purchase_type[0]][id].unlocked = true;
-      // }
-
   constructor(id) {
     super(id);
-
+    this.type = this.generateUpgradeOfType(id);
   }
   
   action() {
-    this.type.action();
+    if(this.type.canUpgrade()){
+      this.type.action();
+    }
   }
 
   generateUpgradeOfType(btn) {
-    let purchaseType = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
-    if(purchaseType === "Click amount") return new ClickUpgrade();
-    else if(purchaseType === "Tick speed") return new TickUpgrade();
-    else return new LeapUpgrade();
+    const purchase = btn.substr(btn.indexOf('_btn_') + 5, btn.indexOf('_btn_') + 5);
+    const purchaseType = vals.upgrades[purchase[0]].type;
+
+    if(purchaseType === "Click amount") return new ClickUpgrade(btn, purchase);
+    else if(purchaseType === "Tick speed") return new TickUpgrade(btn, purchase);
+    else return new LeapUpgrade(btn, purchase);
   }
 }
-//TODO - generalise to include achievements?
 
 class Upgrade {
 
+  constructor(id, purchaseType) {
+    let btn = id.substr(0, id.indexOf('_')) + id.substr(id.lastIndexOf('_') + 1);
+    this.upgrade = vals.upgrades[purchaseType[0]][btn];
+  }
+
+  action() {
+    vals.energy -= this.upgrade.cost;
+    this.upgrade.unlocked = true;
+  }
+
+  canUpgrade() {
+    return vals.energy >= this.upgrade.cost;
+  }
+}
+
+class ClickUpgrade extends Upgrade {
+
+ action() {
+    super.action();
+    var origClick = vals.click;
+    console.log(this.upgrade);
+    vals.click *= this.upgrade.mul;
+    if(vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick);
+  }
+}
+
+class TickUpgrade extends Upgrade {
+
+  action() {
+    super.action();
+    vals.tick *= this.upgrade.mul;
+  }
+}
+
+class LeapUpgrade extends Upgrade {
+
+  action() {
+    super.action();
+    vals.leap.unlocked = true;
+    $.toaster({message:"Don't go quietly into the good night.",title:"Quantum leap unlocked"})
+  }
 }
 
 class Unlocker extends Action {
@@ -1971,6 +1999,61 @@ class Sacrificer extends Action {
 
 class Clicker extends Action {
 
+  constructor(btn) {
+    super(btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1));
+    console.log(btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1) + " " + this.id);
+    this.type = this.uiElementOfType(this.id);
+  }
+
+  uiElementOfType(id) {
+    return vals.leap.selected === (id.substr(0, id.search(/\d/)) + '_leap') ? new LeapElement(id) : new ClickElement(id);
+  }
+
+  action() {
+    this.type.action();
+  }
+}
+
+class UiElement {
+
+  constructor(id) {
+    this.id = id;
+  }
+
+  action() {
+    this.handleBackground();
+  }
+
+  handleBackground() {
+    $('#' + vals.leap.selected ).css('background-color', '');
+    $('#' + vals.leap.selected ).children().each(function() {
+      $(this).css('color', '');
+      $(this).children().each(function() {
+        $(this).css('color', '');
+      });
+    });
+    $('#' + vals.leap.selected ).css('border', '');
+    $('#' + vals.leap.selected ).css('border-radius', '');
+  }
+}
+
+class LeapElement extends UiElement {
+
+  action() {
+    super.action();
+    vals.leap.selected = 0;
+    vals.god_status.current++;
+    $('.reset').prop('disabled', true);
+  }
+}
+
+class ClickElement extends UiElement {
+
+  action() {
+    super.action();
+    vals.leap.selected = (this.id.substr(0, this.id.search(/\d/)) + '_leap');
+    $('.reset').prop('disabled', false);
+  }
 }
 
 function resolveClass(btn) {
@@ -1995,32 +2078,10 @@ function generateUseableId(id) {
 $(document).on("click", ".purchase", function() {
     var btn = $(this).attr('id');
     let event = resolveClass(btn);
-    try {
-      event.action();
-    }
-    catch(err) {
-      console.log("Error occured performing action.");
-    }
+    event.action();
+
     var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1);
     switch( id.substr(0, id.search(/\d/))) {
-      case 'upgrade' :
-      var purchase_type = btn.substr(btn.indexOf('_btn_') + 5,btn.indexOf('_btn_') + 5);
-      if( vals.energy >= vals.upgrades[purchase_type[0]][id].cost) {
-        vals.energy -= vals.upgrades[purchase_type[0]][id].cost;
-        if( vals.upgrades[purchase_type[0]].type === "Click amount") {
-          var origClick = vals.click;
-          vals.click *= vals.upgrades[purchase_type[0]][id].mul;
-          if( vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick );
-        }
-        else if( vals.upgrades[purchase_type[0]].type === 'Tick speed' )
-          vals.tick *= vals.upgrades[purchase_type[0]][id].mul;
-        else {
-          vals.leap.unlocked = true;
-          $.toaster({message:"Don't go quietly into the good night.",title:"Quantum leap unlocked"})
-        }
-        vals.upgrades[purchase_type[0]][id].unlocked = true;
-      }
-      break;
     case 'entry' :
       vals.sacrifice.unlocked = true;
       vals.corruption += 5;
@@ -2061,34 +2122,6 @@ $(document).on("click", ".purchase", function() {
       if( processed) {
         vals.sacrifice[id].amount++;
         vals.sacrifice[id].cost = set_item_cost(vals.sacrifice[id]);
-      }
-    break;
-    case 'click' : case 'tier' : case 'boss' :
-      if(  vals.leap.selected === (id.substr(0, id.search(/\d/)) + '_leap') ) {
-          $('#' + vals.leap.selected ).css('background-color', '');
-          $('#' + vals.leap.selected ).children().each(function() {
-            $(this).css('color', '');
-            $(this).children().each(function() {
-              $(this).css('color', '');
-            });
-          });
-          $('#' + vals.leap.selected ).css('border', '');
-          $('#' + vals.leap.selected ).css('border-radius', '');
-          vals.leap.selected = 0;
-          $('.reset').prop('disabled', true);
-      }
-      else {
-        $('#' + vals.leap.selected ).css('background-color', '');
-          $('#' + vals.leap.selected ).children().each(function() {
-            $(this).css('color', '');
-            $(this).children().each(function() {
-              $(this).css('color', '');
-            });
-          });
-          $('#' + vals.leap.selected ).css('border', '');
-          $('#' + vals.leap.selected ).css('border-radius', '');
-        vals.leap.selected = (id.substr(0, id.search(/\d/)) + '_leap');
-        $('.reset').prop('disabled', false); 
       }
     break;
   }

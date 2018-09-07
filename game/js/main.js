@@ -1151,8 +1151,8 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
                     for( var x in vals[k] ) {
                       if(x === item_num[0]) {
                         vals[k][x].amount = parseInt(item_num[1],16);
-                        vals[k][x].cost = set_item_cost(vals[k][x]);
-                        if( x.substr(x.length-1) < Object.keys(vals[k]).length ) {
+                        if(vals[k][x].amount >= 1) vals[k][x].cost = set_item_cost(vals[k][x]);
+                        if(x.substr(x.length-1) < Object.keys(vals[k]).length) {
                           vals[k][x.substr(0,x.length-1) + String(parseInt(x.substr(x.length-1)))].unlocked = true;    
                         }
                       }
@@ -2170,8 +2170,7 @@ function generateToastMessage(toast, heading) {
 class Clicker extends Action {
 
   constructor(btn) {
-    super(btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1));
-    console.log(btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1) + " " + this.id);
+    super(btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_') + 1));
     this.type = this.uiElementOfType(this.id);
   }
 
@@ -2326,23 +2325,33 @@ $(document).on("click", "#next_boss", function(event) {
 });
 
 $(document).on("click", "#boss_upgrades", function(event) {
+  if(isTab('Pantheon')) {
     clickSound.play();
-    toggleElements([".overlay", ".boss_img", ".traverse_bosses"]);
+    toggleElements(["#pantheon_unlocked .overlay", ".boss_img", ".traverse_bosses"]);
     toggleUi('#' + $(this).attr('id'), ['Upgrade menu', 'Boss fight']);
     $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
+  }
 });
 
 $(document).on("click", "#upgrades_shown", function(event) {
-  clickSound.play();
-  toggleElements(["#bought_upgrades", "#uncompleted"]);
-  toggleUi('#' + $(this).attr('id'), ['See Purchased', 'See Available']);
+  if(isTab("Upgrades")) {
+    clickSound.play();
+    toggleElements(["#bought_upgrades", "#uncompleted"]);
+    toggleUi('#' + $(this).attr('id'), ['See Purchased', 'See Available']);
+  }
 });
 
 $(document).on("click", "#achievements_shown", function(event) {
+  if(isTab('Challenges')) {
     clickSound.play();
-    toggleElements(["#completed_challenges", "#uncompleted"]);
+    toggleElements(["#completed_challenges", "#incomplete"]);
     toggleUi('#' + $(this).attr('id'), ['See Completed', 'See Incomplete']);
-  });
+  }
+});
+
+function isTab(tab) {
+  return vals.current_tab === tab;
+}
 
 function toggleElements(elements) {
   for(let index = 0; index < elements.length; index++) {
@@ -2363,14 +2372,15 @@ function toggleButton(element) {
 }
 
 function toggleIcon(element) {
-  let html = "<span style='font-size:1.5em;' class='glyphicon glyphicon-remove'";
+  let html = "<span style='font-size:1.5em;' class=";
+  console.log( handleBossUpgrade(element));
   html += handleBossUpgrade(element);
   
   $(element).toggleIcon(html, '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
 }
 
 function handleBossUpgrade(element) {
-  return element === "#boss_upgrades" ? 'id="achievements_shown">' : '>,';
+  return element === "#boss_upgrades" ? '"glyphicon glyphicon-circle-arrow-up" id="achievements_shown">' : '"glyphicon glyphicon-remove">';
 }
 
 function toggleBalloon(id, toggles) {
@@ -2399,7 +2409,7 @@ var perform_miracle = function(superclick) {
   vals.stats.miracle_clicks++;
   vals.stats.miracle_click_energy += click;
 
-  return click
+  return click;
 }
 
 var perform_trans = function(superclick) {
@@ -2502,7 +2512,7 @@ function handleMiracleClick(used_id, event) {
     new Audio('data/close_lighter.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
-    click.setTargetColor(resolveColor);
+    click.setTargetColor(resolveColor('#FFC400','#212121'));
     click.revealTarget(divToAppend);
     click.generateOffset(divToAppend);
     click.animate();
@@ -2560,20 +2570,26 @@ $(document).on('contextmenu', '.battle', function(event) {
 
 $(document).on("click", ".battle", function() {
   new Audio('data/close_lighter.mp3').play();
-  attack(vals.pantheon.damage, $(this).attr('id'));
+  processSuperClick();
+  attack($(this).attr('id'));
 });
 
-function attack(damage, id) {  
-  let btn = id, divToAppend = '.boss_img';
-  let bossClick = new BossClick(null, setAttackTarget(damage));
+function attack(id) {  
+  const btn = id, divToAppend = '.boss_img';
+  const damage = generateDamage(vals.pantheon.damage);
+  let bossClick = new BossClick({}, setAttackTarget(damage));
   
   bossClick.revealTarget(divToAppend);
-  bossClick.setTargetColor('#880E4F');
+  bossClick.setTargetColor(resolveColor(["#FFC400",'#880E4F']));
   bossClick.generateOffset(divToAppend);
   bossClick.animate();
 
   handleBossLogic(damage);
   fix_names(vals);
+}
+
+function generateDamage(damage) {
+  return vals.events.superclick.active === true ? damage *= vals.events.superclick.mul : damage;
 }
 
 class BossClick extends Click {
@@ -2596,7 +2612,7 @@ function setAttackTarget(damage) {
 
   return target;
 }
-//TODO - model each boss as an object, the current method is highly inefficient.
+
 function handleBossLogic(damage) {
     for(const k in vals.pantheon.bosses) {
       if(vals.pantheon.bosses[k].current) {
@@ -2622,7 +2638,7 @@ function handleVictory(boss) {
 }
 
 function updatePlayerStats(boss) {
-   vals.flame+=boss.reward;
+   vals.flame += boss.reward;
 }
 
 function updateBossStats(boss) {
@@ -2719,17 +2735,17 @@ function resolveDivFor(miracle) {
 }
 
 function processSuperClick() {
-  if( vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
+  if(vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
     vals.events.superclick.click_num++;
     $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
-  } else if( vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
+  } else if(vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
     $('#superclick_bar').css('background-color', '#FFC400');
     process_superclick(vals, 0);
   } 
 }
 
-function resolveColor() {
-  return vals.events.superclick.active ? "#FFC400" : "#212121";
+function resolveColor(colors) {
+  return vals.events.superclick.active === true ? colors[0] : colors[1];
 }
 
 var bar_timer;
@@ -2760,9 +2776,10 @@ function process_superclick(vals, iterations) {
 //check if followers >= click amount and > 0
 function can_click(superclick) {
   var click = vals.click;
-  if( superclick ) {
+  if(superclick) {
     click *= vals.events.superclick.mul;
   }
+
   if( vals.followers >= 1 && vals.followers >= click ) {
     return true;
   }

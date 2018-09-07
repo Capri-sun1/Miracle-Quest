@@ -1168,7 +1168,7 @@ $(document).on('click','#playing', function(event) {
         vals.pantheon.damage = parseInt(save.dam,16);
         vals.sacrifice.unlocked = save.sac;
         vals.pantheon.dps = save.dps;
-        vals.pantheon.stage = parseInt(save.stage);
+        vals.pantheon.stage = parseInt(save.stage, 16);
         vals.leap.unlocked = save.asc;
         if( save.tier ) vals.god_status.current = parseInt(save.tier,16);
 
@@ -1250,7 +1250,6 @@ $(document).on('click','#playing', function(event) {
             }
 
         }
-
 
         //load data for statistics 
         if( save.s ) {
@@ -1903,7 +1902,8 @@ function staticLeapValuesToJson() {
         't':(500).toString(16),
         'fl':0,
         'dam':Math.pow(3, total_damage_mul).toString(16),
-        "tier":(tier).toString(16)
+        "tier":(tier).toString(16),
+        "stage":0
     };	
 
     return save;	

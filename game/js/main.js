@@ -791,6 +791,7 @@ var vals = {
 var upgrade_box_size = 0;
 var clickSound = new Audio("data/latch_click.mp3");
 var purchaseSound = new Audio("data/heavy_lever.mp3");
+//TODO - add save sound, apply to saving and deleting save
 
 (function($) {
 
@@ -1002,8 +1003,20 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
   }
 
   var valsToJSON = function() {
-      var save = {
-        'e':Math.round(vals.energy).toString(16),
+      var save = staticValuesToJson();
+      purchasesToJson(save);
+      leapToJson(save);
+      upgradesAndAchievementsToJson(save);
+      statsToJson(save);
+      pantheonToJson(save);
+      
+      return save;
+  }
+
+  function staticValuesToJson() {
+  	return 
+  	{
+  		'e':Math.round(vals.energy).toString(16),
         'p':vals.prod,
         'cl':vals.click.toString(16),
         'f':(Math.round(vals.followers)).toString(16),
@@ -1017,31 +1030,40 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
         "sac":vals.sacrifice.unlocked,
         'dps':vals.pantheon.dps,
         "stage":vals.pantheon.stage.toString(16)
-      };
-        var unlocks = {
-            "miracle":"cl",
-            "ascend":"asc"
-        };
-        for(var k in unlocks) { 
-            var items = vals[k];
-            var temp_a = [];
-              for(var i in items) { 
-                if(items[i].unlocked) {
-                    temp_a.push([i] + ":" +items[i].amount.toString(16));
-                  }
-              }
-              save[k] = temp_a.join('|');
+    };
+  }
+
+  function purchasesToJson(save) {
+  	 var unlocks = {
+        "miracle":"cl",
+         "ascend":"asc"
+     };
+
+    for(var k in unlocks) { 
+        var items = vals[k];
+        var temp_a = [];
+        for(var i in items) { 
+            if(items[i].unlocked) {
+               temp_a.push([i] + ":" +items[i].amount.toString(16));
+            }
         }
-         for(var k in vals.leap) { 
-            var items = vals.leap[k];
-            var temp_a = [];
-              for(var i in items) { 
-                if(items[i].amount > 0) {
-                    temp_a.push([i] + ":" +items[i].amount.toString(16));
-                  }
-              }
-            if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+     save[k] = temp_a.join('|');
+    }
+  }
+
+  function leapToJson(save) {
+  	for(var k in vals.leap) { 
+        var items = vals.leap[k];
+        var temp_a = [];
+        for(var i in items) { 
+            if(items[i].amount > 0) {
+                temp_a.push([i] + ":" +items[i].amount.toString(16));
+            }
         }
+        if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+    }
+  }
+  function upgradesAndAchievementsToJson(save) {
         var tiered = {
           "upgrades":"up",
           "challenges":"ch"
@@ -1059,8 +1081,10 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
               }
             temp_arr.push(temp_t); 
             save[k] = temp_arr.join('|');
-        }
+        }  	
+  }
 
+  function statsToJson(save) {
         var temp_s = {
           't':vals.stats.time_played.toString(16),
           't_e':Math.round(vals.stats.total_energy).toString(16),
@@ -1072,8 +1096,10 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
           'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
           'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
         };
-        save['s'] = temp_s;
+        save['s'] = temp_s;  	
+  }
 
+  function pantheonToJson(save) {
         var pantheon = [];
         for(var k in vals.pantheon.bosses) { 
             var items = vals.pantheon.bosses[k];
@@ -1085,9 +1111,9 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
             temp_a.push('reward' + ":" + items.reward.toString(16));    
             pantheon.push(temp_a);
         }
-        save['pantheon'] = pantheon;
-        return save;
+        save['pantheon'] = pantheon;  	
   }
+  
   function get_valsFromJSON(save) {
         vals.energy = parseInt(save.e,16);
         vals.prod = save.p;
@@ -1824,6 +1850,7 @@ function doLeap(vals) {
           tier += (vals.leap[k]['tier'].mul * vals.leap[k]['tier'].amount);
         }
       }
+      //TODO - refactor this into smaller chunks.
       var temp_s = {
           't':vals.stats.time_played.toString(16),
           't_e':Math.round(vals.stats.total_energy).toString(16),

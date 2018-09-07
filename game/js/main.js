@@ -524,7 +524,7 @@ var vals = {
               "reward":1000000,
               "current":true,
               "name":"Arion's Spirit",
-              "reward":0.5,
+              "reward":1,
               "defeated":false
             },
             "boss2":{
@@ -534,7 +534,7 @@ var vals = {
               "reward":50000000,
               "current":false,
               "name":"Banshee",
-              "reward":2,
+              "reward":2.5,
               "defeated": false
             },
             "boss3":{
@@ -548,8 +548,8 @@ var vals = {
               "defeated":false
             },
             "boss4":{
-              "max_hp": 3500000000,
-              "current_hp":3500000000,
+              "max_hp": 35000000000,
+              "current_hp":35000000000,
               "regen":75000000,
               "reward":275000000,
               "current":false,
@@ -789,9 +789,6 @@ var vals = {
 };
  //global variable
 var upgrade_box_size = 0;
-var clickSound = new Audio("data/latch_click.mp3");
-var purchaseSound = new Audio("data/heavy_lever.mp3");
-//TODO - add save sound, apply to saving and deleting save
 
 (function($) {
 
@@ -810,6 +807,7 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
   }});
 
   $(document).ready(function() {
+    setupAudio();
     loadData();
     set_up_containers();
     $.toaster( { settings: {
@@ -827,9 +825,51 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
      timeout : '2500'
    }
    } );
-    $('#settings-tab-btn').click();
+    $('#settings-tab-btn').click();    
     start_game();
   });
+
+function setupAudio() {
+  tabSound = new Audio("data/tabsound.mp3");
+  purchaseSound = new Audio("data/purchasesound.mp3");
+  saveSound = new Audio("data/save.mp3");
+  bgm = new Audio('data/bgm.mp3');
+  bgm.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+  }, false);
+  playAudio(bgm);
+}
+
+function playAudio(bgm) {
+  const play = bgm.play();
+
+  if(play !== undefined) {
+    play.then(function(){
+      return;
+    }).catch(function(NoAudioException) {
+      handleAudioFailure(bgm);
+    });
+  }
+}
+
+function handleAudioFailure(bgm) {
+    console.log('Audio Failed to play, retrying..');
+    document.body.click();
+    setTimeout(function() {
+        playAudio(bgm);
+    },1500);  
+}
+
+$(document).on('click','#playing', function(event) {
+  const offHtml = '<span class="glyphicon glyphicon-volume-off"></span>';
+  if($('#playing').html() === offHtml) {
+    bgm.pause();
+  } else {
+    playAudio(bgm);
+  }
+  $('#playing').toggleIcon('<span class="glyphicon glyphicon-volume-up"></span>', offHtml);
+});
 
   function set_up_containers() {
     var width = $(window).width();
@@ -1893,7 +1933,7 @@ function leapStatsToJson() {
 }
 
 $(document).on("click", ".reset", function() {
-  clickSound.play();
+  saveSound.play();
   if( confirm("Are you sure you want to Quantum leap?") ) {
     doLeap(vals);
     location.reload();
@@ -1901,9 +1941,9 @@ $(document).on("click", ".reset", function() {
 });
 
 $(document).on("click", ".purchase", function() {
-    purchaseSound.play();
     var btn = $(this).attr('id');
     let event = resolveClass(btn);
+    handleSound(btn);
     
     try {
     	event.action();
@@ -1914,6 +1954,14 @@ $(document).on("click", ".purchase", function() {
   	fix_tab_buttons(vals);
   	fix_names(vals);
   });
+
+function handleSound(id) {
+  if(id.includes('save')) {
+    saveSound.play();
+  } else {
+    purchaseSound.play();
+  }
+}
 
 class Action {
 
@@ -2012,7 +2060,10 @@ class ClickUpgrade extends Upgrade {
     super.action();
     var origClick = vals.click;
     vals.click *= this.upgrade.mul;
-    if(vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick);
+    if(vals.pantheon.unlocked) {
+      vals.pantheon.damage += (vals.click - origClick);
+      console.log(vals.pantheon.damage);
+    }
   }
 }
 
@@ -2288,7 +2339,7 @@ function sell(valsType) {
 }
 
 $(document).on("click", '#tab_btns .button', function(event) {
-  clickSound.play();
+  playAudio(tabSound);
   var id = $(this).attr('id');
   var tabName = resolveTabName(id);
 
@@ -2307,7 +2358,7 @@ function resolveTabName(id) {
 }
 
 $(document).on("click", "#prev_boss", function(event) {
-  clickSound.play();
+  tabSound.play();
   if( vals.pantheon.stage > 0 ) {
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = true;
     vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = false;
@@ -2316,7 +2367,7 @@ $(document).on("click", "#prev_boss", function(event) {
 });
 
 $(document).on("click", "#next_boss", function(event) {
-  clickSound.play();
+  tabSound.play();
   if( vals.pantheon.stage <= 2 ) {
     vals.pantheon.stage++;
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = false;
@@ -2326,7 +2377,7 @@ $(document).on("click", "#next_boss", function(event) {
 
 $(document).on("click", "#boss_upgrades", function(event) {
   if(isTab('Pantheon')) {
-    clickSound.play();
+    tabSound.play();
     toggleElements(["#pantheon_unlocked .overlay", ".boss_img", ".traverse_bosses"]);
     toggleUi('#' + $(this).attr('id'), ['Upgrade menu', 'Boss fight']);
     $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
@@ -2335,7 +2386,7 @@ $(document).on("click", "#boss_upgrades", function(event) {
 
 $(document).on("click", "#upgrades_shown", function(event) {
   if(isTab("Upgrades")) {
-    clickSound.play();
+    tabSound.play();
     toggleElements(["#bought_upgrades", "#uncompleted"]);
     toggleUi('#' + $(this).attr('id'), ['See Purchased', 'See Available']);
   }
@@ -2343,7 +2394,7 @@ $(document).on("click", "#upgrades_shown", function(event) {
 
 $(document).on("click", "#achievements_shown", function(event) {
   if(isTab('Challenges')) {
-    clickSound.play();
+    tabSound.play();
     toggleElements(["#completed_challenges", "#incomplete"]);
     toggleUi('#' + $(this).attr('id'), ['See Completed', 'See Incomplete']);
   }
@@ -2373,7 +2424,6 @@ function toggleButton(element) {
 
 function toggleIcon(element) {
   let html = "<span style='font-size:1.5em;' class=";
-  console.log( handleBossUpgrade(element));
   html += handleBossUpgrade(element);
   
   $(element).toggleIcon(html, '<span style="font-size:1.5em;" class="glyphicon glyphicon-ok"></span>');
@@ -2429,7 +2479,7 @@ var perform_trans = function(superclick) {
 }
 
 $(document).on("click", '.boss_upgrade', function(event) { 
-  clickSound.play();
+  tabSound.play();
   var id= $(this).attr('id');
 
   processBossUpgrade(id);
@@ -2509,7 +2559,7 @@ function handleMiracleClick(used_id, event) {
   var miracle = used_id === 'button';
   var click = resolveClick(miracle, event);
   if(click.canClick()) {
-    new Audio('data/close_lighter.mp3').play();
+    new Audio('data/clicksound.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
     click.setTargetColor(resolveColor('#FFC400','#212121'));
@@ -2653,7 +2703,7 @@ function updateBossStats(boss) {
 
 function handleBossMultiplier(firstVictory) {
   let generalMultiplier = firstVictory === true ? 2.5 : 1.5;
-  generalMultiplier += 1 + vals.god_status.current/5.0;
+  generalMultiplier += 0.5 + vals.god_status.current/5.0;
 
   return generalMultiplier;
 }

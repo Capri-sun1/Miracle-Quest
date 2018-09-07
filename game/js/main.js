@@ -1870,6 +1870,21 @@ $(document).on("click", ".reset", function() {
   }
 });
 
+$(document).on("click", ".purchase", function() {
+    purchaseSound.play();
+    var btn = $(this).attr('id');
+    let event = resolveClass(btn);
+    
+    try {
+    	event.action();
+    } catch(EventActionEcception) {
+    	console.log('Error occured while processing event triggered by:- ' + btn);
+    }
+
+  	fix_tab_buttons(vals);
+  	fix_names(vals);
+  });
+
 class Action {
 
   constructor(id) {
@@ -1988,12 +2003,138 @@ class LeapUpgrade extends Upgrade {
   }
 }
 
-class Unlocker extends Action {
-
-}
-
 class Sacrificer extends Action {
 
+	constructor(id) {
+		super(id);
+		this.sacrifice = this.generateSacrificeOfType(id);
+	}
+
+	action() {
+		const corruptionOffset = this.sacrifice.offset;
+		if(this.sacrifice.canSacrifice(corruptionOffset)) {
+			this.sacrifice.action();
+		} else {
+			this.sacrifice.handleCorruptionMessage();
+		}
+	}
+
+	generateSacrificeOfType(id) {
+		return id.includes('entry') ? new EntrySacrifice(id) : new Sacrifice(id).getClass();
+	}
+}
+
+class Sacrifice {
+
+	constructor(id) {
+		this.id = id;
+	}
+	
+	action() {
+	  const type = 'sacrifice' + this.id.substr(this.id.length-1);
+	  vals.sacrifice[type].amount++;
+      vals.sacrifice[type].cost = set_item_cost(vals.sacrifice[type]);
+	}
+
+	canSacrifice(corruptionOffset) {
+		return Math.abs(vals.corruption) <= corruptionOffset;
+	}
+
+	getClass() {
+
+		const type = this.id.substr(this.id.length-1); 
+		if(type === '1') return new FollowerSacrifice(this.id);
+		else if (type === '2') return new MixedSacrifice(this.id);
+		else return new EnergySacrifice(this.id);
+	}
+
+	handleCorruptionMessage() {
+		console.log('Abstract superclass method.');
+	}
+}
+class EntrySacrifice extends Sacrifice {
+
+	constructor(id) {
+		super(id);
+		this.offset = 100000000;
+	}
+	action() {
+      vals.sacrifice.unlocked = true;
+      vals.corruption += 5;
+      vals.followers -= 1000000;
+      generateToastMessage("Sacrifice tab unlocked!","Dark path");
+	}
+
+	handleCorruptionMessage() {
+		super.handleCorruptionMessage();
+	}
+}
+
+class FollowerSacrifice extends Sacrifice {
+
+	constructor(id) {
+		super(id);
+		this.offset = 95;
+	}
+
+	action() {
+		vals.followers -= vals.sacrifice['sacrifice1'].cost;
+		vals.corruption +=5;
+        generateToastMessage("Your power has grown.","Sacrifice");
+        super.action();
+	}
+
+	handleCorruptionMessage() {
+		generateToastMessage("Your power is maxed.","Sacrifice rejected");
+	}
+}
+
+class MixedSacrifice extends Sacrifice {
+
+	constructor(id) {
+		super(id);
+		this.offset = 85;
+	}
+
+	action() {
+        vals.followers-= vals.sacrifice['sacrifice2'].cost;
+        vals.energy-= vals.sacrifice['sacrifice2'].cost;
+        vals.corruption +=15;
+        generateToastMessage("Your power has intensified.","Sacrifice")
+        super.action();
+	}
+
+	handleCorruptionMessage() {
+		generateToastMessage("Corruption Overflowing.","Sacrifice rejected");
+	}
+}
+
+class EnergySacrifice extends Sacrifice {
+	
+	constructor(id) {
+		super(id);
+		this.offset = -95;
+	}
+
+	action() {
+	    vals.energy-= vals.sacrifice['sacrifice3'].cost;
+        vals.corruption -=5;
+        generateToastMessage("Your sanctity increased.","Sacrifice");
+        super.action();
+	}
+
+	handleCorruptionMessage() {
+		generateToastMessage("Your sanctity is maxed.","Sacrifice rejected");
+	}	
+
+	canSacrifice(corruptionOffset) {
+		return Math.abs(vals.corruption) >= corruptionOffset;
+	}
+}
+
+
+function generateToastMessage(toast, heading) {
+	$.toaster({message:toast,title:heading});
 }
 
 class Clicker extends Action {
@@ -2064,7 +2205,7 @@ function resolveClass(btn) {
   switch(id) {
     case 'purchase' : case 'ascend' : return new Producer(valsEntry); 
     case 'upgrade' : return new Upgrader(btn);
-    case 'entry' : return new Unlocker(btn);
+    case 'entry' : return new Sacrificer(btn);
     case 'sacrifice' : return new Sacrificer(btn);
     case 'click' : case 'tier' : case 'boss' : return new Clicker(btn);
   }
@@ -2073,61 +2214,6 @@ function resolveClass(btn) {
 function generateUseableId(id) {
     return id.substr(0, id.search(/\d/));
 }
-
-$(document).on("click", ".purchase", function() {
-    purchaseSound.play();
-    var btn = $(this).attr('id');
-    let event = resolveClass(btn);
-    event.action();
-
-    var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1);
-    switch( id.substr(0, id.search(/\d/))) {
-    case 'entry' :
-      vals.sacrifice.unlocked = true;
-      vals.corruption += 5;
-      vals.followers -= 1000000;
-      $.toaster({message:"Sacrifice tab unlocked!",title:"Dark path"});
-      break;
-    case 'sacrifice':
-      var processed = false;
-      if( id.substr(id.length-1) === '1' ) {
-        if( Math.abs(vals.corruption) <= 95 ) {
-          vals.corruption +=5;
-          $.toaster({message:"Your power has grown.",title:"Sacrifice"});
-          vals.followers-= vals.sacrifice[id].cost;
-          processed = true;
-        }
-        else $.toaster({message:"Your power is maxed.",title:"Sacrifice rejected"});
-      }
-      else if( id.substr(id.length-1) === '2' ) {
-        if( Math.abs(vals.corruption) <= 85 ) {
-          vals.followers-= vals.sacrifice[id].cost;
-          vals.energy-= vals.sacrifice[id].cost;
-          vals.corruption +=15;
-          $.toaster({message:"Your power has intensified.",title:"Sacrifice"});
-          processed = true;
-        }
-        else $.toaster({message:"Corruption overflowing.",title:"Sacrifice rejected"});
-      }
-      else {
-          if( vals.corruption >= -95 ) {
-          vals.energy-= vals.sacrifice[id].cost;
-          vals.corruption -=5;
-          processed = true;
-          $.toaster({message:"Your sanctity increased.",title:"Sacrifice"})
-        }
-        else $.toaster({message:"Your sanctity is maxed.",title:"Sacrifice rejected"})
-      }
-      //only increment if a sacrifice was actually processed
-      if( processed) {
-        vals.sacrifice[id].amount++;
-        vals.sacrifice[id].cost = set_item_cost(vals.sacrifice[id]);
-      }
-    break;
-  }
-  fix_tab_buttons(vals);
-  fix_names(vals);
-  });
 
 $(document).on("click", ".sell", function() {
   const btn = $(this).attr('id');

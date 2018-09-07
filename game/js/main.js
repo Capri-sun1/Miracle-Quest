@@ -789,9 +789,10 @@ var vals = {
 };
  //global variable
 var upgrade_box_size = 0;
+var clickSound = new Audio("data/latch_click.mp3");
+var purchaseSound = new Audio("data/heavy_lever.mp3");
 
 (function($) {
-
 
   $(window).resize(function() {
     set_up_containers();
@@ -826,8 +827,7 @@ var upgrade_box_size = 0;
    }
    } );
     $('#settings-tab-btn').click();
-    // resolve_mobile_width();
-    start_game(vals);
+    start_game();
   });
 
   function set_up_containers() {
@@ -848,10 +848,9 @@ var upgrade_box_size = 0;
   }
 
   function set_item_cost(item) {
-    var amount_multipler = item.amount === 1 ? 2.0 : item.amount * (item.amount*0.3);  
-    var status_multiplier = vals.god_status[vals.god_status.current].mul;
-
-    var newCost = amount_multipler * (status_multiplier * item.base_cost);
+    const amount_multipler = item.amount === 1 ? 2.0 : 2 + item.amount * (item.amount*0.15);  
+    const status_multiplier = vals.god_status[vals.god_status.current].mul;
+    const newCost = amount_multipler * (status_multiplier * item.base_cost);
 
     return Math.round(newCost * 0.9);
   }
@@ -1087,7 +1086,6 @@ var upgrade_box_size = 0;
             pantheon.push(temp_a);
         }
         save['pantheon'] = pantheon;
-        console.log(save);
         return save;
   }
   function get_valsFromJSON(save) {
@@ -1125,8 +1123,9 @@ var upgrade_box_size = 0;
                 for( var i=0; i<t_items.length; i++ ) {
                   var item_num = t_items[i].split(':');
                     for( var x in vals[k] ) {
-                      if( x === item_num[0] ) {
+                      if(x === item_num[0]) {
                         vals[k][x].amount = parseInt(item_num[1],16);
+                        vals[k][x].cost = set_item_cost(vals[k][x]);
                         if( x.substr(x.length-1) < Object.keys(vals[k]).length ) {
                           vals[k][x.substr(0,x.length-1) + String(parseInt(x.substr(x.length-1)))].unlocked = true;    
                         }
@@ -1622,7 +1621,7 @@ function fix_conv_asc(vals) {
     for( var k in vals[keyWord] ) {
       var purchase_num = k.substr(k.length -1 );
       if( (currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && 
-        (vals.prod >= vals[keyWord][k].unlock_rps) ) ) {
+        (vals.prod >= vals[keyWord][k].unlock_rps))) {
         vals[keyWord][k].unlocked = true;
         //dynammically create divs as needed, saves creating all in the html file.
          if( !document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1") ){
@@ -1864,6 +1863,7 @@ function doLeap(vals) {
 }
 
 $(document).on("click", ".reset", function() {
+  clickSound.play();
   if( confirm("Are you sure you want to Quantum leap?") ) {
     doLeap(vals);
     location.reload();
@@ -1966,7 +1966,6 @@ class ClickUpgrade extends Upgrade {
  action() {
     super.action();
     var origClick = vals.click;
-    console.log(this.upgrade);
     vals.click *= this.upgrade.mul;
     if(vals.pantheon.unlocked) vals.pantheon.damage += (vals.click - origClick);
   }
@@ -2076,6 +2075,7 @@ function generateUseableId(id) {
 }
 
 $(document).on("click", ".purchase", function() {
+    purchaseSound.play();
     var btn = $(this).attr('id');
     let event = resolveClass(btn);
     event.action();
@@ -2130,21 +2130,35 @@ $(document).on("click", ".purchase", function() {
   });
 
 $(document).on("click", ".sell", function() {
-  var btn = $(this).attr('id');
-  var id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
+  const btn = $(this).attr('id');
+  const id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
 
-  sell(id);
-  fix_tab_buttons(vals);
-  fix_names(vals);
+  let valsType = deriveType(id);
+  if(canSell(valsType) === true){
+    sell(valsType);  
+    fix_tab_buttons(vals);
+    fix_names(vals);
+  }
 });
 
-function sell(id) {
-  var valsType, type = id.substr(0, id.length-1);
+function deriveType(id) {
+  const type = id.substr(0, id.length-1);
+  let valsType;
+
   if(type === 'purchase') {
     valsType = vals.miracle[id];
   } else {
     valsType = vals.ascend[id];
   }
+  return valsType;
+}
+
+function canSell(valsType) {
+  return valsType.amount >= 1;
+}
+
+function sell(valsType) {
+  purchaseSound.play();
   valsType.amount --;
   var newCost = valsType.cost * 0.5;
 
@@ -2159,6 +2173,7 @@ function sell(id) {
 }
 
 $(document).on("click", '#tab_btns .button', function(event) {
+  clickSound.play();
   var id = $(this).attr('id');
   var tabName = resolveTabName(id);
 
@@ -2177,6 +2192,7 @@ function resolveTabName(id) {
 }
 
 $(document).on("click", "#prev_boss", function(event) {
+  clickSound.play();
   if( vals.pantheon.stage > 0 ) {
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = true;
     vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = false;
@@ -2185,6 +2201,7 @@ $(document).on("click", "#prev_boss", function(event) {
 });
 
 $(document).on("click", "#next_boss", function(event) {
+  clickSound.play();
   if( vals.pantheon.stage <= 2 ) {
     vals.pantheon.stage++;
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = false;
@@ -2193,17 +2210,20 @@ $(document).on("click", "#next_boss", function(event) {
 });
 
 $(document).on("click", "#boss_upgrades", function(event) {
+    clickSound.play();
     toggleElements([".overlay", ".boss_img", ".traverse_bosses"]);
     toggleUi('#' + $(this).attr('id'), ['Upgrade menu', 'Boss fight']);
     $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
 });
 
 $(document).on("click", "#upgrades_shown", function(event) {
+  clickSound.play();
   toggleElements(["#bought_upgrades", "#uncompleted"]);
   toggleUi('#' + $(this).attr('id'), ['See Purchased', 'See Available']);
 });
 
 $(document).on("click", "#achievements_shown", function(event) {
+    clickSound.play();
     toggleElements(["#completed_challenges", "#uncompleted"]);
     toggleUi('#' + $(this).attr('id'), ['See Completed', 'See Incomplete']);
   });
@@ -2283,6 +2303,7 @@ var perform_trans = function(superclick) {
 }
 
 $(document).on("click", '.boss_upgrade', function(event) { 
+  clickSound.play();
   var id= $(this).attr('id');
 
   processBossUpgrade(id);
@@ -2354,7 +2375,7 @@ $(document).on("click", '.miracle', function(event) {
   try {
     handleMiracleClick(used_id, event);
   } catch(cannotClickException) {
-    console.log("Cannot convert when there are no followers.");
+    handleError();
   }
 });
 
@@ -2362,6 +2383,7 @@ function handleMiracleClick(used_id, event) {
   var miracle = used_id === 'button';
   var click = resolveClick(miracle, event);
   if(click.canClick()) {
+    new Audio('data/close_lighter.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
     click.setTargetColor(resolveColor);
@@ -2421,6 +2443,7 @@ $(document).on('contextmenu', '.battle', function(event) {
 });
 
 $(document).on("click", ".battle", function() {
+  new Audio('data/close_lighter.mp3').play();
   attack(vals.pantheon.damage, $(this).attr('id'));
 });
 

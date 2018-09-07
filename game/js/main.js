@@ -996,7 +996,7 @@ $(document).on('click','#playing', function(event) {
     }
     if( vals.pantheon.dps > 0 ) {
       currentBoss.current_hp -= vals.pantheon.dps;
-      attack(vals.pantheon.dps, '#battle' + (vals.pantheon.stage+1));
+      attack('#battle' + (vals.pantheon.stage+1));
     }
   }
 
@@ -1373,7 +1373,9 @@ $(document).on('click','#playing', function(event) {
             if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1) )
              {
               $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
-              if( i === '1') vals.pantheon.damage *= vals.click; 
+              if( i === '1') {
+                vals.pantheon.damage *= vals.click; 
+              }
             }
             vals.challenges[k][i].unlocked = true;
             fix_names(vals);
@@ -2064,7 +2066,6 @@ class ClickUpgrade extends Upgrade {
     vals.click *= this.upgrade.mul;
     if(vals.pantheon.unlocked) {
       vals.pantheon.damage += (vals.click - origClick);
-      console.log(vals.pantheon.damage);
     }
   }
 }
@@ -2264,7 +2265,6 @@ class LeapElement extends UiElement {
   action() {
     super.action();
     vals.leap.selected = 0;
-    vals.god_status.current++;
     $('.reset').prop('disabled', true);
   }
 }
@@ -2621,7 +2621,7 @@ $(document).on('contextmenu', '.battle', function(event) {
 });
 
 $(document).on("click", ".battle", function() {
-  new Audio('data/close_lighter.mp3').play();
+  new Audio('data/clicksound.mp3').play();
   processSuperClick();
   attack($(this).attr('id'));
 });
@@ -2746,9 +2746,7 @@ function handleError() {
 
 function gen_boss_offset(id, target) {
     var width = $(window).width();
-    if( width > 1300 )  
-      target.offset({left: 2.6 * $(id).offset().left, top: $(id).offset().top * 1.5});
-    else if( width <= 700) 
+    if( width <= 700) 
       target.offset( {'top': $(id).offset().top* 1.05, 'left': $(window).width()/1.7});
     else if( width <= 750) 
       target.offset( {'top': $(id).offset().top*1.05, 'left': $(window).width()/1.75});
@@ -2756,6 +2754,11 @@ function gen_boss_offset(id, target) {
       target.offset( {'left': 1.75* $(id).offset().left, 'top': $(id).offset().top*1.1});
     else if( width <= 1300) 
       target.offset( {'left': 2.15* $(id).offset().left, 'top': $(id).offset().top*1.2});
+    if( width <= 1900)  
+      target.offset({left: 2.6 * $(id).offset().left, top: $(id).offset().top * 1.5});
+    else if(width > 1900) {
+      target.offset({left: 3.5 * $(id).offset().left, top: $(id).offset().top * 1.5});
+    }
 }
 
 function resolveClick(miracle, event) {

@@ -59,7 +59,7 @@ var vals = {
         "cost":50,
         "amount":0,
         "mul":1, //this is actually addition..
-        "req":125
+        "req":50
       }
     }
   },
@@ -935,7 +935,7 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
     if(vals.current_tab === "Pantheon" && vals.pantheon.unlocked === true) {
       for(const k in vals.pantheon.bosses ) {
         if(vals.pantheon.bosses[k].current ) {
-          handleCurrentBoss(vals.pantheon.bosses[k]);
+          handleCurrentBoss(mul, vals.pantheon.bosses[k]);
           break;
         }
       }
@@ -945,7 +945,7 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
     }
   }
 
-  function handleCurrentBoss(currentBoss) {
+  function handleCurrentBoss(mul, currentBoss) {
     const bossHpPlusRegen = (mul * currentBoss.current_hp) + (mul * currentBoss.regen);
     const bossHpMax = mul * currentBoss.max_hp;
 
@@ -1014,8 +1014,7 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
   }
 
   function staticValuesToJson() {
-  	return 
-  	{
+  	let save = {
   		'e':Math.round(vals.energy).toString(16),
         'p':vals.prod,
         'cl':vals.click.toString(16),
@@ -1031,6 +1030,7 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
         'dps':vals.pantheon.dps,
         "stage":vals.pantheon.stage.toString(16)
     };
+  	return save;
   }
 
   function purchasesToJson(save) {
@@ -1113,7 +1113,7 @@ var purchaseSound = new Audio("data/heavy_lever.mp3");
         }
         save['pantheon'] = pantheon;  	
   }
-  
+
   function get_valsFromJSON(save) {
         vals.energy = parseInt(save.e,16);
         vals.prod = save.p;
@@ -1827,42 +1827,28 @@ function fix_challenges(vals) {
 }
 
 function doLeap(vals) {
-  //reset all the stats, buildings etc - will need to alter json file
-      var selected = vals.leap.selected.substr(0, vals.leap.selected.indexOf('_'));
-      var chosen = vals.leap[$('.wrap-nav').attr('id').substr($('.wrap-nav').attr('id').length -1)][selected];
-      chosen.amount ++;
+  var selected = vals.leap.selected.substr(0, vals.leap.selected.indexOf('_'));
+  var chosen = vals.leap[$('.wrap-nav').attr('id').substr($('.wrap-nav').attr('id').length -1)][selected];
+  chosen.amount ++;
 
-      var total_click_mul = 0;
-      for( var k in vals.leap ) {
-        if( k != 'unlocked' && k!='selected') {
-          total_click_mul += (vals.leap[k]['click'].mul * vals.leap[k]['click'].amount);
-        }
-      }
-      var total_damage_mul = 0;
-       for( var k in vals.leap ) {
-        if( k != 'unlocked' && k!='selected') {
-          total_damage_mul += (vals.leap[k]['boss'].mul * vals.leap[k]['boss'].amount);
-        }
-      }
-      var tier = 1;
-      for( var k in vals.leap ) {
-        if( k != 'unlocked' && k!='selected') {
-          tier += (vals.leap[k]['tier'].mul * vals.leap[k]['tier'].amount);
-        }
-      }
-      //TODO - refactor this into smaller chunks.
-      var temp_s = {
-          't':vals.stats.time_played.toString(16),
-          't_e':Math.round(vals.stats.total_energy).toString(16),
-          't_f':Math.round(vals.stats.total_followers).toString(16),
-          'm_p':vals.stats.max_prod,
-          'm_l':vals.stats.max_loss,
-          'm_c':vals.stats.miracle_clicks.toString(16),
-          'a_c':vals.stats.ascension_clicks.toString(16),
-          'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
-          'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
-      };
-      var save = {
+  const save = saveForLeap();
+  localStorage.sv1 = btoa(JSON.stringify(save));
+}
+
+function saveForLeap() {
+	let save = staticLeapValuesToJson();
+	save['s'] = leapStatsToJson();
+	leapToJson(save);
+
+	return save;
+}
+
+function staticLeapValuesToJson() {
+    const total_click_mul = generateTotalValueFor('click', 0);
+    const total_damage_mul = generateTotalValueFor('boss', 0);
+    const tier = generateTotalValueFor('tier', 1);
+
+    let save = {
         'e':0,
         'p':0,
         'cl':Math.pow(2, total_click_mul).toString(16),
@@ -1874,19 +1860,36 @@ function doLeap(vals) {
         'fl':0,
         'dam':Math.pow(3, total_damage_mul).toString(16),
         "tier":(tier).toString(16)
-      };
-      save['s'] = temp_s;
-        for(var k in vals.leap) { 
-            var items = vals.leap[k];
-            var temp_a = [];
-              for(var i in items) { 
-                if(items[i].amount > 0) {
-                    temp_a.push([i] + ":" +items[i].amount.toString(16));
-                  }
-              }
-            if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+    };	
+
+    return save;	
+}
+
+function generateTotalValueFor(type, startValue) {
+    let totalValue = startValue;
+
+    for(var k in vals.leap) {
+        if(k != 'unlocked' && k!='selected') {
+          totalValue += (vals.leap[k][type].mul * vals.leap[k][type].amount);
         }
-        localStorage.sv1 = btoa(JSON.stringify(save));
+    }
+	return totalValue;
+}
+
+function leapStatsToJson() {
+      const temp_s = {
+          't':vals.stats.time_played.toString(16),
+          't_e':Math.round(vals.stats.total_energy).toString(16),
+          't_f':Math.round(vals.stats.total_followers).toString(16),
+          'm_p':vals.stats.max_prod,
+          'm_l':vals.stats.max_loss,
+          'm_c':vals.stats.miracle_clicks.toString(16),
+          'a_c':vals.stats.ascension_clicks.toString(16),
+          'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
+          'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
+      };
+
+      return temp_s;
 }
 
 $(document).on("click", ".reset", function() {

@@ -1068,7 +1068,8 @@ $(document).on('click','#playing', function(event) {
         "tier":vals.god_status.current.toString(16),
         "sac":vals.sacrifice.unlocked,
         'dps':vals.pantheon.dps,
-        "stage":vals.pantheon.stage.toString(16)
+        "stage":vals.pantheon.stage.toString(16),
+        "asc":vals.leap.unlocked
     };
   	return save;
   }
@@ -1168,6 +1169,7 @@ $(document).on('click','#playing', function(event) {
         vals.sacrifice.unlocked = save.sac;
         vals.pantheon.dps = save.dps;
         vals.pantheon.stage = parseInt(save.stage);
+        vals.leap.unlocked = save.asc;
         if( save.tier ) vals.god_status.current = parseInt(save.tier,16);
 
         for( var k in vals.pantheon.bosses ) {
@@ -2562,7 +2564,7 @@ function handleMiracleClick(used_id, event) {
     new Audio('data/clicksound.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
-    click.setTargetColor(resolveColor('#FFC400','#212121'));
+    click.setTargetColor(resolveColor(['#FFC400','#212121']));
     click.revealTarget(divToAppend);
     click.generateOffset(divToAppend);
     click.animate();

@@ -812,9 +812,14 @@ button:disabled, button.disabled {
         width: 20%;
         margin-top: 5%;
     }
-    #tab_divs, #tab_btns { 
+    #tab_btns, #tab_divs { 
         width: 75%;
     }
+
+    .reset {
+      margin: 5%;
+    }
+
 }
 @media screen and (min-width: 1900px) { 
     #left_wrap { 

@@ -807,8 +807,12 @@ var upgrade_box_size = 0;
   }});
 
   $(document).ready(function() {
-    setupAudio();
     loadData();
+
+    lastTime = resolveLastTime();
+    handleTimeSinceLastVisit();
+
+    setupAudio();
     set_up_containers();
     $.toaster( { settings: {
       toast : {
@@ -828,6 +832,44 @@ var upgrade_box_size = 0;
     $('#settings-tab-btn').click();    
     start_game();
   });
+
+function resolveLastTime() {
+  try {
+    return new Date(lastTime);
+  }
+  catch(NoTimeDataException) {
+    return new Date();
+  }
+}
+
+function handleTimeSinceLastVisit() {
+  if(lastTime !== undefined) {
+    let timeNow = new Date();
+    let diffInDays = dateDiffInDays(lastTime, timeNow);
+    let diffInSeconds = diffInDays >= 1 ? diffInDays * 86400 : (timeNow.getTime() - lastTime.getTime()) / 1000;
+    handleSecondsIdle(diffInSeconds);
+  }
+}
+
+function dateDiffInDays(a, b) {
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  return Math.floor((utc2 - utc1) / 86400000);
+}
+
+function handleSecondsIdle(diffInSeconds) {
+  var cost = adjustForGodStatus(vals.god_status[vals.god_status.current].mul);
+  var corrected_prod = adjustProduction(cost);
+  var total_loss = adjustLoss(cost);
+  //offline production 33% of normal - hardcoded for now
+  const followerDiff = Math.round((diffInSeconds * corrected_prod)/3);
+  const energyDiff =  Math.round((diffInSeconds * total_loss)/3);
+  vals.energy += energyDiff;
+  vals.followers += followerDiff;
+
+  generateToastMessage("Welcome back", "Gained: " + energyDiff + " energy;\n" + followerDiff + " followers since your last visit!");
+}
 
 function setupAudio() {
   tabSound = new Audio("data/tabsound.mp3");
@@ -901,7 +943,7 @@ $(document).on('click','#playing', function(event) {
     var cost = adjustForGodStatus(mul);
     var corrected_prod = adjustProduction(cost);
     var total_loss = adjustLoss(cost);
-
+    
     handleNegativeValues();
     handleUiUpdate([corrected_prod, total_loss, cost]);
 
@@ -1069,7 +1111,8 @@ $(document).on('click','#playing', function(event) {
         "sac":vals.sacrifice.unlocked,
         'dps':vals.pantheon.dps,
         "stage":vals.pantheon.stage.toString(16),
-        "asc":vals.leap.unlocked
+        "asc":vals.leap.unlocked,
+        "time":new Date()
     };
   	return save;
   }
@@ -1171,6 +1214,7 @@ $(document).on('click','#playing', function(event) {
         vals.pantheon.stage = parseInt(save.stage, 16);
         vals.leap.unlocked = save.asc;
         if( save.tier ) vals.god_status.current = parseInt(save.tier,16);
+        lastTime = save.time;
 
         for( var k in vals.pantheon.bosses ) {
           var boss = vals.pantheon.bosses[k];
@@ -1889,6 +1933,7 @@ function saveForLeap() {
 function staticLeapValuesToJson() {
     const total_click_mul = generateTotalValueFor('click', 0);
     const total_damage_mul = generateTotalValueFor('boss', 0);
+
     const tier = generateTotalValueFor('tier', 1);
 
     let save = {

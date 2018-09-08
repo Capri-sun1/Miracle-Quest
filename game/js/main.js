@@ -862,13 +862,13 @@ function handleSecondsIdle(diffInSeconds) {
   var cost = adjustForGodStatus(vals.god_status[vals.god_status.current].mul);
   var corrected_prod = adjustProduction(cost);
   var total_loss = adjustLoss(cost);
-  //offline production 33% of normal - hardcoded for now
+  //offline production much slower - hardcoded for now.
   if(isNaN(diffInSeconds) === false) {
-    const values = [Math.round((diffInSeconds * corrected_prod)/3), Math.round((diffInSeconds * total_loss)/3)];
+    const values = [Math.round((diffInSeconds * corrected_prod)/2), Math.round((diffInSeconds * total_loss)/2)];
     vals.followers +=  values[0];
     vals.energy += values[1];
 
-    generateToastMessage("Gained: " + values[1] + " energy,\n" + values[0] + " followers since your last visit.","Welcome back!");
+    generateToastMessage("Gained: " + truncate_bigint(values[1]) + " energy,\n" + truncate_bigint(values[0]) + " followers since your last visit.","Welcome back!");
   }
 }
 

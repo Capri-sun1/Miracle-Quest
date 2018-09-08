@@ -523,7 +523,7 @@ var vals = {
               "regen":100,
               "reward":1000000,
               "current":true,
-              "name":"Arion's Spirit",
+              "name":"Temporal aberration",
               "reward":1,
               "defeated":false
             },
@@ -870,6 +870,10 @@ function handleSecondsIdle(diffInSeconds) {
 
     generateToastMessage("Gained: " + truncate_bigint(values[1]) + " energy,\n" + truncate_bigint(values[0]) + " followers since your last visit.","Welcome back!");
   }
+}
+//need to account for negative follower production
+function handleValuesFromIdle(values) {
+
 }
 
 function setupAudio() {
@@ -2668,22 +2672,25 @@ $(document).on('contextmenu', '.battle', function(event) {
 
 $(document).on("click", ".battle", function() {
   new Audio('data/clicksound.mp3').play();
+  const hit = 'battle_' + (vals.pantheon.stage+1) + '_hit';
+  const id = $(this).attr('id');
+
+  $(this).attr('src', 'data/' + hit + ".png");
   processSuperClick();
-  attack($(this).attr('id'));
+  attack(id);
 });
 
 function attack(id) {  
   const btn = id, divToAppend = '.boss_img';
   const damage = generateDamage(vals.pantheon.damage);
   let bossClick = new BossClick({}, setAttackTarget(damage));
-  
+
   bossClick.revealTarget(divToAppend);
-  bossClick.setTargetColor(resolveColor(["#FFC400",'#880E4F']));
+  bossClick.setTargetColor(resolveColor(["#FFC400",'#00FFFF']));
   bossClick.generateOffset(divToAppend);
   bossClick.animate();
 
   handleBossLogic(damage);
-  fix_names(vals);
 }
 
 function generateDamage(damage) {
@@ -2793,14 +2800,14 @@ function handleError() {
 function gen_boss_offset(id, target) {
     var width = $(window).width();
     if( width <= 700) 
-      target.offset( {'top': $(id).offset().top* 1.05, 'left': $(window).width()/1.7});
+      target.offset( {'top': $(id).offset().top* 1.05, 'left': $(window).width()/ 2});
     else if( width <= 750) 
-      target.offset( {'top': $(id).offset().top*1.05, 'left': $(window).width()/1.75});
+      target.offset( {'top': $(id).offset().top*1.15, 'left': $(window).width()});
     else if( width <= 1100) 
-      target.offset( {'left': 1.75* $(id).offset().left, 'top': $(id).offset().top*1.1});
+      target.offset( {left: 2 *  $(id).offset().left, 'top': $(id).offset().top*1.1});
     else if( width <= 1300) 
-      target.offset( {'left': 2.15* $(id).offset().left, 'top': $(id).offset().top*1.2});
-    if( width <= 1900)  
+      target.offset( {left: 2 * $(id).offset().left, 'top': $(id).offset().top*1.2});
+    else if( width <= 1900)  
       target.offset({left: 2.6 * $(id).offset().left, top: $(id).offset().top * 1.5});
     else if(width > 1900) {
       target.offset({left: 3.5 * $(id).offset().left, top: $(id).offset().top * 1.5});

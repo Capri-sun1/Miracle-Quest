@@ -863,12 +863,13 @@ function handleSecondsIdle(diffInSeconds) {
   var corrected_prod = adjustProduction(cost);
   var total_loss = adjustLoss(cost);
   //offline production 33% of normal - hardcoded for now
-  const followerDiff = Math.round((diffInSeconds * corrected_prod)/3);
-  const energyDiff =  Math.round((diffInSeconds * total_loss)/3);
-  vals.energy += energyDiff;
-  vals.followers += followerDiff;
+  if(isNaN(diffInSeconds) === false) {
+    const values = [Math.round((diffInSeconds * corrected_prod)/3), Math.round((diffInSeconds * total_loss)/3)];
+    vals.followers +=  values[0];
+    vals.energy += values[1];
 
-  generateToastMessage("Welcome back", "Gained: " + energyDiff + " energy;\n" + followerDiff + " followers since your last visit!");
+    generateToastMessage("Gained: " + values[1] + " energy,\n" + values[0] + " followers since your last visit.","Welcome back!");
+  }
 }
 
 function setupAudio() {

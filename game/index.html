@@ -8,6 +8,8 @@
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
 <script type = 'text/javascript' src="js/jquery.toaster.js"></script>
+<script type="text/javascript" src="build/dat.gui.min.js"></script>
+<script type = 'text/javascript' src='js/perlin.js'></script>
 <script type = 'text/javascript' src="js/main.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link href="css/main.css" rel="stylesheet" type="text/css">
@@ -16,7 +18,6 @@
 <title>Miracle Clicker</title>
 </head>
 <body>
-
 <div id="left_wrap" class="left_width">
 	<div id="make_sell_spacer"></div>
     <div id="left_floatable">
@@ -41,7 +42,7 @@
     <div class="progress" style="margin: 0 10%">
   		<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" id="superclick_bar"
   			aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:0%; color:lightgrey">
-  			<strong style="color:#212121; text-align:center; text-transform:uppercase">Charge</strong>
+  			<strong style="color: #000000;; text-align:center; text-transform:uppercase">Charge</strong>
   		</div>
 	</div>
     <div id="miracle2_div">
@@ -86,6 +87,8 @@
 			<span class="button__inner">Pantheon</span></button>
 		<button class="button button--secondary" id="challenges-tab-btn">
 			<span class="button__inner" id="challenges-tab-text"></span></button>
+		<button class="button button--secondary" id="generator-tab-btn">
+			<span class="button__inner">Generate</span></button>
 		<button class="button button--secondary" id="stats-tab-btn">
 			<span class="button__inner">Statistics</span></button>
 	</div>
@@ -200,9 +203,9 @@
 
 	<div id="Upgrades" class="tabcontent">
 
-		<div style="text-align:center; margin-bottom:0.5%" class="tab_div">
+		<div style="text-align:center; margin-bottom:0.5%" class="tab_div" id="main_upgrades_header">
 		<h3> Upgrades
-		<div class="btn btn-med" id="upgrades_shown" style="background-color:#fff;"
+		<div class="btn btn-med" id="upgrades_shown" style="background-color:#fff;color:#000;"
 				data-balloon="See Purchased" data-balloon-pos="down">
 				<span style="font-size:1.5em;" class="glyphicon glyphicon-remove">
 				</span>
@@ -270,7 +273,7 @@
 			<span id="pantheon_lbl_1">You have insufficient divine power to challenge these beings.</span>
 		</div>
 		<div id="pantheon_unlocked" style="display:none" class="tab_div">
-
+			
 			<h3 style="text-align:center">Celestial Pantheon <strong id="boss_type"></strong><strong id="boss_num">Boss 1</strong></h3>
 			
 			<div class="button_essence">
@@ -320,7 +323,7 @@
 		</div>
 	</div>
 			<figure style="text-align:center; margin-bottom:10%;" class="boss_img"><input type="image" id="battle_1" class="battle" 
-				src="data/battle_1.png" style="height:30em; width: 22.5em">
+				src="data/battle_1.png">
 			<figcaption><span id="boss_name"> Vengeful spirit: </span> Regeneration <strong id='regen'>10 per tick.</strong>
 				<br><br><strong>Health Remaining / Max - </strong><strong id='max_hp'></strong><div class="progress" style="margin: 1.5% 7.5% 10% 7.5%">
   				<div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" id="boss_hp_bar"
@@ -392,6 +395,12 @@
 			</div>
 		</div>
 </div>
+	<div id="Generator" class="tabcontent">
+		<div style="text-align:center; margin-bottom:0.5%" class="tab_div" id="main_generator_header">
+			<h3>Test your power in the void.</h3><br>
+		</div>
+		<canvas id="c"></canvas>
+	</div>
 	<div id="Stats" class="tabcontent">	
 			<div id="stats_div_1" class="tab_div">
 				<h3 id="stats_header_1">Game statistics</h3><br>
@@ -479,7 +488,7 @@
 		<div id="challenges_main_header_div" class="tab_div" style="text-align:center">
 				<h3 id="challenges_header">
 				Heavenly Trials			
-				<div class="btn btn-med" id="achievements_shown" style="background-color:#fff;"
+				<div class="btn btn-med" id="achievements_shown" style="background-color:#fff; color:#000"
 				data-balloon="See Completed" data-balloon-pos="down">
 				<span style="font-size:1.5em;" class="glyphicon glyphicon-remove">
 				</span></div></h3><br>
@@ -570,7 +579,7 @@
 	</div>
 	</div>
 	<div id="Settings" class="tabcontent">	<div id="settings_1" style="text-align:center">
-		<div id="time_played" style="margin-left:5%;background-color:#E1F5FE;" class="tab_div">
+		<div id="time_played" style="margin-left:5%;" class="tab_div">
 		<h3 id="settings_header_1" style="padding-bottom:1em">Instructions:
 		<p style="font-weight: normal; font-size:0.8em"> <span><br>-Perform miracles to convert followers</span><br>
 			<span>-Ascend followers to increase your divine energy</span><br>
@@ -583,7 +592,7 @@
 		<h3 id="settings_header_2">Delete your save.</h3>
 		<button class='purchase' id='delete_save'>Delete save</button>
 		<h3 id="settings_header_3">Toggle Music</h3>
-		<button class="btn btn-med" id="playing" style="background-color:#212121; color: #fff;"><span class="glyphicon glyphicon-volume-off"></span></button></h4>
+		<button class="btn btn-med" id="playing" style="background-color:#000000; color: #fff;"><span class="glyphicon glyphicon-volume-off"></span></button></h4>
 		<h4 id="settings_header_4"><br>Created by abarkley123; BGM from www.zapsplat.com.</h4><br>
 	</div>
 	</div>

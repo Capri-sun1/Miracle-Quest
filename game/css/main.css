@@ -98,18 +98,18 @@ html {
 }
 .button--secondary:after {
   border-radius: 2px;
-  background-color: #212121;
+  background-color: #000000;
 }
 .button--secondary .button__inner {
-  background-color: #212121;
+  background-color: #000000;
 }
 .button--secondary:hover .button__inner, .button--secondary:focus .button__inner {
   background-color: #E1F5FE;
-  color: #212121;
+  color: #000000;
 }
 
 #sacrifice_header_desc {
-  background-color: #212121;
+  background-color: #000000;
   padding: 6px 6px;
   border: 2px solid #fff;
   color: #fff;
@@ -162,16 +162,17 @@ html {
     padding-top : 0.5em;
     -webkit-animation: fadeEffect 1s;
     animation: fadeEffect 1s;
+    font-weight:bold;
 }
 .tab_div {
   margin: 3px;
   padding: 4px;
-  background-color: #E1F5FE;
+  /* background-color: #E1F5FE; */
   border-radius: 5px;
   position: relative;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
+  /* -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
-          box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777; */
 }
 /* Change background color of buttons on hover */
 .tab button:hover {
@@ -216,12 +217,12 @@ html {
   margin-right: 5%;
   margin-bottom: 1%;
   text-align: center;
-  background-color: #fff;
+  /* background-color: #fff; */
   border-radius: 5px ;
   font-size: 1em;
-    -webkit-box-shadow: 0 10px 6px -6px #777;
+    /* -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
-          box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777; */
 }
 #total_energy1 {
   margin-left: 28%;
@@ -243,7 +244,6 @@ html {
 }
 #miracle_wrap, #make_sell_spacer {
 
-    background: #E1F5FE;
     width: 90%;
     margin-left: 5%;
 
@@ -276,34 +276,35 @@ html {
 #left_floatable { 
     width: 100%;
     z-index: 1000;
+    color:#fff;
+    border: 2px solid #fff;
+    border-radius: 5px;
 }
 
 #power_div {
   text-align: center;
   padding: 1em;
   color: #fff;
-  background-color: #212121;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   width: 90%;
   margin-left: 5%;
   margin-bottom: 10px;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
+  /* -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
-          box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777; */
 }
 #above_div {
   text-align: center;
   padding: 1em;
   color: #fff;
-  background-color: #212121;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   width: 90%;
   margin-left: 5%;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
+  /* -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
-          box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777; */
 }
 #miracle_button, #miracle_button2nd {
     -moz-user-select: none; 
@@ -333,7 +334,7 @@ html {
   padding: 10px 20px;
 }
 #miracle_button, #miracle_button2nd {
-  background-color: #212121;
+  background-color: #000000;
 }
 #miracle_button:hover, #miracle_button2nd:hover {
   background-color: #E1F5FE;
@@ -365,9 +366,9 @@ html {
 }
 .scroll_tabs .button--secondary {
   position: relative;
-  -webkit-box-shadow: 0 10px 6px -6px #777;
+  /* -webkit-box-shadow: 0 10px 6px -6px #777;
      -moz-box-shadow: 0 10px 6px -6px #777;
-          box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777; */
   padding-bottom: 5px;
   margin-bottom: 5px;
     font-size: 0.9em;
@@ -409,7 +410,7 @@ div.scroll_tabs button:hover {
 }
 .purchase {
     border: none;
-    background-color: #212121;
+    background-image: url('../data/preview18.png');
     color: white;
     padding: 8px 8px;
     text-align: center;
@@ -420,7 +421,7 @@ div.scroll_tabs button:hover {
 }
 .purchase:hover {
   background-color: #E3F2FD;
-  color: #212121;
+  color: #fff;
   padding: 6px 6px;
   border: 2px solid  #880E4F;
 }
@@ -517,7 +518,7 @@ nav ul li {
   top:0;
   height:100%;
   width:100%;
-  background:#333;
+  /* background:#333; */
   overflow:auto;
   z-index:99;
 }
@@ -533,7 +534,7 @@ nav ul li {
 }
 .wrap ul.wrap-nav {
   padding: 2% 2%;
-  border-bottom:1px solid #575757;
+  /* border-bottom:1px solid #575757; */
   text-transform:capitalize;
 }
 .wrap ul.wrap-nav li {
@@ -626,7 +627,7 @@ nav ul li {
 }
 .sell:hover {
   background-color: #E3F2FD;
-  color: #212121;
+  color: #fff;
   padding: 6px 14px;
   border: 2px solid  #880E4F;
 }
@@ -644,7 +645,7 @@ nav ul li {
 }
 .sell {
     border: none;
-    background-color: #212121;
+    background-image:url('../data/preview18.png');
     color: white;
     padding: 8px 16px;
     text-align: center;
@@ -654,8 +655,8 @@ nav ul li {
     border-radius: 2px;
 }
 #battle_1 {
-  width: 40%;
-  height: 40%;
+  width: 40% !important;
+  height: 40% !important;
   margin-bottom: 5%;
   margin-left: 5%;
 }
@@ -666,10 +667,33 @@ button:disabled, button.disabled {
     opacity: .8;
 }
 
+@-webkit-keyframes rotation {
+  from {
+      -webkit-transform: rotate(0deg);
+  }
+  to {
+      -webkit-transform: rotate(359deg);
+  }
+}
+
+.tab_div {
+  border: 2px solid #fff;
+  color:#fff;
+}
+#pantheon_unlocked, #challenges_main_header_div, #sacrifices_div_0, #time_played, #main_upgrades_header, #leap_unlocked, #stats_div_1  {
+  border: none !important;
+}
+.uncompleted {
+  border-radius:15px;
+}
+
+#c {
+  background:transparent;
+  margin:1%;
+}
 @media screen and (max-width: 750px ) {
    #left_wrap {
-      margin-top : 0px;
-      margin-bottom: 0px;
+      margin: 2.5% 2%;
     }
     .tabs {
       margin-top: 0px;
@@ -710,14 +734,16 @@ button:disabled, button.disabled {
     #tab_btns {
       width: 100%;
     }
+    #left_floatable {
+      margin-left:0.5em;
+    }
 }
 @media screen and (min-height: 550px) and (min-width: 750px) { 
     #left_floatable {
         position: fixed; 
         top: 5px;
         left: 5px;
-        border: none;
-        background: none;
+        margin-left:0.5em;
         width: inherit;
     }
     #make_sell_spacer { display: block; }
@@ -819,6 +845,11 @@ button:disabled, button.disabled {
     .reset {
       margin: 5%;
     }
+    .boss_img {
+      height: 80% !important;
+      width: 70% !important;
+      margin-left:10%;
+    }
 
 }
 @media screen and (min-width: 1900px) { 
@@ -827,6 +858,9 @@ button:disabled, button.disabled {
     }
     #tab_divs, #tab_btns { 
         width: 80%;
+    }
+    #battle_1 {
+      width: 25% !important;
     }
 }
 

@@ -1,9 +1,9 @@
-
 html {
   font-family: 'Helvetica', sans-serif !important;
   font-size: 18px;
   background-color: lightgrey;
   background-image: url('../data/background.jpg');
+  transition: background 3s linear;
 }
 
 .button {

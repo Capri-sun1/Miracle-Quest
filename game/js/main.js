@@ -2443,7 +2443,6 @@ $(document).on("click", '#tab_btns .button', function(event) {
   var id = $(this).attr('id');
   var tabName = resolveTabName(id);
 
-  // if(id.includes('generator')) init();
   openTab(event, tabName);
 });
 

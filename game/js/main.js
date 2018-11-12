@@ -793,8 +793,8 @@ var upgrade_box_size = 0;
 (function($) {
 
   $(window).resize(function() {
-    set_up_containers();
-    if( $(window).width() < 700 ) {
+    setupContainers();
+    if($(window).width() < 700) {
       $.toaster( { settings: {
        toaster : {
         css : {
@@ -807,13 +807,14 @@ var upgrade_box_size = 0;
   }});
 
   $(document).ready(function() {
+    loadBackgroundImage();
     loadData();
 
     lastTime = resolveLastTime();
     handleTimeSinceLastVisit();
 
     setupAudio();
-    set_up_containers();
+    setupContainers();
     $.toaster( { settings: {
       toast : {
        css : {
@@ -832,6 +833,24 @@ var upgrade_box_size = 0;
     $('#settings-tab-btn').click();    
     start_game();
   });
+
+function loadBackgroundImage() {
+  var objects = document.getElementsByClassName('asyncImage');
+
+  Array.from(objects).map((item) => {
+    const img = new Image();
+    img.src = item.dataset.src;
+
+    img.onload = () => {
+      item.classList.remove('asyncImage');
+      if (item.nodeName === 'IMG') {
+        $("html").css("background-image", `url(${item.dataset.src})`);
+      }
+    };
+  });
+
+  document.getElementById('background-async').remove();
+}
 
 function resolveLastTime() {
   try {
@@ -918,7 +937,7 @@ $(document).on('click','#playing', function(event) {
   $('#playing').toggleIcon('<span class="glyphicon glyphicon-volume-up"></span>', offHtml);
 });
 
-  function set_up_containers() {
+  function setupContainers() {
     var width = $(window).width();
     var height = $(window).height();
     $('#miracle_lbl').text("Divine energy ");
@@ -1057,210 +1076,6 @@ $(document).on('click','#playing', function(event) {
     }
   }
 
-  /**
- * requestAnimationFrame
- */
-window.requestAnimationFrame = (function(){
-  return  window.requestAnimationFrame       ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame    ||
-          window.oRequestAnimationFrame      ||
-          window.msRequestAnimationFrame     ||
-          function (callback) {
-              window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
-
-/**
-* Vector
-*/
-function Vector(x, y) {
-  this.x = x || 0;
-  this.y = y || 0;
-}
-
-Vector.add = function(a, b) {
-  return new Vector(a.x + b.x, a.y + b.y);
-};
-
-Vector.sub = function(a, b) {
-  return new Vector(a.x - b.x, a.y - b.y);
-};
-
-Vector.prototype = {
-  set: function(x, y) {
-      if (typeof x === 'object') {
-          y = x.y;
-          x = x.x;
-      }
-      this.x = x || 0;
-      this.y = y || 0;
-      return this;
-  },
-
-  add: function(v) {
-      this.x += v.x;
-      this.y += v.y;
-      return this;
-  },
-
-  sub: function(v) {
-      this.x -= v.x;
-      this.y -= v.y;
-      return this;
-  },
-
-  scale: function(s) {
-      this.x *= s;
-      this.y *= s;
-      return this;
-  },
-
-  length: function() {
-      return Math.sqrt(this.x * this.x + this.y * this.y);
-  },
-
-  normalize: function() {
-      var len = Math.sqrt(this.x * this.x + this.y * this.y);
-      if (len) {
-          this.x /= len;
-          this.y /= len;
-      }
-      return this;
-  },
-
-  angle: function() {
-      return Math.atan2(this.y, this.x);
-  },
-
-  distanceTo: function(v) {
-      var dx = v.x - this.x,
-          dy = v.y - this.y;
-      return Math.sqrt(dx * dx + dy * dy);
-  },
-
-  distanceToSq: function(v) {
-      var dx = v.x - this.x,
-          dy = v.y - this.y;
-      return dx * dx + dy * dy;
-  },
-
-  clone: function() {
-      return new Vector(this.x, this.y);
-  }
-};
-
-
-/**
-* Point
-*/
-function Point(x, y, radius) {
-  Vector.call(this, x, y);
-
-  this.radius = radius || 7;
-
-  this.vec = new Vector(random(1, -1), random(1, -1)).normalize();
-  this._easeRadius    = this.radius;
-  this._currentRadius = this.radius;
-
-}
-
-Point.prototype = (function(o) {
-  var s = new Vector(0, 0), p;
-  for (p in o) {
-      s[p] = o[p];
-  }
-  return s;
-})({
-  color:       'rgb(255, 255, 255)',
-  dragging:    false,
-  _latestDrag: null,
-
-  update: function(points, bounds) {
-      this._currentRadius = random(this._easeRadius, this._easeRadius * 0.35);
-      this._easeRadius += (this.radius - this._easeRadius) * 0.1;
-
-      if (this.dragging) return;
-
-      var vec = this.vec,
-          i, len, p, d;
-
-      for (i = 0, len = points.length; i < len; i++) {
-          p = points[i];
-          if (p !== this) {
-              d = this.distanceToSq(p);
-              if (d < 90000) {
-                  vec.add(Vector.sub(this, p).normalize().scale(0.03));
-              } else if (d > 250000) {
-                  vec.add(Vector.sub(p, this).normalize().scale(0.015));
-              }
-          }
-      }
-
-      if (vec.length() > 3) vec.normalize().scale(3);
-
-      this.add(vec);
-
-      if (this.x < bounds.x) {
-          this.x = bounds.x;
-          if (vec.x < 0) vec.x *= -1;
-
-      } else if (this.x > bounds.right) {
-          this.x = bounds.right;
-          if (vec.x > 0) vec.x *= -1;
-      }
-
-      if (this.y < bounds.y) {
-          this.y = bounds.y;
-          if (vec.y < 0) vec.y *= -1;
-
-      } else if (this.y > bounds.bottom) {
-          this.y = bounds.bottom;
-          if (vec.y > 0) vec.y *= -1;
-      }
-  },
-
-  hitTest: function(p) {
-      if (this.distanceToSq(p) < 900) {
-          this._easeRadius = this.radius * 2.5;
-          return true;
-      }
-      return false;
-  },
-
-  startDrag: function() {
-      this.dragging = true;
-      this.vec.set(0, 0);
-      this._latestDrag = new Vector().set(this);
-  },
-
-  drag: function(p) {
-      this._latestDrag.set(this);
-      this.set(p);
-  },
-
-  endDrag: function() {
-      this.vec = Vector.sub(this, this._latestDrag);
-      this.dragging = false;
-  },
-
-  draw: function(ctx) {
-      ctx.save();
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this._currentRadius, 0, Math.PI * 2, false);
-      ctx.fill();
-      ctx.shadowBlur  = 20;
-      ctx.shadowColor = this.color;
-      ctx.fillStyle   = 'rgba(0, 0, 0, 1)';
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this._currentRadius, 0, Math.PI * 2, false);
-      ctx.fill();
-      ctx.restore();
-  }
-});
   function handleStats() {
     if( vals.current_tab==="Stats")
       fix_stats(vals);
@@ -1291,7 +1106,6 @@ Point.prototype = (function(o) {
   }
 
   function handleGameLogic(corrected_prod, cost) {
-      //adding production to variables
       if( vals.followers >= vals.loss || corrected_prod > 0)  {
         vals.followers += corrected_prod;
         vals.stats.total_followers += corrected_prod;
@@ -1417,6 +1231,10 @@ Point.prototype = (function(o) {
         save['pantheon'] = pantheon;  	
   }
 
+
+  /**
+   * Really bad code starts here, please refactor me.
+   */
   function get_valsFromJSON(save) {
         vals.energy = parseInt(save.e,16);
         vals.prod = save.p;
@@ -1545,12 +1363,18 @@ Point.prototype = (function(o) {
   }
 
   function set_achievement_multiplier(vals) {
-    var out = 1.00;
-    for( var k in vals.challenges ) {
-      for( var i in vals.challenges[k])
-        if( vals.challenges[k][i].unlocked) out += 0.02;
+    var multiplier = 1.00;
+    for (const challengeType in vals.challenges ) {
+      for (const challengeNumber in vals.challenges[challengeType]) {
+        let challenge = vals.challenges[challengeType][challengeNumber];
+
+        if (challenge.unlocked) {
+          multiplier += 0.02;
+        }
+      }
     }
-    vals.achievement_multiplier = out;
+
+    vals.achievement_multiplier = multiplier;
     $('#prod_mul').text(Math.round(vals.achievement_multiplier * 100)/100 + 'x');
     fix_tab_buttons(vals);
   }
@@ -1814,7 +1638,8 @@ Point.prototype = (function(o) {
    function fix_names( vals ) {
     //fix conv and asc
     fix_conv_asc(vals);
-    fix_corruption_bar(vals);
+    fix_corruption_bar(vals.corruption);
+    fix_corruption_text(vals.corruption);
     //check on each update cycle for now - later only update once the desired event has occured
     $('#god_status').text(vals.god_status[vals.god_status.current].label);
     //todo- move this to its own method.
@@ -1905,8 +1730,7 @@ function fix_pantheon(vals) {
              if( !i.includes('hp') && !i.includes('regen')) {
                 if( $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '' )
                  $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
-             }
-             else {
+             } else {
               if( $('#shop_' + i).html() === '' )
                  $('#shop_' + i).html(item.label);
              }
@@ -1915,30 +1739,38 @@ function fix_pantheon(vals) {
   }
 }
 
-function fix_corruption_bar(vals) {
-  var cor = vals.corruption;
-  if( cor >= -100 ) $('#corruption_bar').css('background-color', '#0D47A1');
-  if( cor >= -80 && cor < -60 ) $('#corruption_bar').css('background-color', '#1976D2');
-  if( cor >= -60 && cor < -40 ) $('#corruption_bar').css('background-color', '#42A5F5');
-  if( cor >= -40 && cor < -20) $('#corruption_bar').css('background-color', '#90CAF9');
-  if( cor >= -20 && cor < 0) $('#corruption_bar').css('background-color', '#BBDEFB');
-  if( cor == 0 ) $('#corruption_bar').css('background-color', '#B0BEC5');
-  if( cor <= 20 && cor > 0) $('#corruption_bar').css('background-color', '#EF9A9A');
-  if( cor <= 40 && cor > 20) $('#corruption_bar').css('background-color', '#E57373');
-  if( cor <= 60 && cor > 40) $('#corruption_bar').css('background-color', '#F44336');
-  if( cor <= 80 && cor > 60) $('#corruption_bar').css('background-color', '#D32F2F');
-  if( cor <= 100 && cor > 80) $('#corruption_bar').css('background-color', '#B71C1C');
-  var g_e;
-  if( cor < 0 ) {
-    g_e = " Good";
-    cor *= -1
-  }
-  else if( cor > 0 ) 
-    g_e = " Evil";
-  else if( cor === 0 )
-    g_e = " - Neutral";
+function fix_corruption_bar(cor) {
+  let desiredColor = '#B0BEC5';
+  
+  if (cor >= -100) desiredColor = '#0D47A1';
+  else if (cor >= -80 && cor < -60) desiredColor = '#1976D2';
+  else if (cor >= -60 && cor < -40) desiredColor = '#42A5F5';
+  else if (cor >= -40 && cor < -20) desiredColor = '#90CAF9';
+  else if (cor >= -20 && cor < 0) desiredColor = '#BBDEFB';
+  else if (cor <= 20 && cor > 0) desiredColor = '#EF9A9A';
+  else if (cor <= 40 && cor > 20) desiredColor = '#E57373';
+  else if (cor <= 60 && cor > 40) desiredColor = '#F44336';
+  else if (cor <= 80 && cor > 60) desiredColor = '#D32F2F';
+  else if (cor <= 100 && cor > 80) desiredColor = '#B71C1C';
+  
+  set_corruption_color(desiredColor);
+}
 
-  $('#corruption_amount').text(cor + '%' + g_e);
+function set_corruption_color(desiredColor) {
+  $('#corruption_bar').css('background-color', 'desiredColor');
+}
+
+function fix_corruption_text(corruption) {
+  let alignment = ' - Neutral';
+
+  if (corruption < 0) {
+    alignment = " Good";
+    corruption *= -1
+  } else if (corruption > 0) {
+    alignment = " Evil";
+  }
+
+  $('#corruption_amount').text(corruption + '%' + alignment);
 }
 
 //generalised function that handles both asc and conv tabs.
@@ -2128,10 +1960,16 @@ function fix_challenges(vals) {
     }
 }
 
+  /**
+   * Really bad code ends.
+   */
+
 function doLeap(vals) {
-  var selected = vals.leap.selected.substr(0, vals.leap.selected.indexOf('_'));
-  var chosen = vals.leap[$('.wrap-nav').attr('id').substr($('.wrap-nav').attr('id').length -1)][selected];
-  chosen.amount ++;
+  const upgradeSelected = vals.leap.selected.substr(0, vals.leap.selected.indexOf('_'));
+  const upgradeTier = $('.wrap-nav').attr('id').substr($('.wrap-nav').attr('id').length -1);
+  
+  let chosen = vals.leap[upgradeTier][upgradeSelected];
+  chosen.amount++;
 
   const save = saveForLeap();
   localStorage.sv1 = btoa(JSON.stringify(save));
@@ -2605,7 +2443,7 @@ $(document).on("click", '#tab_btns .button', function(event) {
   var id = $(this).attr('id');
   var tabName = resolveTabName(id);
 
-  if(id.includes('generator')) init();
+  // if(id.includes('generator')) init();
   openTab(event, tabName);
 });
 
@@ -3206,596 +3044,4 @@ function truncate_int(num) {
     }
     var num_str = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
     return num_str;
-}
-
-/**
- * requestAnimationFrame
- */
-window.requestAnimationFrame = (function(){
-  return  window.requestAnimationFrame       ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame    ||
-          window.oRequestAnimationFrame      ||
-          window.msRequestAnimationFrame     ||
-          function (callback) {
-              window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
-
-/**
-* Vector
-*/
-function Vector(x, y) {
-  this.x = x || 0;
-  this.y = y || 0;
-}
-
-Vector.add = function(a, b) {
-  return new Vector(a.x + b.x, a.y + b.y);
-};
-
-Vector.sub = function(a, b) {
-  return new Vector(a.x - b.x, a.y - b.y);
-};
-
-Vector.prototype = {
-  set: function(x, y) {
-      if (typeof x === 'object') {
-          y = x.y;
-          x = x.x;
-      }
-      this.x = x || 0;
-      this.y = y || 0;
-      return this;
-  },
-
-  add: function(v) {
-      this.x += v.x;
-      this.y += v.y;
-      return this;
-  },
-
-  sub: function(v) {
-      this.x -= v.x;
-      this.y -= v.y;
-      return this;
-  },
-
-  scale: function(s) {
-      this.x *= s;
-      this.y *= s;
-      return this;
-  },
-
-  length: function() {
-      return Math.sqrt(this.x * this.x + this.y * this.y);
-  },
-
-  normalize: function() {
-      var len = Math.sqrt(this.x * this.x + this.y * this.y);
-      if (len) {
-          this.x /= len;
-          this.y /= len;
-      }
-      return this;
-  },
-
-  angle: function() {
-      return Math.atan2(this.y, this.x);
-  },
-
-  distanceTo: function(v) {
-      var dx = v.x - this.x,
-          dy = v.y - this.y;
-      return Math.sqrt(dx * dx + dy * dy);
-  },
-
-  distanceToSq: function(v) {
-      var dx = v.x - this.x,
-          dy = v.y - this.y;
-      return dx * dx + dy * dy;
-  },
-
-  clone: function() {
-      return new Vector(this.x, this.y);
-  }
-};
-
-
-/**
-* Point
-*/
-function Point(x, y, radius) {
-  Vector.call(this, x, y);
-
-  this.radius = radius || 7;
-
-  this.vec = new Vector(random(1, -1), random(1, -1)).normalize();
-  this._easeRadius    = this.radius;
-  this._currentRadius = this.radius;
-
-}
-
-Point.prototype = (function(o) {
-  var s = new Vector(0, 0), p;
-  for (p in o) {
-      s[p] = o[p];
-  }
-  return s;
-})({
-  color:       'rgb(255, 255, 255)',
-  dragging:    false,
-  _latestDrag: null,
-
-  update: function(points, bounds) {
-      this._currentRadius = random(this._easeRadius, this._easeRadius * 0.35);
-      this._easeRadius += (this.radius - this._easeRadius) * 0.1;
-
-      if (this.dragging) return;
-
-      var vec = this.vec,
-          i, len, p, d;
-
-      for (i = 0, len = points.length; i < len; i++) {
-          p = points[i];
-          if (p !== this) {
-              d = this.distanceToSq(p);
-              if (d < 90000) {
-                  vec.add(Vector.sub(this, p).normalize().scale(0.03));
-              } else if (d > 250000) {
-                  vec.add(Vector.sub(p, this).normalize().scale(0.015));
-              }
-          }
-      }
-
-      if (vec.length() > 3) vec.normalize().scale(3);
-
-      this.add(vec);
-
-      if (this.x < bounds.x) {
-          this.x = bounds.x;
-          if (vec.x < 0) vec.x *= -1;
-
-      } else if (this.x > bounds.right) {
-          this.x = bounds.right;
-          if (vec.x > 0) vec.x *= -1;
-      }
-
-      if (this.y < bounds.y) {
-          this.y = bounds.y;
-          if (vec.y < 0) vec.y *= -1;
-
-      } else if (this.y > bounds.bottom) {
-          this.y = bounds.bottom;
-          if (vec.y > 0) vec.y *= -1;
-      }
-  },
-
-  hitTest: function(p) {
-      if (this.distanceToSq(p) < 900) {
-          this._easeRadius = this.radius * 2.5;
-          return true;
-      }
-      return false;
-  },
-
-  startDrag: function() {
-      this.dragging = true;
-      this.vec.set(0, 0);
-      this._latestDrag = new Vector().set(this);
-  },
-
-  drag: function(p) {
-      this._latestDrag.set(this);
-      this.set(p);
-  },
-
-  endDrag: function() {
-      this.vec = Vector.sub(this, this._latestDrag);
-      this.dragging = false;
-  },
-
-  draw: function(ctx) {
-      ctx.save();
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this._currentRadius, 0, Math.PI * 2, false);
-      ctx.fill();
-      ctx.shadowBlur  = 20;
-      ctx.shadowColor = this.color;
-      ctx.fillStyle   = 'rgba(0, 0, 0, 1)';
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this._currentRadius, 0, Math.PI * 2, false);
-      ctx.fill();
-      ctx.restore();
-  }
-});
-
-
-/**
-* Lightning
-*/
-function Lightning(startPoint, endPoint, step) {
-  this.startPoint = startPoint || new Vector();
-  this.endPoint   = endPoint || new Vector();
-  this.step       = step || 45;
-
-  this.children = [];
-}
-
-Lightning.prototype = {
-  color:         'rgba(255, 255, 255, 1)',
-  speed:         0.025,
-  amplitude:     1,
-  lineWidth:     5,
-  blur :         50,
-  blurColor:     'rgba(255, 255, 255, 0.5)',
-  points:        null,
-  off:           0,
-  _simplexNoise: new SimplexNoise(),
-  // Case by child
-  parent:        null,
-  startStep:     0,
-  endStep:       0,
-
-  length: function() {
-      return this.startPoint.distanceTo(this.endPoint);
-  },
-
-  getChildNum: function() {
-      return children.length;
-  },
-
-  setChildNum: function(num) {
-      var children = this.children, child,
-          i, len;
-
-      len = this.children.length;
-
-      if (len > num) {
-          for (i = num; i < len; i++) {
-              children[i].dispose();
-          }
-          children.splice(num, len - num);
-
-      } else {
-          for (i = len; i < num; i++) {
-              child = new Lightning();
-              child._setAsChild(this);
-              children.push(child);
-          }
-      }
-  },
-
-  update: function() {
-      var startPoint = this.startPoint,
-          endPoint   = this.endPoint,
-          length, normal, radian, sinv, cosv,
-          points, off, waveWidth, n, av, ax, ay, bv, bx, by, m, x, y,
-          children, child,
-          i, len;
-
-      if (this.parent) {
-          if (this.endStep > this.parent.step) {
-              this._updateStepsByParent();
-          }
-
-          startPoint.set(this.parent.points[this.startStep]);
-          endPoint.set(this.parent.points[this.endStep]);
-      }
-
-      length = this.length();
-      normal = Vector.sub(endPoint, startPoint).normalize().scale(length / this.step);
-      radian = normal.angle();
-      sinv   = Math.sin(radian);
-      cosv   = Math.cos(radian);
-
-      points    = this.points = [];
-      off       = this.off += random(this.speed, this.speed * 0.2);
-      waveWidth = (this.parent ? length * 1.5 : length) * this.amplitude;
-      if (waveWidth > 750) waveWidth = 750;
-
-      for (i = 0, len = this.step + 1; i < len; i++) {
-          n = i / 60;
-          av = waveWidth * this._noise(n - off, 0) * 0.5;
-          ax = sinv * av;
-          ay = cosv * av;
-
-          bv = waveWidth * this._noise(n + off, 0) * 0.5;
-          bx = sinv * bv;
-          by = cosv * bv;
-
-          m = Math.sin((Math.PI * (i / (len - 1))));
-
-          x = startPoint.x + normal.x * i + (ax - bx) * m;
-          y = startPoint.y + normal.y * i - (ay - by) * m;
-
-          points.push(new Vector(x, y));
-      }
-
-      children = this.children;
-
-      for (i = 0, len = children.length; i < len; i++) {
-          child = children[i];
-          child.color     = this.color;
-          child.speed     = this.speed * 1.35;
-          child.amplitude = this.amplitude;
-          child.lineWidth = this.lineWidth * 0.75;
-          child.blur      = this.blur;
-          child.blurColor = this.blurColor;
-          children[i].update();
-      }
-  },
-
-  draw: function(ctx) {
-      var points = this.points,
-          children = this.children,
-          i, len, p, d;
-
-      // Blur
-      if (this.blur) {
-          ctx.save();
-          ctx.globalCompositeOperation = 'lighter';
-          ctx.fillStyle   = 'rgba(0, 0, 0, 1)';
-          ctx.shadowBlur  = this.blur;
-          ctx.shadowColor = this.blurColor;
-          ctx.beginPath();
-          for (i = 0, len = points.length; i < len; i++) {
-              p = points[i];
-              d = len > 1 ? p.distanceTo(points[i === len - 1 ? i - 1 : i + 1]) : 0;
-              ctx.moveTo(p.x + d, p.y);
-              ctx.arc(p.x, p.y, d, 0, Math.PI * 2, false);
-          }
-          ctx.fill();
-          ctx.restore();
-      }
-
-      ctx.save();
-      ctx.lineWidth = random(this.lineWidth, 0.5);
-      ctx.strokeStyle = this.color;
-      ctx.beginPath();
-      for (i = 0, len = points.length; i < len; i++) {
-          p = points[i];
-          ctx[i === 0 ? 'moveTo' : 'lineTo'](p.x, p.y);
-      }
-      ctx.stroke();
-      ctx.restore();
-
-      // Draw children
-      for (i = 0, len = this.children.length; i < len; i++) {
-          children[i].draw(ctx);
-      }
-  },
-
-  dispose: function() {
-      if (this._timeoutId) {
-          clearTimeout(this._timeoutId);
-      }
-      this._simplexNoise = null;
-  },
-
-  _noise: function(v) {
-      var octaves = 6,
-          fallout = 0.5,
-          amp = 1, f = 1, sum = 0,
-          i;
-
-      for (i = 0; i < octaves; ++i) {
-          amp *= fallout;
-          sum += amp * (this._simplexNoise.noise2D(v * f, 0) + 1) * 0.5;
-          f *= 2;
-      }
-
-      return sum;
-  },
-
-  _setAsChild: function(lightning) {
-      if (!(lightning instanceof Lightning)) return;
-      this.parent = lightning;
-
-      var self = this,
-          setTimer = function() {
-              self._updateStepsByParent();
-              self._timeoutId = setTimeout(setTimer, randint(1500));
-          };
-
-      self._timeoutId = setTimeout(setTimer, randint(1500));
-  },
-
-  _updateStepsByParent: function() {
-      if (!this.parent) return;
-      var parentStep = this.parent.step;
-      this.startStep = randint(parentStep - 2);
-      this.endStep   = this.startStep + randint(parentStep - this.startStep - 2) + 2;
-      this.step = this.endStep - this.startStep;
-  }
-};
-
-
-/**
-* Rect
-*/
-function Rect(x, y, width, height) {
-  this.x = x || 0;
-  this.y = y || 0;
-  this.width  = width || 0;
-  this.height = height || 0;
-  this.right  = this.x + this.width;
-  this.bottom = this.y + this.height;
-}
-
-
-// Helpers
-
-function random(max, min) {
-  if (typeof max !== 'number') {
-      return Math.random();
-  } else if (typeof min !== 'number') {
-      min = 0;
-  }
-  return Math.random() * (max - min) + min;
-}
-
-
-function randint(max, min) {
-  if (!max) return 0;
-  return random(max + 1, min) | 0;
-}
-
-
-
-// Initialize
-
-function init() {
-
-  // Vars
-
-  var canvas, context,
-      centerX, centerY, grad,
-      mouse,
-      bounds,
-      points,
-      lightning,
-      gui, control;
-
-
-  // Event Listeners
-
-  function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      centerX = canvas.width * 0.5;
-      centerY = canvas.height * 0.5;
-      context = canvas.getContext('2d');
-      grad = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.sqrt(centerX * centerX + centerY * centerY));
-      grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      grad.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
-  }
-
-  function mouseMove(e) {
-      mouse.set(e.clientX, e.clientY);
-
-      var i, hit = false;
-      for (i = 0; i < 2; i++) {
-          if ((!hit && points[i].hitTest(mouse)) || points[i].dragging)
-              hit = true;
-      }
-      document.body.style.cursor = hit ? 'pointer' : 'default';
-  }
-
-  function mouseDown(e) {
-      for (var i = 0; i < 2; i++) {
-          if (points[i].hitTest(mouse)) {
-              points[i].startDrag();
-              return;
-          }
-      }
-  }
-
-  function mouseUp(e) {
-      for (var i = 0; i < 2; i++) {
-          if (points[i].dragging)
-              points[i].endDrag();
-      }
-  }
-
-
-  // GUI Control
-
-  control = {
-      childNum: 3,
-      totalNum: 1,
-      color: [255, 255, 255],
-      backgroundColor: '#000'
-  };
-
-  // Init
-  canvas = document.getElementById('c');
-
-  window.addEventListener('resize', resize, false);
-  resize(null);
-
-  bounds = new Rect(0, 0, canvas.width * 0.75, canvas.height);
-  mouse  = new Vector();
-
-  lightning = new Lightning();
-
-  points = [
-      new Point(centerX - (canvas.width/2.25), centerY, lightning.lineWidth * 1.25),
-      new Point(centerX, centerY, lightning.lineWidth * 1.25)
-  ];
-
-  lightning.startPoint.set(points[0]);
-  lightning.endPoint.set(points[1]);
-  lightning.setChildNum(3);
-
-  canvas.addEventListener('mousemove', mouseMove, false);
-  canvas.addEventListener('mousedown', mouseDown, false);
-  canvas.addEventListener('mouseup', mouseUp, false);
-
-
-  // GUI
-  gui = new dat.GUI();
-  gui.add(lightning, 'amplitude', 0, 2).name('Amplitude');
-  gui.add(lightning, 'speed', 0, 0.1).name('Speed');
-  gui.add(control, 'childNum', 0, 10).step(1).name('Child Num').onChange(function() {
-      lightning.setChildNum(control.childNum | 0);
-  });
-
-  gui.addColor(control, 'color').name('Color').onChange(function() {
-      var c = control.color;
-      var r = (c[0] || 0) | 0, g = (c[1] || 0) | 0, b = (c[2] || 0) | 0,
-          i, len;
-
-      lightning.color     = 'rgb(' + r + ',' + g + ',' + b + ')';
-      lightning.blurColor = 'rgba(' + r + ',' + g + ',' + b + ', 0.5)';
-      for (i = 0, len = points.length; i < len; i++) {
-          points[i].color = lightning.color;
-      }
-  });
-  gui.add(lightning, 'lineWidth', 1, 10).name('Line Width').onChange(function() {
-      for (var i = 0, len = points.length; i < len; i++) {
-          points[i].radius = lightning.lineWidth * 1.25;
-      }
-  });
-  gui.add(lightning, 'blur', 0, 100).name('Blur');
-  gui.addColor(control, 'backgroundColor').name('Background');
-  gui.close();
-
-
-  // Start Update
-
-  var loop = function() {
-      context.save();
-      context.fillStyle = control.backgroundColor;
-      if(window.innerWidth < 700) context.fillRect(0, 0, canvas.width, canvas.height);
-      else if(window.innerWidth < 1000 ) context.fillRect(0, 0, canvas.width * 0.8, canvas.height);
-      else  context.fillRect(0, 0, canvas.width * 0.75, canvas.height);
-      context.fillStyle = grad;
-      context.fillRect(0, 0, canvas.width * 0.75, canvas.height);
-      context.restore();
-
-      lightning.startPoint.set(points[0]);
-      lightning.endPoint.set(points[1]);
-      lightning.step = Math.ceil(lightning.length() / 10);
-      if (lightning.step < 5) lightning.step = 5;
-
-      lightning.update();
-      lightning.draw(context);
-
-      var i, p;
-
-      for (i = 0; i < 2; i++) {
-          p = points[i];
-          if (p.dragging) p.drag(mouse);
-          p.update(points, bounds);
-          p.draw(context);
-      }
-
-      requestAnimationFrame(loop);
-  };
-  loop();
-
 }

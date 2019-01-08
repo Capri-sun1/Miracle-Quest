@@ -2614,12 +2614,8 @@ function resolveClass(btn) {
   if(btn === 'delete_save') return new Deleter(btn);
   if(btn === 'make_save') return new Saver(btn);
   const valsEntry = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1);
-  let id = generateUseableId(valsEntry);
-  if (id.length !== 1) {
-    if (valsEntry.includes('purchase') || valsEntry.includes('ascend')) {
-      id = valsEntry.substr(0, valsEntry.length-1);
-    }
-  }
+  const id = generateUseableId(valsEntry);
+
   switch(id) {
     case 'purchase' : case 'ascend' : return new Producer(valsEntry); 
     case 'upgrade' : return new Upgrader(btn);

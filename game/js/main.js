@@ -34,6 +34,24 @@ var vals = {
       "mul": 2,
       "boss_label":"Angry",
       "max_tier":4
+    }, 
+    "3":{
+      "label":"Apparition",
+      "mul": 4,
+      "boss_label":"Furious",
+      "max_tier":4
+    },
+    "4":{
+      "label":"Phantom",
+      "mul": 7,
+      "boss_label":"Incandescent",
+      "max_tier":4
+    },
+    "5":{
+      "label":"Deity",
+      "mul": 12,
+      "boss_label":"Cruel",
+      "max_tier":4
     }
   },
   "leap" : {
@@ -143,6 +161,26 @@ var vals = {
                 "cost":5000000,
                 "unlock_rps":8500.0,
                 "unlocked":false,
+            },
+            "purchase9":{
+                "label":"Bible of the bacterium",
+                "description":"Begin to bring microbial life itself into the fold.",
+                "amount":0,
+                "output":160000,
+                "base_cost":80000000,
+                "cost":80000000,
+                "unlock_rps":40000.0,
+                "unlocked":false,
+            },
+            "purchasea":{
+                "label":"Planet of the apes",
+                "description":"Influence an entire planet's population.",
+                "amount":0,
+                "output":2000000,
+                "base_cost":6000000000,
+                "cost":6000000000,
+                "unlock_rps":160000.0,
+                "unlocked":false,
             }
     },  "ascend":{
             "ascend1":{
@@ -223,6 +261,26 @@ var vals = {
                 "base_cost":6000000,
                 "cost":6000000,
                 "unlock_rps":8500.0,
+                "unlocked":false,
+            }, 
+            "ascend9":{
+                "label":"Astral reactor",
+                "description":"A place where followers can be converted directly to essence.",
+                "amount":0,
+                "output":200000,
+                "base_cost":100000000,
+                "cost":100000000,
+                "unlock_rps":40000.0,
+                "unlocked":false,
+            }, 
+            "ascenda":{
+                "label":"Staff of destiny",
+                "description":"Staff which grants the wielder full control over the minds of mortals.",
+                "amount":0,
+                "output":2500000,
+                "base_cost":8000000000,
+                "cost":8000000000,
+                "unlock_rps":210000.0,
                 "unlocked":false,
             }
   },
@@ -305,6 +363,13 @@ var vals = {
               "unlocked":false,
               "cost":500000000,
               "mul":6
+            },
+            "upgrade11":{
+              "label":"Deal with the devil",
+              "description":"Sacrifice some of your divinity for greater control over space.",
+              "unlocked":false,
+              "cost":4500000000,
+              "mul":8
             }
           },
           "2": {
@@ -364,6 +429,13 @@ var vals = {
               "unlocked":false,
               "cost":1000000000,
               "mul":0.8
+            },
+            "upgrade8":{
+               "label":"Demon's paw",
+              "description":"A monkey's paw - but far more potent.",
+              "unlocked":false,
+              "cost":50000000000,
+              "mul":0.7
             }
           },
           "3" : {
@@ -436,6 +508,57 @@ var vals = {
                   "max_amount":8
                 },
                 "prod2":{
+                  "label":"Deal +0.1 Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.1,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;10%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.8,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;20%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.8,
+                  "max_amount":5
+                }
+              },
+              //tier 2 upgrades
+              "2":{
+                "click1":{
+                  "label":"Damage x1.75/click",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":1.75,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.05x energy prod",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.01x Divine Power/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.01,
+                  "max_amount":8
+                },
+                "prod2":{
                   "label":"Deal +0.05 Energy Prod/Tick",
                   "amount":0,
                   "base_cost":5,
@@ -460,14 +583,113 @@ var vals = {
                   "max_amount":5
                 }
               },
-              //tier 2 upgrades
-              "2":{
+              "3":{
                 "click1":{
-                  "label":"Damage x1.5/click",
+                  "label":"Damage x2/click",
                   "amount":0,
                   "base_cost":5,
                   "cost":5,
-                  "mul":1.5,
+                  "mul":2,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.05x energy prod",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.01x Divine Power/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.01,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;10%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.9,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;20%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.8,
+                  "max_amount":5
+                }
+              },
+              "4":{
+                "click1":{
+                  "label":"Damage x2.5/click",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":2.5,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.05x energy prod",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.01x Divine Power/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.01,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;10%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.9,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;20%",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":0.8,
+                  "max_amount":5
+                }
+              },
+              "5":{
+                "click1":{
+                  "label":"Damage x3/click",
+                  "amount":0,
+                  "base_cost":5,
+                  "cost":5,
+                  "mul":3,
                   "max_amount":8
                 },
                 "prod1":{
@@ -1061,7 +1283,7 @@ $(document).on('click','#playing', function(event) {
     } else {
       currentBoss.current_hp = currentBoss.max_hp;
     }
-    if( vals.pantheon.dps > 0 ) {
+    if (vals.pantheon.dps > 0 ) {
       currentBoss.current_hp -= vals.pantheon.dps;
       attack('#battle' + (vals.pantheon.stage+1));
     }
@@ -1576,7 +1798,7 @@ $(document).on('click','#playing', function(event) {
    if( vals.current_tab === 'Leap' ) {
     var id = $('.wrap-nav').attr('id');
     var tier = id.substr(id.length-1);
-      if( vals.flame >= vals.leap[tier]['tier'].req) {
+      if (vals.flame >= vals.leap[tier]['tier'].req && parseInt(vals.god_status.current) < 5) {
         $('#tier_btn_' + tier).prop('disabled', false);  
       }  
       else $('#tier_btn_' + tier).prop('disabled', true);    
@@ -1969,7 +2191,11 @@ function doLeap(vals) {
   const upgradeTier = $('.wrap-nav').attr('id').substr($('.wrap-nav').attr('id').length -1);
   
   let chosen = vals.leap[upgradeTier][upgradeSelected];
-  chosen.amount++;
+  if (upgradeSelected === 'tier') {
+    vals.god_status.current++;
+  } else {
+    chosen.amount++;
+  }
 
   const save = saveForLeap();
   localStorage.sv1 = btoa(JSON.stringify(save));
@@ -1984,15 +2210,14 @@ function saveForLeap() {
 }
 
 function staticLeapValuesToJson() {
-    const total_click_mul = generateTotalValueFor('click', 0);
-    const total_damage_mul = generateTotalValueFor('boss', 0);
-
-    const tier = generateTotalValueFor('tier', 1);
+    const tier_mul = generateLeapOffset(vals.god_status.current);
+    const total_damage_mul = generateTotalValueFor('boss', 1) * tier_mul;
+    const total_click_mul = generateTotalValueFor('click', 1) * tier_mul;
 
     let save = {
         'e':0,
         'p':0,
-        'cl':Math.pow(2, total_click_mul).toString(16),
+        'cl':total_click_mul.toString(16),
         'f':0,
         'l':0,
         'c':0,
@@ -2000,7 +2225,7 @@ function staticLeapValuesToJson() {
         't':(500).toString(16),
         'fl':0,
         'dam':Math.pow(3, total_damage_mul).toString(16),
-        "tier":(tier).toString(16),
+        "tier":vals.god_status.current.toString(16),
         "stage":0
     };	
 
@@ -2010,12 +2235,22 @@ function staticLeapValuesToJson() {
 function generateTotalValueFor(type, startValue) {
     let totalValue = startValue;
 
-    for(var k in vals.leap) {
+    for (var k in vals.leap) {
         if(k != 'unlocked' && k!='selected') {
           totalValue += (vals.leap[k][type].mul * vals.leap[k][type].amount);
         }
     }
+
 	return totalValue;
+}
+
+function generateLeapOffset(tier) {
+  let totalMultiplier = 1;
+  for (let i = parseInt(tier); i > 1; i--) {
+    totalMultiplier *= vals.god_status[i.toString()].mul;
+  }
+
+  return totalMultiplier;
 }
 
 function leapStatsToJson() {
@@ -2046,7 +2281,6 @@ $(document).on("click", ".purchase", function() {
     var btn = $(this).attr('id');
     let event = resolveClass(btn);
     handleSound(btn);
-    
     try {
     	event.action();
     } catch(EventActionEcception) {
@@ -2380,8 +2614,12 @@ function resolveClass(btn) {
   if(btn === 'delete_save') return new Deleter(btn);
   if(btn === 'make_save') return new Saver(btn);
   const valsEntry = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.lastIndexOf('_')+1);
-  const id = generateUseableId(valsEntry);
-
+  let id = generateUseableId(valsEntry);
+  if (id.length !== 1) {
+    if (valsEntry.includes('purchase') || valsEntry.includes('ascend')) {
+      id = valsEntry.substr(0, valsEntry.length-1);
+    }
+  }
   switch(id) {
     case 'purchase' : case 'ascend' : return new Producer(valsEntry); 
     case 'upgrade' : return new Upgrader(btn);
@@ -2392,7 +2630,14 @@ function resolveClass(btn) {
 }
 
 function generateUseableId(id) {
-    return id.substr(0, id.search(/\d/));
+    const value = id.substr(0, id.search(/\d/));
+    if (id.length !== 1) {
+      if (id.includes('purchase') || id.includes('ascend')) {
+        return id.substr(0, id.length-1);
+      }
+    }
+
+    return value;
 }
 
 $(document).on("click", ".sell", function() {
@@ -2621,12 +2866,20 @@ function processHealthUpgrade(bossUpgrade, tier) {
 }
 
 function processDamageUpgrade(type, tier) {
-  pg = vals.pantheon.upgrades[tier][type + tier];
-
+  upg = vals.pantheon.upgrades[tier][type + tier];
   if(type === "click") {
-    tier === '1' ? vals.pantheon.damage *= upg.mul : vals.pantheon.dps += (vals.click * upg.mul);
+    //process upgrades for tick based dmg upgrades
+    if (tier === '2') {
+      vals.pantheon.dps += (vals.click * upg.mul);
+    } else {
+      vals.pantheon.damage *= upg.mul;
+    }
   } else if (type === "prod") {
-    tier === '1' ? vals.pantheon.damage += (vals.loss * upg.mul) : vals.pantheon.dps += (vals.loss * upg.mul);
+    if (tier === '2') {
+      vals.pantheon.dps += (vals.loss * upg.mul);
+    } else {
+      vals.pantheon.damage += (vals.loss * upg.mul);
+    }
   }
 }
 

@@ -1285,7 +1285,7 @@ $(document).on('click','#playing', function(event) {
     }
     if (vals.pantheon.dps > 0 ) {
       currentBoss.current_hp -= vals.pantheon.dps;
-      attack('#battle' + (vals.pantheon.stage+1));
+      attack('#battle' + (vals.pantheon.stage+1), vals.pantheon.dps);
     }
   }
 
@@ -2224,7 +2224,7 @@ function staticLeapValuesToJson() {
         'ac':1,
         't':(500).toString(16),
         'fl':0,
-        'dam':Math.pow(3, total_damage_mul).toString(16),
+        'dam':total_damage_mul.toString(16),
         "tier":vals.god_status.current.toString(16),
         "stage":0
     };	
@@ -2974,12 +2974,12 @@ $(document).on("click", ".battle", function() {
 
   $(this).attr('src', 'data/' + hit + ".png");
   processSuperClick();
-  attack(id);
+  attack(id, vals.pantheon.damage);
 });
 
-function attack(id) {  
+function attack(id, dam) {  
   const btn = id, divToAppend = '.boss_img';
-  const damage = generateDamage(vals.pantheon.damage);
+  const damage = generateDamage(dam);
   let bossClick = new BossClick({}, setAttackTarget(damage));
 
   bossClick.revealTarget(divToAppend);

@@ -1623,12 +1623,7 @@ function applyBossUpgrades(bossUpgrade, tier, amount) {
   let type = isElligible ? bossUpgrade : bossUpgrade.substr(0, bossUpgrade.length-1);
   let upg = vals.pantheon.upgrades[vals.god_status.current][bossUpgrade];
   for (let i = 0; i < amount; i++) {
-    if (isElligible) {
-      processHealthUpgrade(type, tier);
-      processDamageUpgrade(type, tier);
-    } else {
-      vals.pantheon.upgrades[vals.god_status.current][bossUpgrade].amount++;
-    }
+    vals.pantheon.upgrades[vals.god_status.current][bossUpgrade].amount++;
     vals.pantheon.upgrades[vals.god_status.current][bossUpgrade].cost = set_item_cost(upg);
   }
 }
@@ -2793,6 +2788,7 @@ $(document).on("click", "#next_boss", function(event) {
 $(document).on("click", "#boss_upgrades", function(event) {
   if(isTab('Pantheon')) {
     tabSound.play();
+    fixBossUpgrades();
     toggleElements(["#pantheon_unlocked .overlay", ".boss_img", ".traverse_bosses"]);
     toggleUi('#' + $(this).attr('id'), ['Upgrade menu', 'Boss fight']);
     $('#boss_num').toggleText(': Boss ' + String(parseInt(vals.pantheon.stage) + 1 ), ": Upgrades");
@@ -2895,12 +2891,22 @@ var perform_trans = function(superclick) {
 
 $(document).on("click", '.boss_upgrade', function(event) { 
   tabSound.play();
-  var id= $(this).attr('id');
-
+  var id = $(this).attr('id');
   processBossUpgrade(id);
-  //fix purchase cost of boss upgrades
-  //$(this).html('Purchase ' + upg.cost + '<span class="glyphicon glyphicon-fire"></span>');
+  fixBossUpgrades();
 });
+
+
+function fixBossUpgrades() {
+  let upg = vals.pantheon.upgrades[vals.god_status.current];
+  const buttons = ["click_1", "prod_1", "click_2", "prod_2", "max_hp", "regen"];
+  for (let i = 0; i < buttons.length; i++) {
+    let id = buttons[i];
+    if (i > 3) choice = id;
+    else choice = id.substr(0, id.search(/\d/) -1) + id.substr(id.search(/\d/));
+    $('#' + id).html('Purchase ' + upg[choice].cost + '<span class="glyphicon glyphicon-fire"></span>');
+  }
+}
 
 function processBossUpgrade(id) {
   var bossUpgrade = id.substr(0, id.search(/\d/) -1);

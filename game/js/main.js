@@ -61,17 +61,17 @@ var vals = {
     "1": {
       "click":{
         "label":"Improved Power",
-        "description":"Your clicks are twice as powerful.",
+        "description":"Your clicks are more powerful.",
         "amount":0,
-        "mul": 1,
+        "mul": 2,
         "max": 3,
         "req":0
       },
       "boss":{
         "label":"Boss Killer",
-        "description":"You do 3x damage to bosses.",
+        "description":"You do increased damage to bosses.",
         "amount":0,
-        "mul": 1,
+        "mul": 4,
         "max":5,
         "req":0
       },
@@ -80,7 +80,7 @@ var vals = {
         "description":"You Ascend to a new God status, with new unlocks but increased difficulty.",
         "cost":35,
         "amount":0,
-        "mul":1, //this is actually addition..
+        "mul":1,
         "req":35,
         "max":5
       }
@@ -742,49 +742,47 @@ var vals = {
             },
 
             "bosses" : {
-
-
-            "boss1":{
-              "max_hp": 1000000,
-              "current_hp":1000000,
-              "regen":100,
-              "reward":1000000,
-              "current":true,
-              "name":"Temporal aberration",
-              "reward":1,
-              "defeated":false
-            },
-            "boss2":{
-              "max_hp": 125000000,
-              "current_hp":125000000,
-              "regen":10000,
-              "reward":50000000,
-              "current":false,
-              "name":"Banshee",
-              "reward":2.5,
-              "defeated": false
-            },
-            "boss3":{
-              "max_hp": 1750000000,
-              "current_hp":1750000000,
-              "regen":1000000,
-              "reward":275000000,
-              "current":false,
-              "name":"Erinys",
-              "reward": 5,
-              "defeated":false
-            },
-            "boss4":{
-              "max_hp": 35000000000,
-              "current_hp":35000000000,
-              "regen":75000000,
-              "reward":275000000,
-              "current":false,
-              "name":"Demonic form",
-              "reward": 15,
-              "defeated":false
+              "boss1":{
+                "max_hp": 1000000,
+                "current_hp":1000000,
+                "regen":100,
+                "reward":1000000,
+                "current":true,
+                "name":"Temporal aberration",
+                "reward":1,
+                "defeated":false
+              },
+              "boss2":{
+                "max_hp": 125000000,
+                "current_hp":125000000,
+                "regen":10000,
+                "reward":50000000,
+                "current":false,
+                "name":"Banshee",
+                "reward":2.5,
+                "defeated": false
+              },
+              "boss3":{
+                "max_hp": 1750000000,
+                "current_hp":1750000000,
+                "regen":1000000,
+                "reward":275000000,
+                "current":false,
+                "name":"Erinys",
+                "reward": 5,
+                "defeated":false
+              },
+              "boss4":{
+                "max_hp": 35000000000,
+                "current_hp":35000000000,
+                "regen":75000000,
+                "reward":275000000,
+                "current":false,
+                "name":"Demonic form",
+                "reward": 15,
+                "defeated":false
+              }
             }
-           }
            },
            "challenges": {
 
@@ -1338,9 +1336,7 @@ function set_item_cost(item) {
   }
 
   function handleStats() {
-    if( vals.current_tab==="Stats")
-      fix_stats(vals);
-    
+    if( vals.current_tab==="Stats") fix_stats(vals);
     vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000)/1000;
     last_saved = (vals.tick + last_saved * 1000)/1000;
   }
@@ -1357,10 +1353,8 @@ function set_item_cost(item) {
   }
 
   function handleGameLoop(iterations, cycles) {
-    if( iterations >= 30 ) {
-      let newLoop = 0;
-
-      game_engine(newLoop, ++cycles);
+    if (iterations >= 30) {
+      game_engine(0, ++cycles);
     } else {
       game_engine(++iterations, cycles);
     }
@@ -1372,25 +1366,24 @@ function set_item_cost(item) {
         vals.stats.total_followers += corrected_prod;
         vals.energy += ( ( 1+(vals.corruption/100) ) * vals.loss);
         vals.stats.total_energy += ( ( 1+(vals.corruption/100) ) * vals.loss);
-      }
-      else {vals.energy += ( cost * (vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
+      } else {
+        vals.energy += (cost * (vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
         vals.stats.total_energy += (cost *(vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
       }
   }
 
-  var valsToJSON = function() {
-      var save = staticValuesToJson();
-      purchasesToJson(save);
-      leapToJson(save);
-      upgradesAndAchievementsToJson(save);
-      statsToJson(save);
-      pantheonToJson(save);
-      
-      return save;
-  }
+var valsToJSON = function() {
+    var save = staticValuesToJson();
+    purchasesToJson(save);
+    leapToJson(save);
+    upgradesAndAchievementsToJson(save);
+    statsToJson(save);
+    pantheonToJson(save);
+    return save;
+}
 
-  function staticValuesToJson() {
-  	let save = {
+function staticValuesToJson() {
+  let save = {
   		'e':Math.round(vals.energy).toString(16),
         'p':vals.prod,
         'cl':vals.click.toString(16),
@@ -1407,9 +1400,9 @@ function set_item_cost(item) {
         "stage":vals.pantheon.stage.toString(16),
         "asc":vals.leap.unlocked,
         "time":new Date()
-    };
-  	return save;
-  }
+  };
+ 	return save;
+}
 
   function purchasesToJson(save) {
   	 var unlocks = {
@@ -1478,26 +1471,37 @@ function set_item_cost(item) {
         save['s'] = temp_s;  	
   }
 
-  function pantheonToJson(save) {
-        var pantheon = [];
-        for(var k in vals.pantheon.bosses) { 
-            var items = vals.pantheon.bosses[k];
-            var temp_a = [];
-            temp_a.push('max_hp' + ":" +items.max_hp.toString(16));
-            temp_a.push('current_hp' + ":" +items.current_hp.toString(16));
-            temp_a.push('regen' + ":" +items.regen.toString(16));
-            temp_a.push('defeated' + ":" + items.defeated.toString().toLowerCase());
-            temp_a.push('reward' + ":" + items.reward.toString(16));    
-            pantheon.push(temp_a);
-        }
-        save['pantheon'] = pantheon;  	
+function pantheonToJson(save) {
+  let pantheon = [];
+  for (let k in vals.pantheon.bosses) { 
+    const items = vals.pantheon.bosses[k];
+    let temp_a = [];
+    temp_a.push('max_hp' + ":" +items.max_hp.toString(16));
+    temp_a.push('current_hp' + ":" +items.current_hp.toString(16));
+    temp_a.push('regen' + ":" +items.regen.toString(16));
+    temp_a.push('defeated' + ":" + items.defeated.toString().toLowerCase());
+    temp_a.push('reward' + ":" + items.reward.toString(16));    
+    pantheon.push(temp_a);
   }
 
+  for (let i in vals.pantheon.upgrades) {
+    if (i != vals.god_status.current) continue;
+    const items = vals.pantheon.upgrades[i];
+    let temp_b = [];
+    for (let j in items) {
+      temp_b.push(j + ":" + items[j].amount.toString(16));
+    }
+    pantheon.push(temp_b);
+  }
 
-  /**
-   * Really bad code starts here, please refactor me.
-   */
-  function get_valsFromJSON(save) {
+  save['pantheon'] = pantheon; 
+}
+
+
+/**
+* Really bad code starts here, please refactor me.
+*/
+function get_valsFromJSON(save) {
         vals.energy = parseInt(save.e,16);
         vals.prod = save.p;
         vals.click = parseInt(save.cl, 16);
@@ -1580,22 +1584,28 @@ function set_item_cost(item) {
                 }
             }
         }
-        if( save['pantheon'] ) {
-            var items = save['pantheon'];
-            for( var i=0; i< items.length; i++ ) {
-              for( var k in items[i] ) {
-                vals.pantheon.bosses['boss' + (i+1)].max_hp = parseInt(items[i][0].split(':')[1], 16);
-                vals.pantheon.bosses['boss' + (i+1)].current_hp = parseInt(items[i][1].split(':')[1], 16);
-                vals.pantheon.bosses['boss' + (i+1)].regen = parseInt(items[i][2].split(':')[1], 16);
-                vals.pantheon.bosses['boss' + (i+1)].defeated = (items[i][3].split(':')[1].toString().toLowerCase() == 'true');
-                vals.pantheon.bosses['boss' + (i+1)].reward = parseInt(items[i][4].split(':')[1], 16);
+        if (save['pantheon']) {
+            const items = save['pantheon'];
+            for (let i=0; i < items.length; i++) {
+              for (let k in items[i]) {
+                if (i === (items.length-1)) {
+                  let type = items[i][k].split(':')[0];
+                  let amount = parseInt(items[i][k].split(':')[1], 16);
+                  applyBossUpgrades(type, vals.god_status.current, amount);
+                } else {
+                  let currentBoss = 'boss' + (i+1);
+                  vals.pantheon.bosses[currentBoss].max_hp = parseInt(items[i][0].split(':')[1], 16);
+                  vals.pantheon.bosses[currentBoss].current_hp = parseInt(items[i][1].split(':')[1], 16);
+                  vals.pantheon.bosses[currentBoss].regen = parseInt(items[i][2].split(':')[1], 16);
+                  vals.pantheon.bosses[currentBoss].defeated = (items[i][3].split(':')[1].toString().toLowerCase() == 'true');
+                  vals.pantheon.bosses[currentBoss].reward = parseInt(items[i][4].split(':')[1], 16);
+                }
               }
             }
-
         }
 
         //load data for statistics 
-        if( save.s ) {
+        if (save.s) {
           vals.stats.time_played = parseInt(save.s.t,16);
           vals.stats.total_energy = parseInt(save.s.t_e,16);
           vals.stats.total_followers = parseInt(save.s.t_f,16);
@@ -1606,23 +1616,37 @@ function set_item_cost(item) {
           vals.stats.miracle_click_energy = parseInt(save.s.mc_e,16);
           vals.stats.ascension_click_energy = parseInt(save.s.ac_e, 16);
         }
-
   }
 
-  function loadData() {
-    try {
-        get_valsFromJSON(JSON.parse(atob(localStorage.sv1)));
-    } catch(err) { //TODO - work on designing meaningful exceptions
-      console.log("No saved data to load.");
+function applyBossUpgrades(bossUpgrade, tier, amount) {
+  let isElligible = isNaN(parseInt(bossUpgrade.substr(bossUpgrade.length-1, bossUpgrade.length), 10));
+  let type = isElligible ? bossUpgrade : bossUpgrade.substr(0, bossUpgrade.length-1);
+  let upg = vals.pantheon.upgrades[vals.god_status.current][bossUpgrade];
+  for (let i = 0; i < amount; i++) {
+    if (isElligible) {
+      processHealthUpgrade(type, tier);
+      processDamageUpgrade(type, tier);
+    } else {
+      vals.pantheon.upgrades[vals.god_status.current][bossUpgrade].amount++;
     }
-    fix_tab_buttons(vals);
-    fix_names(vals);
+    vals.pantheon.upgrades[vals.god_status.current][bossUpgrade].cost = set_item_cost(upg);
   }
+}
 
-  function deleteSave() {
-    localStorage.removeItem("sv1");
-    location.reload();
+function loadData() {
+  try {
+      get_valsFromJSON(JSON.parse(atob(localStorage.sv1)));
+  } catch(NoSuchSaveException) { 
+    console.log("No saved data to load: " + NoSuchSaveException);
   }
+  fix_tab_buttons(vals);
+  fix_names(vals);
+}
+
+function deleteSave() {
+  localStorage.removeItem("sv1");
+  location.reload();
+}
 
   function set_achievement_multiplier(vals) {
     var multiplier = 1.00;
@@ -2260,38 +2284,26 @@ function saveForLeap() {
 }
 
 function staticLeapValuesToJson() {
-    const tier_mul = generateLeapOffset(vals.god_status.current);
-    const total_damage_mul = generateTotalValueFor('boss', 1) * tier_mul;
-    const total_click_mul = generateTotalValueFor('click', 1) * tier_mul;
+    const tierMul = generateLeapOffset(vals.god_status.current);
+    const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
+    const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
 
     let save = {
         'e':0,
         'p':0,
-        'cl':total_click_mul.toString(16),
+        'cl':totalClickMul.toString(16),
         'f':0,
         'l':0,
         'c':0,
         'ac':1,
         't':(500).toString(16),
         'fl':0,
-        'dam':total_damage_mul.toString(16),
+        'dam':totalDamageMul.toString(16),
         "tier":vals.god_status.current.toString(16),
         "stage":0
     };	
 
     return save;	
-}
-
-function generateTotalValueFor(type, startValue) {
-    let totalValue = startValue;
-
-    for (var k in vals.leap) {
-        if(k != 'unlocked' && k!='selected') {
-          totalValue += (vals.leap[k][type].mul * vals.leap[k][type].amount);
-        }
-    }
-
-	return totalValue;
 }
 
 function generateLeapOffset(tier) {
@@ -2301,6 +2313,18 @@ function generateLeapOffset(tier) {
   }
 
   return totalMultiplier;
+}
+
+function generateTotalValueFor(type, startValue) {
+    let totalValue = startValue;
+
+    for (var k in vals.leap) {
+        if(k != 'unlocked' && k!='selected') {
+          totalValue = Math.pow(vals.leap[k][type].mul, vals.leap[k][type].amount);
+        }
+    }
+
+	return totalValue;
 }
 
 function leapStatsToJson() {
@@ -2599,7 +2623,6 @@ class EnergySacrifice extends Sacrifice {
 	}
 }
 
-
 function generateToastMessage(toast, heading) {
 	$.toaster({message:toast,title:heading});
 }
@@ -2875,46 +2898,45 @@ $(document).on("click", '.boss_upgrade', function(event) {
   var id= $(this).attr('id');
 
   processBossUpgrade(id);
-  $(this).html('Purchase ' + upg.cost + '<span class="glyphicon glyphicon-fire"></span>');
+  //fix purchase cost of boss upgrades
+  //$(this).html('Purchase ' + upg.cost + '<span class="glyphicon glyphicon-fire"></span>');
 });
-
-var upg;
 
 function processBossUpgrade(id) {
   var bossUpgrade = id.substr(0, id.search(/\d/) -1);
   var tier = id.substr(id.search(/\d/));
-  upg = vals.pantheon.upgrades[vals.god_status.current][bossUpgrade+tier];
-
+  let type = bossUpgrade;
+  if (bossUpgrade === 'click' || bossUpgrade === 'prod') type += tier;
   if(isUpgradeAvailable(bossUpgrade, tier)) {
-    upg.amount++;
-    vals.flame-=upg.cost; 
-    processHealthUpgrade(bossUpgrade, tier);
+    vals.pantheon.upgrades[vals.god_status.current][type].amount++;
+    vals.flame -= vals.pantheon.upgrades[vals.god_status.current][type].cost; 
+    processHealthUpgrade(bossUpgrade);
     processDamageUpgrade(bossUpgrade, tier);
-    upg.cost = set_item_cost(upg);
+    vals.pantheon.upgrades[vals.god_status.current][type].cost = set_item_cost(vals.pantheon.upgrades[vals.god_status.current][type]);
   }
 }
 
-function processHealthUpgrade(bossUpgrade, tier) {
-  pg = vals.pantheon.upgrades[tier][bossUpgrade];
+function processHealthUpgrade(bossUpgrade) {
+  let upg = vals.pantheon.upgrades[vals.god_status.current][bossUpgrade];
 
-  for( var k in vals.pantheon.bosses ) {
-    var boss = vals.pantheon.bosses[k];
+  for (let k in vals.pantheon.bosses) {
+    const boss = vals.pantheon.bosses[k];
 
-    if(bossUpgrade === 'max_hp') {
+    if (bossUpgrade === 'max_hp') {
       boss.max_hp *= upg.mul;
 
       if( boss.current_hp > boss.max_hp ) {
         boss.current_hp = boss.max_hp;
       }
-    } else {
+    } else if (bossUpgrade === 'regen') {
         boss.regen *= upg.mul;
     }
   }
 }
 
 function processDamageUpgrade(type, tier) {
-  upg = vals.pantheon.upgrades[tier][type + tier];
-  if(type === "click") {
+  let upg = vals.pantheon.upgrades[vals.god_status.current][type + tier];
+  if (type === "click") {
     //process upgrades for tick based dmg upgrades
     if (tier === '2') {
       vals.pantheon.dps += (vals.click * upg.mul);
@@ -2931,7 +2953,9 @@ function processDamageUpgrade(type, tier) {
 }
 
 function isUpgradeAvailable(bossUpgrade, tier) {
-    if( bossUpgrade === 'regen' || bossUpgrade === 'max_hp') {
+    let upg = vals.pantheon.upgrades[vals.god_status.current][bossUpgrade + tier];
+    if (bossUpgrade === 'regen' || bossUpgrade === 'max_hp') {
+      upg = vals.pantheon.upgrades[vals.god_status.current][bossUpgrade];
       return upg.amount < upg.max_amount && vals.flame >= upg.cost;
     } else {
       return tier === '1' && upg.amount < upg.max_amount && vals.flame >= upg.cost
@@ -3003,7 +3027,7 @@ class Click {
     }
   }
 
-  generateOffset(id) {
+generateOffset(id) {
     var yOffset = this.resolveVerticalOffset();
     if(id === '#miracle2_div') {
       yOffset *= 0.75;
@@ -3179,8 +3203,7 @@ function resolveTargetFor(miracle) {
   } else if(can_click(vals.events.superclick.active)) {
     target = $('.transcend_click:first').clone();
     html = '-' + truncate_bigint(perform_trans(vals.events.superclick.active)); 
-  } 
-  else {
+  } else {
     return;
   }
   target.html(html);
@@ -3210,7 +3233,7 @@ var bar_timer;
 
 function process_superclick(vals, iterations) {
     
-    if( iterations === 9 ) {
+    if (iterations === 9) {
       $('#superclick_bar').css('background-color', '');
       vals.events.superclick.click_num = 0;
       $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
@@ -3223,7 +3246,7 @@ function process_superclick(vals, iterations) {
     $('#superclick_bar').css('width', (100 - 10 * (iterations) )+ '%');
     vals.events.superclick.active = true;
 
-    if( iterations < 9 ) {
+    if (iterations < 9) {
       bar_timer = setTimeout(function() {
         process_superclick(vals,iterations);
       }, vals.tick);

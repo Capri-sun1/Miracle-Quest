@@ -63,21 +63,26 @@ var vals = {
         "label":"Improved Power",
         "description":"Your clicks are twice as powerful.",
         "amount":0,
-        "mul": 1 // powers of 2 - 2^1 = 2 etc.
+        "mul": 1,
+        "max": 3,
+        "req":0
       },
       "boss":{
         "label":"Boss Killer",
         "description":"You do 3x damage to bosses.",
         "amount":0,
-        "mul": 1
+        "mul": 1,
+        "max":5,
+        "req":0
       },
       "tier":{
         "label":"True Ascension",
         "description":"You Ascend to a new God status, with new unlocks but increased difficulty.",
-        "cost":50,
+        "cost":35,
         "amount":0,
         "mul":1, //this is actually addition..
-        "req":50
+        "req":35,
+        "max":5
       }
     }
   },
@@ -289,87 +294,87 @@ var vals = {
           "type":"Click amount",
             "upgrade1":{
               "label":"Basic telekinetics",
-              "description":"Limited control of Earthly forces doubles your Divine Power.",
+              "description":"Limited control of Earthly forces increases your Divine Power.",
               "unlocked":false,
               "cost":25,
-              "mul":2
+              "mul":1.25
             },
             "upgrade2":{
               "label":"Matter Manipulation",
-              "description":"A small amount of control over matter triples your Divine Power.",
+              "description":"A small amount of control over matter makes your Power swell.",
               "unlocked":false,
               "cost":150,
-              "mul":3
+              "mul":1.5
             },
             "upgrade3":{
               "label":"Transmogrification",
-              "description":"Conversion of animals into any shape triples your Divine Power.",
+              "description":"Convert entities into a form that enhances your Divine Power.",
               "unlocked":false,
               "cost":750,
-              "mul":3
+              "mul":1.75
             },
             "upgrade4":{
               "label":"Elementary conjuring",
-              "description":"Fledgling control of the elements triples your Divine power.",
+              "description":"Fledgling control of the elements doubles your Divine power.",
               "unlocked":false,
               "cost":3500,
-              "mul":3
+              "mul":2
             },
              "upgrade5":{
               "label":"Studying Holy texts",
-              "description":"Interpreting these ancient writings increases your Divine Power by 4 times.",
+              "description":"Interpreting these ancient writings increases your Divine Power by even more.",
               "unlocked":false,
               "cost":18500,
-              "mul":4
+              "mul":2.25
             },
              "upgrade6":{
               "label":"Burning the Holy texts",
               "description":"Read them, have you? Page-turners they were not.",
               "unlocked":false,
               "cost":80000,
-              "mul":4
+              "mul":2.5
             },
             "upgrade7":{
               "label":"Astral projection",
               "description":"A double of yourself to act on your command.",
               "unlocked":false,
               "cost":375000,
-              "mul":5
+              "mul":2.75
             },
             "upgrade8":{
               "label":"Benign possession",
               "description":"Controlling some of your followers' forms to further your purpose.",
               "unlocked":false,
               "cost":1000000,
-              "mul":5
+              "mul":3
             },
             "upgrade9":{
               "label":"Power siphoning",
               "description":"Enhancing your power by extracting it from the World.",
               "unlocked":false,
               "cost":9000000,
-              "mul":5
+              "mul":3.25
             },
             "upgrade10":{
               "label":"Void gathering",
               "description":"Retrieving power from the void of space.",
               "unlocked":false,
               "cost":70000000,
-              "mul":6
+              "mul":3.5
             },
             "upgrade11":{
               "label":"Chaotic ritual",
               "description":"Harnessing chaos energy to increase your power.",
               "unlocked":false,
               "cost":500000000,
-              "mul":6
+              "mul":4
             },
             "upgrade11":{
               "label":"Deal with the devil",
               "description":"Sacrifice some of your divinity for greater control over space.",
               "unlocked":false,
               "cost":4500000000,
-              "mul":8
+              "mul":5
             }
           },
           "2": {
@@ -379,63 +384,63 @@ var vals = {
               "description":"Training speeds up your perception of time passing.",
               "unlocked":false,
               "cost":500,
-              "mul":0.8
+              "mul":0.9
             },
             "upgrade2":{
                "label":"Mastered reflexes",
               "description":"Mastering your form speeds up your perception of time passing futher.",
               "unlocked":false,
               "cost":7500,
-              "mul":0.8
+              "mul":0.9
             },
             "upgrade3":{
                "label":"Shapeshifting",
               "description":"Transformation allows your perception of time passing to speed up futher.",
               "unlocked":false,
               "cost":50000,
-              "mul":0.8
+              "mul":0.9
             },
             "upgrade4":{
                "label":"Mind Control",
               "description":"Convincing your followers that time is passing at a faster rate.",
               "unlocked":false,
               "cost":125000,
-              "mul":0.8
+              "mul":0.9
             },
             "upgrade5":{
                "label":"Gravity bending",
               "description":"Using gravity to change how time flows.",
               "unlocked":false,
               "cost":1600000,
-              "mul":0.8
+              "mul":0.88
             },
             "upgrade6":{
                "label":"God's stopwatch",
               "description":"Your newest toy new from the box.",
               "unlocked":false,
               "cost":20000000,
-              "mul":0.8
+              "mul":0.88
             },
             "upgrade7":{
                "label":"The Mandela Effect",
               "description":"Reverse time and change what you wish - but only something small.",
               "unlocked":false,
               "cost":250000000,
-              "mul":0.8
+              "mul":0.87
             },
             "upgrade8":{
                "label":"Keys to the car",
               "description":"Stolen keys to a working time machine.",
               "unlocked":false,
               "cost":1000000000,
-              "mul":0.8
+              "mul":0.87
             },
             "upgrade8":{
                "label":"Demon's paw",
               "description":"A monkey's paw - but far more potent.",
               "unlocked":false,
               "cost":50000000000,
-              "mul":0.7
+              "mul":0.85
             }
           },
           "3" : {
@@ -486,48 +491,48 @@ var vals = {
                 "click1":{
                   "label":"Damage x1.5/click",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":1.5,
+                  "cost":1.5,
                   "mul":1.5,
                   "max_amount":8
                 },
                 "prod1":{
                   "label":"Damage +0.15x energy prod",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2,
+                  "cost":2,
                   "mul":0.15,
                   "max_amount":8
                 },
                 "click2":{
                   "label":"Deal +0.025x Divine Power/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2,
+                  "cost":2,
                   "mul":0.025,
                   "max_amount":8
                 },
                 "prod2":{
                   "label":"Deal +0.1 Energy Prod/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2,
+                  "cost":2,
                   "mul":0.1,
                   "max_amount":8
                 },
                 "max_hp":{
                   "label":"Boss Max Hp &darr;10%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.5,
+                  "cost":2.5,
                   "mul":0.8,
                   "max_amount":6
                 },
                 "regen":{
                   "label":"Boss Regen &darr;20%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.5,
+                  "cost":1,
                   "mul":0.8,
                   "max_amount":5
                 }
@@ -537,49 +542,49 @@ var vals = {
                 "click1":{
                   "label":"Damage x1.75/click",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":1.75,
+                  "cost":1.75,
                   "mul":1.75,
                   "max_amount":8
                 },
                 "prod1":{
                   "label":"Damage +0.05x energy prod",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.25,
+                  "cost":2.25,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "click2":{
                   "label":"Deal +0.01x Divine Power/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.75,
+                  "cost":2.75,
                   "mul":0.01,
                   "max_amount":8
                 },
                 "prod2":{
                   "label":"Deal +0.05 Energy Prod/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.75,
+                  "cost":2.75,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "max_hp":{
-                  "label":"Boss Max Hp &darr;10%",
+                  "label":"Boss Max Hp &darr;15%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
-                  "mul":0.9,
+                  "base_cost":3,
+                  "cost":3,
+                  "mul":0.85,
                   "max_amount":6
                 },
                 "regen":{
-                  "label":"Boss Regen &darr;20%",
+                  "label":"Boss Regen &darr;25%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
-                  "mul":0.8,
+                  "base_cost":1.25,
+                  "cost":1.25,
+                  "mul":0.75,
                   "max_amount":5
                 }
               },
@@ -587,49 +592,49 @@ var vals = {
                 "click1":{
                   "label":"Damage x2/click",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2,
+                  "cost":2,
                   "mul":2,
                   "max_amount":8
                 },
                 "prod1":{
                   "label":"Damage +0.05x energy prod",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.5,
+                  "cost":2.5,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "click2":{
                   "label":"Deal +0.01x Divine Power/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.5,
+                  "cost":2.5,
                   "mul":0.01,
                   "max_amount":8
                 },
                 "prod2":{
                   "label":"Deal +0.05 Energy Prod/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.5,
+                  "cost":2.5,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "max_hp":{
-                  "label":"Boss Max Hp &darr;10%",
+                  "label":"Boss Max Hp &darr;20%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
-                  "mul":0.9,
+                  "base_cost":3.5,
+                  "cost":3.5,
+                  "mul":0.8,
                   "max_amount":6
                 },
                 "regen":{
-                  "label":"Boss Regen &darr;20%",
+                  "label":"Boss Regen &darr;30%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
-                  "mul":0.8,
+                  "base_cost":1.5,
+                  "cost":1.5,
+                  "mul":0.7,
                   "max_amount":5
                 }
               },
@@ -637,49 +642,49 @@ var vals = {
                 "click1":{
                   "label":"Damage x2.5/click",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.25,
+                  "cost":2.25,
                   "mul":2.5,
                   "max_amount":8
                 },
                 "prod1":{
                   "label":"Damage +0.05x energy prod",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.75,
+                  "cost":2.75,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "click2":{
                   "label":"Deal +0.01x Divine Power/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.75,
+                  "cost":2.75,
                   "mul":0.01,
                   "max_amount":8
                 },
                 "prod2":{
                   "label":"Deal +0.05 Energy Prod/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":2.75,
+                  "cost":2.75,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "max_hp":{
-                  "label":"Boss Max Hp &darr;10%",
+                  "label":"Boss Max Hp &darr;25%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
-                  "mul":0.9,
+                  "base_cost":4,
+                  "cost":4,
+                  "mul":0.75,
                   "max_amount":6
                 },
                 "regen":{
-                  "label":"Boss Regen &darr;20%",
+                  "label":"Boss Regen &darr;35%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
-                  "mul":0.8,
+                  "base_cost":1.75,
+                  "cost":1.75,
+                  "mul":0.65,
                   "max_amount":5
                 }
               },
@@ -687,49 +692,49 @@ var vals = {
                 "click1":{
                   "label":"Damage x3/click",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":3,
+                  "cost":3,
                   "mul":3,
                   "max_amount":8
                 },
                 "prod1":{
                   "label":"Damage +0.05x energy prod",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":3.5,
+                  "cost":3.5,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "click2":{
                   "label":"Deal +0.01x Divine Power/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":3.5,
+                  "cost":3.5,
                   "mul":0.01,
                   "max_amount":8
                 },
                 "prod2":{
                   "label":"Deal +0.05 Energy Prod/Tick",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
+                  "base_cost":3.5,
+                  "cost":3.5,
                   "mul":0.05,
                   "max_amount":8
                 },
                 "max_hp":{
-                  "label":"Boss Max Hp &darr;10%",
+                  "label":"Boss Max Hp &darr;30%",
                   "amount":0,
                   "base_cost":5,
                   "cost":5,
-                  "mul":0.9,
+                  "mul":0.7,
                   "max_amount":6
                 },
                 "regen":{
-                  "label":"Boss Regen &darr;20%",
+                  "label":"Boss Regen &darr;40%",
                   "amount":0,
-                  "base_cost":5,
-                  "cost":5,
-                  "mul":0.8,
+                  "base_cost":2,
+                  "cost":2,
+                  "mul":0.6,
                   "max_amount":5
                 }
               }
@@ -1106,15 +1111,26 @@ function handleSecondsIdle(diffInSeconds) {
   //offline production much slower - hardcoded for now.
   if(isNaN(diffInSeconds) === false) {
     const values = [Math.round((diffInSeconds * corrected_prod)/2), Math.round((diffInSeconds * total_loss)/2)];
-    vals.followers +=  values[0];
-    vals.energy += values[1];
-
-    generateToastMessage("Gained: " + truncate_bigint(values[1]) + " energy,\n" + truncate_bigint(values[0]) + " followers since your last visit.","Welcome back!");
+    const choice = Math.floor(Math.random() * (2));
+    let diff = values
+      .filter(arr => arr !== 0)
+      .map((arr) => arr/=7.5)
+      .reduce((a, b) => a + b, 0);
+    addIdleValueTo(choice, diff);
   }
 }
-//need to account for negative follower production
-function handleValuesFromIdle(values) {
 
+function addIdleValueTo(index, diff) {
+  let message = "";
+  if (index === 0) {
+    vals.followers += diff;
+    message += " followers,\n";
+  } else {
+    vals.energy += diff;
+    message += " energy,\n";
+  }
+
+  generateToastMessage("\nYou were granted " + truncate_bigint(diff) + message + " upon visiting!", "Welcome Present");
 }
 
 function setupAudio() {
@@ -1159,30 +1175,54 @@ $(document).on('click','#playing', function(event) {
   $('#playing').toggleIcon('<span class="glyphicon glyphicon-volume-up"></span>', offHtml);
 });
 
-  function setupContainers() {
-    var width = $(window).width();
-    var height = $(window).height();
-    $('#miracle_lbl').text("Divine energy ");
-    $('#upgrades-box').css("height", height * 0.8);
-    $('#upgrades-box').css("margin-right", width * 0.25);
-    $('#upgrades-box').css("width", width * 0.65);
-    upgrade_box_size = $('#upgrades-box').css('height');
-    $('.reset').prop('disabled', true);
-    $('#tier_btn_1').prop('disabled', true);
+function setupContainers() {
+  var width = $(window).width();
+  var height = $(window).height();
+  $('#miracle_lbl').text("Divine energy ");
+  $('#upgrades-box').css("height", height * 0.8);
+  $('#upgrades-box').css("margin-right", width * 0.25);
+  $('#upgrades-box').css("width", width * 0.65);
+  upgrade_box_size = $('#upgrades-box').css('height');
+  $('.reset').prop('disabled', true);
+  $('#tier_btn_1').prop('disabled', true);
+}
+
+function start_game() {
+  fix_names(vals);
+  game_engine(0, 0);
+}
+
+const matched = x => ({
+  on: () => matched(x),
+  otherwise: () => x,
+})
+
+const match = x => ({  
+  on: (pred, fn) => (pred(x) ? matched(fn(x)) : match(x)),
+  otherwise: fn => fn(x),
+})
+
+function set_item_cost(item) {
+  let amount_multiplier = 2.0;
+
+  if (item.amount >= 1) {
+    item.output = match((item.amount))
+    .on(x => x < 10, () => item.output * 1 + (item.amount/100))
+    .on(x => x < 25 && x > 10, () => item.output * 1 + (item.amount/75))
+    .on(x => x < 50 && x > 25, () => item.output * 1 + (item.amount/50))
+    .on(x => x < 100 && x > 50, () => item.output * 1 + (item.amount/25))
+    .otherwise(x => item.output * 1 + (item.amount/10));
+    amount_multiplier = 2 + item.amount * (item.amount*0.15);  
+    if (item.amount % 10 === 0) {
+      generateToastMessage("Further purchases of this item are more valuable.", "Milestone reached!");
+    }
   }
 
-  function start_game() {
-    fix_names(vals);
-    game_engine(0, 0);
-  }
+  const status_multiplier = vals.god_status[vals.god_status.current].mul;
+  const newCost = amount_multiplier * (status_multiplier * item.base_cost);
 
-  function set_item_cost(item) {
-    const amount_multipler = item.amount === 1 ? 2.0 : 2 + item.amount * (item.amount*0.15);  
-    const status_multiplier = vals.god_status[vals.god_status.current].mul;
-    const newCost = amount_multipler * (status_multiplier * item.base_cost);
-
-    return Math.round(newCost * 0.9);
-  }
+  return Math.round(newCost * 0.9);
+}
 
   function game_engine(iterations, cycles) {
     var mul = vals.god_status[vals.god_status.current].mul;
@@ -1292,9 +1332,8 @@ $(document).on('click','#playing', function(event) {
   function handleBossMovement(currentBoss) {
     if(currentBoss === 'boss1') {
       $('#battle_1').css('-webkit-animation', 'rotation 10s infinite linear');
-    }
-    else {
-      $('#battle_1').css('-webkit-animation', 'none');
+    } else {
+      $('#battleitem.amount_1').css('-webkit-animation', 'none');
     }
   }
 
@@ -1402,6 +1441,7 @@ $(document).on('click','#playing', function(event) {
         if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
     }
   }
+
   function upgradesAndAchievementsToJson(save) {
         var tiered = {
           "upgrades":"up",
@@ -1795,14 +1835,24 @@ $(document).on('click','#playing', function(event) {
           }
         }
     }
-   if( vals.current_tab === 'Leap' ) {
-    var id = $('.wrap-nav').attr('id');
-    var tier = id.substr(id.length-1);
-      if (vals.flame >= vals.leap[tier]['tier'].req && parseInt(vals.god_status.current) < 5) {
-        $('#tier_btn_' + tier).prop('disabled', false);  
-      }  
-      else $('#tier_btn_' + tier).prop('disabled', true);    
-   }
+    if( vals.current_tab === 'Leap' ) {
+      const leapUpgrades = ['click', 'boss', 'tier'];
+      for (upg in leapUpgrades) {
+        let leapUpgrade = leapUpgrades[upg];
+        const id = $('.wrap-nav').attr('id');
+        const tier = id.substr(id.length-1);
+        if (vals.flame >= vals.leap[tier][leapUpgrade].req 
+          && vals.leap[tier][leapUpgrade].amount < (vals.leap[tier][leapUpgrade].max + (parseInt(vals.god_status.current)-1))) {
+          $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', false);  
+          if (leapUpgrades !== 'tier') {
+            $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', leapUpgrade + " potency increase");
+          }
+        } else {
+          $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', true); 
+          $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Max number purchased.");
+        }   
+      }
+    }
   }
 
   function fix_tab_buttons(vals) {
@@ -1979,7 +2029,7 @@ function fix_corruption_bar(cor) {
 }
 
 function set_corruption_color(desiredColor) {
-  $('#corruption_bar').css('background-color', 'desiredColor');
+  $('#corruption_bar').css('background-color', desiredColor);
 }
 
 function fix_corruption_text(corruption) {
@@ -2183,7 +2233,7 @@ function fix_challenges(vals) {
 }
 
   /**
-   * Really bad code ends.
+   * (more) bad code ends.
    */
 
 function doLeap(vals) {
@@ -2195,7 +2245,7 @@ function doLeap(vals) {
     vals.god_status.current++;
   } else {
     chosen.amount++;
-  }
+  } 
 
   const save = saveForLeap();
   localStorage.sv1 = btoa(JSON.stringify(save));
@@ -2284,6 +2334,7 @@ $(document).on("click", ".purchase", function() {
     try {
     	event.action();
     } catch(EventActionEcception) {
+      console.log(EventActionEcception);
     	console.log('Error occured while processing event triggered by:- ' + btn);
     }
 

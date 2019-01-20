@@ -410,7 +410,7 @@ div.scroll_tabs button:hover {
 }
 .purchase {
     border: none;
-    background-image: url('../data/preview18.png');
+    background-color: #000;
     color: white;
     padding: 8px 8px;
     text-align: center;
@@ -420,8 +420,6 @@ div.scroll_tabs button:hover {
     border-radius: 2px;
 }
 .purchase:hover {
-  background-color: #E3F2FD;
-  color: #fff;
   padding: 6px 6px;
   border: 2px solid  #880E4F;
 }
@@ -626,8 +624,6 @@ nav ul li {
   border: 2px solid  #880E4F;
 }
 .sell:hover {
-  background-color: #E3F2FD;
-  color: #fff;
   padding: 6px 14px;
   border: 2px solid  #880E4F;
 }
@@ -645,7 +641,7 @@ nav ul li {
 }
 .sell {
     border: none;
-    background-image:url('../data/preview18.png');
+    background-color: #000;
     color: white;
     padding: 8px 16px;
     text-align: center;

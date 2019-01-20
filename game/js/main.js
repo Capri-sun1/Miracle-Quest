@@ -78,7 +78,7 @@ var vals = {
       "tier":{
         "label":"True Ascension",
         "description":"You Ascend to a new God status, with new unlocks but increased difficulty.",
-        "cost":35,
+        "cost":25,
         "amount":0,
         "mul":1,
         "req":25,
@@ -533,7 +533,7 @@ var vals = {
                   "max_amount":8
                 },
                 "prod2":{
-                  "label":"Deal +0.1 Energy Prod/Tick",
+                  "label":"Deal +0.1x Energy Prod/Tick",
                   "amount":0,
                   "base_cost":2,
                   "cost":2,
@@ -584,7 +584,7 @@ var vals = {
                   "max_amount":8
                 },
                 "prod2":{
-                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "label":"Deal +0.05x Energy Prod/Tick",
                   "amount":0,
                   "base_cost":2.75,
                   "cost":2.75,
@@ -634,7 +634,7 @@ var vals = {
                   "max_amount":8
                 },
                 "prod2":{
-                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "label":"Deal +0.05x Energy Prod/Tick",
                   "amount":0,
                   "base_cost":2.5,
                   "cost":2.5,
@@ -684,7 +684,7 @@ var vals = {
                   "max_amount":8
                 },
                 "prod2":{
-                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "label":"Deal +0.05x Energy Prod/Tick",
                   "amount":0,
                   "base_cost":2.75,
                   "cost":2.75,
@@ -734,7 +734,7 @@ var vals = {
                   "max_amount":8
                 },
                 "prod2":{
-                  "label":"Deal +0.05 Energy Prod/Tick",
+                  "label":"Deal +0.05x Energy Prod/Tick",
                   "amount":0,
                   "base_cost":3.5,
                   "cost":3.5,
@@ -1524,13 +1524,13 @@ function pantheonToJson(save) {
 function get_valsFromJSON(save) {
         vals.energy = parseInt(save.e,16);
         vals.prod = save.p;
-        vals.click = save.cl;
+        vals.click = parseInt(save.cl);
         vals.followers = parseInt(save.f, 16);
         vals.loss = save.l;
         vals.corruption = parseInt(save.c, 16);
         vals.achievement_multiplier = save.ac;
         vals.tick = parseInt(save.t, 16);
-        vals.flame = save.fl;
+        vals.flame = parseInt(save.fl);
         vals.pantheon.damage = parseInt(save.dam,16);
         vals.sacrifice.unlocked = save.sac;
         vals.pantheon.dps = save.dps;
@@ -1840,37 +1840,39 @@ function deleteSave() {
       }
     }
    }
-   if( vals.current_tab === 'Pantheon') {
-    if( !vals.pantheon.unlocked ) return;
-      var boss_num = parseInt(vals.pantheon.stage) + 1;
-      if( boss_num > 1 ) {
+   if (vals.current_tab === 'Pantheon') {
+    if (!vals.pantheon.unlocked) return;
+      let boss_num = parseInt(vals.pantheon.stage) + 1;
+      if(boss_num > 1) {
         $('#prev_boss').prop('disabled', false);
         $('#prev_boss').css('display', "inline-block");  
-      }
-      else {
+      } else {
         $('#prev_boss').prop('disabled', true);
         $('#prev_boss').css('display', "none");  
       }
 
-      var defeated = vals.pantheon.bosses['boss' + String(boss_num)].defeated;
-      if( boss_num >= parseInt(vals.god_status[vals.god_status.current].max_tier) || defeated != true ) {
+      let defeated = vals.pantheon.bosses['boss' + String(boss_num)].defeated;
+      if (boss_num >= parseInt(vals.god_status[vals.god_status.current].max_tier) || defeated != true) {
         $('#next_boss').prop('disabled', true);
         $('#next_boss').css('display', "none");  
-      }
-      else {
+      } else {
         $('#next_boss').prop('disabled', false);
         $('#next_boss').css('display', "inline-block");  
       }
-       for( var k in vals.pantheon.upgrades ) {
-           for( var i in vals.pantheon.upgrades[k] ) {
-             var item = vals.pantheon.upgrades[k][i];
+       for (let k in vals.pantheon.upgrades) {
+           for (let i in vals.pantheon.upgrades[k]) {
+              let item = vals.pantheon.upgrades[vals.god_status.current][i];
               var id = '#';
-              if( i.includes('hp') || i.includes('regen')  ) id += i + '_' + k.substr(k.length-1);
-              else id += i.substr(0, i.length-1) + '_' + i.substr(i.length-1);
-              if( vals.flame >= item.cost && item.amount < item.max_amount ) {
-                  $(id).prop('disabled', false);
+              if (i.includes('hp') || i.includes('regen')) {
+                id += i + '_' + k.substr(k.length-1);
+              } else {
+                id += i.substr(0, i.length-1) + '_' + i.substr(i.length-1);
               }
-              else $(id).prop('disabled', true);
+              if (vals.flame >= item.cost && item.amount < item.max_amount) {
+                  $(id).prop('disabled', false);
+              } else {
+                $(id).prop('disabled', true);
+              }
           }
         }
     }
@@ -1883,12 +1885,18 @@ function deleteSave() {
         if (vals.flame >= vals.leap[tier][leapUpgrade].req 
           && vals.leap[tier][leapUpgrade].amount < (vals.leap[tier][leapUpgrade].max + (parseInt(vals.god_status.current)-1))) {
           $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', false);  
-          if (leapUpgrades !== 'tier') {
+          if (leapUpgrade !== 'tier') {
             $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', leapUpgrade + " potency increase");
+          } else {
+            $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Ascend your divinity.");
           }
         } else {
           $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', true); 
-          $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Max number purchased.");
+          if (leapUpgrade !== 'tier') {
+            $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Max number purchased.");
+          } else {
+            $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Insufficent essence.");
+          }
         }   
       }
     }
@@ -2038,7 +2046,7 @@ function fix_pantheon(vals) {
       for (let i in vals.pantheon.upgrades[k]) {
         let item = vals.pantheon.upgrades[k][i];
         if(!i.includes('hp') && !i.includes('regen')) {
-          if( $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '' )
+          if($('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '')
             $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
         } else {
           if( $('#shop_' + i).html() === '' ) {
@@ -2309,7 +2317,7 @@ function staticLeapValuesToJson() {
     let save = {
         'e':0,
         'p':0,
-        'cl':totalClickMul.toString(16),
+        'cl':totalClickMul,
         'f':0,
         'l':0,
         'c':0,
@@ -2460,8 +2468,8 @@ class Upgrader extends Action {
     const purchase = btn.substr(btn.indexOf('_btn_') + 5, btn.indexOf('_btn_') + 5);
     const purchaseType = vals.upgrades[purchase[0]].type;
 
-    if(purchaseType === "Click amount") return new ClickUpgrade(btn, purchase);
-    else if(purchaseType === "Tick speed") return new TickUpgrade(btn, purchase);
+    if (purchaseType === "Click amount") return new ClickUpgrade(btn, purchase);
+    else if (purchaseType === "Tick speed") return new TickUpgrade(btn, purchase);
     else return new LeapUpgrade(btn, purchase);
   }
 }
@@ -2508,7 +2516,7 @@ class LeapUpgrade extends Upgrade {
   action() {
     super.action();
     vals.leap.unlocked = true;
-    $.toaster({message:"Don't go quietly into the good night.",title:"Quantum leap unlocked"})
+    $.toaster({message:"Don't go quietly into the good night.", title:"Quantum leap unlocked"})
   }
 }
 
@@ -2608,7 +2616,7 @@ class MixedSacrifice extends Sacrifice {
 	action() {
         vals.followers-= vals.sacrifice['sacrifice2'].cost;
         vals.energy-= vals.sacrifice['sacrifice2'].cost;
-        vals.corruption +=15;
+        vals.corruption += 15;
         generateToastMessage("Your power has intensified.","Sacrifice")
         super.action();
 	}
@@ -2934,9 +2942,13 @@ function fixBossUpgrades() {
   const buttons = ["click_1", "prod_1", "click_2", "prod_2", "max_hp", "regen"];
   for (let i = 0; i < buttons.length; i++) {
     let id = buttons[i];
-    if (i > 3) choice = id;
-    else choice = id.substr(0, id.search(/\d/) -1) + id.substr(id.search(/\d/));
-    $('#' + id).html('Purchase ' + upg[choice].cost + '<span class="glyphicon glyphicon-fire"></span>');
+    if (i > 3) {
+      choice = id;
+      $('#' + id + '_1').html('Purchase ' + upg[choice].cost + '<span class="glyphicon glyphicon-fire"></span>');
+    } else {
+      choice = id.substr(0, id.search(/\d/) -1) + id.substr(id.search(/\d/));
+      $('#' + id).html('Purchase ' + upg[choice].cost + '<span class="glyphicon glyphicon-fire"></span>');
+    }
   }
 }
 
@@ -3163,12 +3175,12 @@ function updateBossStats(boss) {
 
   boss.max_hp *= generalMultiplier;
   boss.current_hp = boss.max_hp;
-  boss.regen *= (generalMultiplier + 0.5);
+  boss.regen *= (generalMultiplier + 0.2);
 }
 
 function handleBossMultiplier(firstVictory) {
   let generalMultiplier = firstVictory === true ? 2.5 : 1.5;
-  generalMultiplier += 0.5 + vals.god_status.current/5.0;
+  generalMultiplier += 0.4 + vals.god_status.current/10.0;
 
   return generalMultiplier;
 }

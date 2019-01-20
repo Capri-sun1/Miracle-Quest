@@ -7,7 +7,8 @@ var vals = {
     "superclick": {
       "click_num":0,
       "active":false,
-      "mul": 2
+      "mul": 2,
+      "max_clicks":100
     }
   },
   "stats" :{
@@ -65,24 +66,24 @@ var vals = {
         "amount":0,
         "mul": 2,
         "max": 3,
-        "req":0
+        "req": 0
       },
       "boss":{
         "label":"Boss Killer",
         "description":"You do increased damage to bosses.",
         "amount":0,
         "mul": 4,
-        "max":5,
-        "req":0
+        "max": 5,
+        "req": 0
       },
       "tier":{
         "label":"True Ascension",
         "description":"You Ascend to a new God status, with new unlocks but increased difficulty.",
-        "cost":25,
-        "amount":0,
-        "mul":1,
-        "req":25,
-        "max":5
+        "cost": 30,
+        "amount": 0,
+        "mul": 1,
+        "req": 30,
+        "max": 5
       }
     }
   },
@@ -161,7 +162,7 @@ var vals = {
                 "base_output":7500,
                 "base_cost":800000,
                 "cost":800000,
-                "unlock_rps":1175.0,
+                "unlock_rps":1400.0,
                 "unlocked":false,
             },
             "purchase8":{
@@ -172,7 +173,7 @@ var vals = {
                 "base_output":30000,
                 "base_cost":5000000,
                 "cost":5000000,
-                "unlock_rps":8500.0,
+                "unlock_rps":10000.0,
                 "unlocked":false,
             },
             "purchase9":{
@@ -190,14 +191,15 @@ var vals = {
                 "label":"Planet of the apes",
                 "description":"Influence an entire planet's population.",
                 "amount":0,
-                "output":2000000,
-                "base_output":2000000,
+                "output":200000000,
+                "base_output":200000000,
                 "base_cost":6000000000,
                 "cost":6000000000,
-                "unlock_rps":160000.0,
+                "unlock_rps":200000.0,
                 "unlocked":false,
             }
-    },  "ascend":{
+         },  
+         "ascend":{
             "ascend1":{
                 "label":"Step-in-booth",
                 "description":"An univiting small booth to slowly process followers.",
@@ -272,7 +274,7 @@ var vals = {
                 "base_output":7500,
                 "base_cost":1000000,
                 "cost":1000000,
-                "unlock_rps":1175.0,
+                "unlock_rps":1400.0,
                 "unlocked":false,
             },
             "ascend8":{
@@ -283,7 +285,7 @@ var vals = {
                 "base_output":30000,
                 "base_cost":6000000,
                 "cost":6000000,
-                "unlock_rps":8500.0,
+                "unlock_rps":10000.0,
                 "unlocked":false,
             }, 
             "ascend9":{
@@ -301,11 +303,11 @@ var vals = {
                 "label":"Staff of destiny",
                 "description":"Staff which grants the wielder full control over the minds of mortals.",
                 "amount":0,
-                "output":2500000,
-                "base_output":2500000,
+                "output":250000000,
+                "base_output":250000000,
                 "base_cost":8000000000,
                 "cost":8000000000,
-                "unlock_rps":210000.0,
+                "unlock_rps":225000.0,
                 "unlocked":false,
             }
   },
@@ -316,85 +318,85 @@ var vals = {
               "label":"Basic telekinetics",
               "description":"Limited control of Earthly forces increases your Divine Power.",
               "unlocked":false,
-              "cost":25,
-              "mul":1.4
+              "cost":75,
+              "mul":1.6
             },
             "upgrade2":{
               "label":"Matter Manipulation",
               "description":"A small amount of control over matter makes your Power swell.",
               "unlocked":false,
-              "cost":150,
-              "mul":1.8
+              "cost":400,
+              "mul":2
             },
             "upgrade3":{
               "label":"Transmogrification",
               "description":"Convert entities into a form that enhances your Divine Power.",
               "unlocked":false,
-              "cost":750,
-              "mul":2.2
+              "cost":2750,
+              "mul":2.4
             },
             "upgrade4":{
               "label":"Elementary conjuring",
               "description":"Fledgling control of the elements doubles your Divine power.",
               "unlocked":false,
-              "cost":3500,
-              "mul":2.6
+              "cost":12500,
+              "mul":2.8
             },
              "upgrade5":{
               "label":"Studying Holy texts",
               "description":"Interpreting these ancient writings increases your Divine Power by even more.",
               "unlocked":false,
-              "cost":18500,
-              "mul":3
+              "cost":80000,
+              "mul":3.2
             },
              "upgrade6":{
               "label":"Burning the Holy texts",
               "description":"Read them, have you? Page-turners they were not.",
               "unlocked":false,
-              "cost":80000,
-              "mul":3.4
+              "cost":500000,
+              "mul":3.6
             },
             "upgrade7":{
               "label":"Astral projection",
               "description":"A double of yourself to act on your command.",
               "unlocked":false,
-              "cost":375000,
-              "mul":3.8
+              "cost":3000000,
+              "mul":4.2
             },
             "upgrade8":{
               "label":"Benign possession",
               "description":"Controlling some of your followers' forms to further your purpose.",
               "unlocked":false,
-              "cost":1000000,
-              "mul":4.2
+              "cost":20000000,
+              "mul":5
             },
             "upgrade9":{
               "label":"Power siphoning",
               "description":"Enhancing your power by extracting it from the World.",
               "unlocked":false,
-              "cost":9000000,
-              "mul":4.6
+              "cost":130000000,
+              "mul":5.8
             },
             "upgrade10":{
               "label":"Void gathering",
               "description":"Retrieving power from the void of space.",
               "unlocked":false,
-              "cost":70000000,
-              "mul":5
+              "cost":1000000000,
+              "mul":6.75
             },
             "upgrade11":{
               "label":"Chaotic ritual",
               "description":"Harnessing chaos energy to increase your power.",
               "unlocked":false,
-              "cost":800000000,
-              "mul":6
+              "cost":9000000000,
+              "mul":8
             },
             "upgrade11":{
               "label":"Deal with the devil",
               "description":"Sacrifice some of your divinity for greater control over space.",
               "unlocked":false,
-              "cost":9000000000,
-              "mul":8
+              "cost":120000000000,
+              "mul":10
             }
           },
           "2": {
@@ -445,7 +447,7 @@ var vals = {
                "label":"The Mandela Effect",
               "description":"Reverse time and change what you wish - but only something small.",
               "unlocked":false,
-              "cost":250000000,
+              "cost":21000000,
               "mul":0.87
             },
             "upgrade8":{
@@ -464,13 +466,63 @@ var vals = {
             }
           },
           "3" : {
+            "type": "Quantum Leap",
             "upgrade1":{
               "label":"Unlock Quantum Leap",
               "description":"To infinity and beyond",
               "unlocked":false,
-              "cost":15000000000
+              "cost":200000000000,
+              "mul":" infinity"
             }
-          }
+          },
+          "4" : {
+            "type":"superclick_mul",
+            "upgrade1":{
+              "label":"Fight or flight",
+              "description":"You feel adrenaline surging through you as you click.",
+              "unlocked":false,
+              "cost":20000,
+              "mul":1.5
+            },
+            "upgrade2":{
+              "label":"Toughened leather",
+              "description":"Fire resistant gloves allow you to click faster.",
+              "unlocked":false,
+              "cost":7500000,
+              "mul":1.75
+            },
+            "upgrade3":{
+              "label":"A gift from Zeus",
+              "description":"Power over lightning for a brief time.",
+              "unlocked":false,
+              "cost":250000000,
+              "mul":2.0
+            },
+            "upgrade4":{
+              "label":"Dark matter gauntlets",
+              "description":"They come in any colour - as long as they're dark.",
+              "unlocked":false,
+              "cost":55000000000,
+              "mul":2.5
+            }
+          },
+            "5" : {
+              "type":"superclick_length",
+              "upgrade1": {
+                "label":"Star visor",
+                "description":"Glasses that change your perception of the World.",
+                "unlocked":false,
+                "cost":625000,
+                "mul":1.5
+              },
+              "upgrade2": {
+                "label":"Gravitational filaments",
+                "description":"Bend space-time, but just for a short time.",
+                "unlocked":false,
+                "cost":1150000000,
+                "mul":2
+              }
+            }
         },
             //think about creating 'god-battle' mode!
           "sacrifice": {
@@ -765,7 +817,7 @@ var vals = {
               "boss1":{
                 "max_hp": 1000000,
                 "current_hp":1000000,
-                "regen":100,
+                "regen":200,
                 "reward":1000000,
                 "current":true,
                 "name":"Temporal aberration",
@@ -871,7 +923,7 @@ var vals = {
               "label":"Iceland x 3",
               "description":"You've gained 1M followers through your miracles.",
               "val_req":1000000
-              }
+              },
             },
              "challenge2":{
               "required_type":'click_a',
@@ -985,15 +1037,15 @@ var vals = {
                 "description":"You've gained your first 4th tier Conversion facilities.",
                 "req_tier":4,
                 "req_num":1
-              },
-              "3" : {
-              "visible":false,  
-              "unlocked":false,
-              "label":"Someday they'll have dreams",
-              "description":"You've gained your first 8th tier Conversion point.",
-              "req_tier":8,
-              "req_num":1
-              }
+                },
+                "3" : {
+                "visible":false,  
+                "unlocked":false,
+                "label":"Someday they'll have dreams",
+                "description":"You've gained your first 8th tier Conversion point.",
+                "req_tier":8,
+                "req_num":1
+                }
             },
             "challenge5":{
               "required_type":'sac',
@@ -1215,7 +1267,7 @@ function set_item_cost(item) {
   if (item.amount >= 1) {
     let multiplier = 1;
     const values = [[0, 10, 5], [10, 25, 2.5], [25, 50, 1], [50, 75, 0.5], 
-                  [75, 100, 0.25], [100, 200, 0.1], [200, 350, 0.04], [350, 500, 0.01]];
+                  [75, 100, 0.25], [100, 200, 0.1], [200, 350, 0.04], [350, 500, 0.01], [500, 10000, 0.004]];
     for (let i = 0; i < values.length; i++) {
       const lowerBound = values[i][0];
       const upperBound = values[i][1];
@@ -1351,7 +1403,7 @@ function set_item_cost(item) {
     if(currentBoss === 'boss1') {
       $('#battle_1').css('-webkit-animation', 'rotation 10s infinite linear');
     } else {
-      $('#battleitem.amount_1').css('-webkit-animation', 'none');
+      $('#battle_1').css('-webkit-animation', 'none');
     }
   }
 
@@ -1419,7 +1471,9 @@ function staticValuesToJson() {
         'dps':vals.pantheon.dps,
         "stage":vals.pantheon.stage.toString(16),
         "asc":vals.leap.unlocked,
-        "time":new Date()
+        "time":new Date(),
+        "sc":vals.events.superclick.mul,
+        "sm":vals.events.superclick.max_clicks
   };
  	return save;
 }
@@ -1536,6 +1590,8 @@ function get_valsFromJSON(save) {
         vals.pantheon.dps = save.dps;
         vals.pantheon.stage = parseInt(save.stage, 16);
         vals.leap.unlocked = save.asc;
+        vals.events.superclick.mul = parseInt(save.sc);
+        vals.events.superclick.max_clicks = parseInt(save.sm);
         if( save.tier ) vals.god_status.current = parseInt(save.tier,16);
         lastTime = save.time;
 
@@ -1905,11 +1961,11 @@ function deleteSave() {
   function fix_tab_buttons(vals) {
     var unlock_conv = 0, unlock_ascend = 0, unlock_aug = 0;
     var total_conv = 0, total_ascend = 0, total_aug = 0;
-      for( var k in vals.upgrades ){
-        for( var i in vals.upgrades[k] ){
-          if( vals.upgrades[k][i].unlocked ) unlock_aug++;
-          if( vals.upgrades[k][i] != "Click amount" && vals.upgrades[k][i] != "Tick speed" ) total_aug++;
-          }
+      for (let k in vals.upgrades) {
+        for (let i in vals.upgrades[k]) {
+          if (vals.upgrades[k][i].unlocked ) unlock_aug++;
+          if (vals.upgrades[k][i] != "Click amount" && vals.upgrades[k][i] != "Tick speed") total_aug++;
+        }
       }
       for( var k in vals.miracle ) {
         if( vals.miracle[k].unlocked ) unlock_conv++;
@@ -1920,10 +1976,10 @@ function deleteSave() {
         total_ascend ++;
       }
     $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/26");
-    $('#augment-tab-text').text("Upgrade " + unlock_aug + "/20");
+    $('#augment-tab-text').text("Upgrade " + unlock_aug + "/28");
     $('#convert-tab-text').text("Create " + unlock_conv + "/" + total_conv);
     $('#ascend-tab-text').text("Convert " + unlock_ascend + "/" + total_ascend);
-    if( !vals.leap.unlocked ) $('#leap-tab-btn').css('display', 'none');
+    if (!vals.leap.unlocked) $('#leap-tab-btn').css('display', 'none');
     else $('#leap-tab-btn').css('display', 'inline-block');
   }
 
@@ -2026,7 +2082,7 @@ function fix_pantheon(vals) {
   if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
     $('#pantheon_div_1').css('display', 'none');
     $('#pantheon_unlocked').css('display','block');
-    $('#essence_amount').text( Math.round( vals.flame * 10) /10 );
+    $('#essence_amount').text(Math.round(vals.flame * 10)/10);
     for (let k in vals.pantheon.bosses) {
       let id = k.substr(k.length-1);
       if (vals.pantheon.bosses[k].current) {
@@ -2034,23 +2090,25 @@ function fix_pantheon(vals) {
           $('#boss_num').text(': ' + vals.god_status[vals.god_status.current].boss_label + ' Boss ' + id);
         }
         $('#battle_1').attr('src', 'data/battle_' + id + '.png');
-        $('#battle_1_hp').text( truncate_bigint( mul * vals.pantheon.bosses[k].current_hp));
-        $('#max_hp').text( truncate_bigint(mul * vals.pantheon.bosses[k].max_hp));
-        $('#boss_hp_bar').css('width', 100 * ( (mul*vals.pantheon.bosses[k].current_hp)/(mul*vals.pantheon.bosses[k].max_hp) ) + '%');
-        $('#regen').text(mul*vals.pantheon.bosses[k].regen);
+        $('#battle_1_hp').text(truncate_bigint(mul * vals.pantheon.bosses[k].current_hp));
+        $('#max_hp').text(truncate_bigint(mul * vals.pantheon.bosses[k].max_hp));
+        $('#boss_hp_bar').css('width', 100 * ((mul*vals.pantheon.bosses[k].current_hp)/(mul*vals.pantheon.bosses[k].max_hp)) + '%');
+        $('#regen').text(truncate_bigint(mul*vals.pantheon.bosses[k].regen));
         $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
         break;
       }
     }
-    for (let k in vals.pantheon.upgrades) {
-      for (let i in vals.pantheon.upgrades[k]) {
-        let item = vals.pantheon.upgrades[k][i];
-        if(!i.includes('hp') && !i.includes('regen')) {
-          if($('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '')
-            $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
-        } else {
-          if( $('#shop_' + i).html() === '' ) {
-            $('#shop_' + i).html(item.label);
+    if( $('#boss_num').text() != ': Upgrades') {
+      for (let k in vals.pantheon.upgrades) {
+        for (let i in vals.pantheon.upgrades[k]) {
+          let item = vals.pantheon.upgrades[k][i];
+          if(!i.includes('hp') && !i.includes('regen')) {
+            if($('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '')
+              $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
+          } else {
+            if( $('#shop_' + i).html() === '' ) {
+              $('#shop_' + i).html(item.label);
+            }
           }
         }
       }
@@ -2326,7 +2384,9 @@ function staticLeapValuesToJson() {
         'fl':0,
         'dam':totalDamageMul.toString(16),
         "tier":vals.god_status.current.toString(16),
-        "stage":0
+        "stage":0,
+        "sc":2,
+        "sm":100
     };	
 
     return save;	
@@ -2467,9 +2527,9 @@ class Upgrader extends Action {
   generateUpgradeOfType(btn) {
     const purchase = btn.substr(btn.indexOf('_btn_') + 5, btn.indexOf('_btn_') + 5);
     const purchaseType = vals.upgrades[purchase[0]].type;
-
     if (purchaseType === "Click amount") return new ClickUpgrade(btn, purchase);
     else if (purchaseType === "Tick speed") return new TickUpgrade(btn, purchase);
+    else if (purchaseType === "superclick_mul" || "superclick_length") return new SuperclickUpgrade(btn, purchase);
     else return new LeapUpgrade(btn, purchase);
   }
 }
@@ -2517,6 +2577,23 @@ class LeapUpgrade extends Upgrade {
     super.action();
     vals.leap.unlocked = true;
     $.toaster({message:"Don't go quietly into the good night.", title:"Quantum leap unlocked"})
+  }
+}
+
+class SuperclickUpgrade extends Upgrade {
+  
+  constructor(id, purchaseType) {
+    super(id, purchaseType);
+    this.type = purchaseType;
+  }
+
+  action() {
+    super.action();
+    if (this.type.startsWith('4')) {
+      vals.events.superclick.mul *= this.upgrade.mul;
+    } else {
+      vals.events.superclick.max_clicks *= this.upgrade.mul;
+    }
   }
 }
 
@@ -2971,10 +3048,8 @@ function processHealthUpgrade(bossUpgrade) {
 
   for (let k in vals.pantheon.bosses) {
     const boss = vals.pantheon.bosses[k];
-
     if (bossUpgrade === 'max_hp') {
       boss.max_hp *= upg.mul;
-
       if( boss.current_hp > boss.max_hp ) {
         boss.current_hp = boss.max_hp;
       }
@@ -3266,7 +3341,7 @@ function resolveDivFor(miracle) {
 }
 
 function processSuperClick() {
-  if(vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
+  if (vals.events.superclick.click_num < 100 && !vals.events.superclick.active) {
     vals.events.superclick.click_num++;
     $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
   } else if(vals.events.superclick.click_num === 100 && !vals.events.superclick.active) {
@@ -3283,7 +3358,7 @@ var bar_timer;
 
 function process_superclick(vals, iterations) {
     
-    if (iterations === 9) {
+    if (iterations === (vals.events.superclick.max_clicks/10 -1)) {
       $('#superclick_bar').css('background-color', '');
       vals.events.superclick.click_num = 0;
       $('#superclick_bar').css('width', vals.events.superclick.click_num + '%'); 
@@ -3293,10 +3368,10 @@ function process_superclick(vals, iterations) {
     }
     clearTimeout(bar_timer);
 
-    $('#superclick_bar').css('width', (100 - 10 * (iterations) )+ '%');
+    $('#superclick_bar').css('width', (100 - (100/((vals.events.superclick.max_clicks/10)-1)) * iterations + '%'));
     vals.events.superclick.active = true;
 
-    if (iterations < 9) {
+    if (iterations < ((vals.events.superclick.max_clicks/10) -1)) {
       bar_timer = setTimeout(function() {
         process_superclick(vals,iterations);
       }, vals.tick);

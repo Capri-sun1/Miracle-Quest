@@ -81,7 +81,7 @@ var vals = {
         "cost":35,
         "amount":0,
         "mul":1,
-        "req":35,
+        "req":25,
         "max":5
       }
     }
@@ -92,6 +92,7 @@ var vals = {
                 "description":"An inspired teenager to spread the word.",
                 "amount":0,
                 "output":0.2,
+                "base_output":0.2,
                 "base_cost":15,
                 "cost":15,
                 "unlock_rps":0,
@@ -102,6 +103,7 @@ var vals = {
                 "description":"Leaflets for your followers to hand out.",
                 "amount":0,
                 "output":1,
+                "base_output":1,
                 "base_cost":160,
                 "cost":160,
                 "unlock_rps":0.2,
@@ -112,6 +114,7 @@ var vals = {
                 "description":"An attendant to preach in public places.",
                 "amount":0,
                 "output":5,
+                "base_output":5,
                 "base_cost":1000,
                 "cost":1000,
                 "unlock_rps":1.2,
@@ -122,6 +125,7 @@ var vals = {
                 "description":"An old-time chapel capable of holding small services.",
                 "amount":0,
                 "output":25,
+                "base_output":25,
                 "base_cost":5000,
                 "cost":5000,
                 "unlock_rps":5.0,
@@ -132,6 +136,7 @@ var vals = {
                 "description":"Followers trained to hold services in your name.",
                 "amount":0,
                 "output":150,
+                "base_output":150,
                 "base_cost":22500,
                 "cost":22500,
                 "unlock_rps":25.0,
@@ -142,6 +147,7 @@ var vals = {
                 "description":"A new sect started by your followers.",
                 "amount":0,
                 "output":1000,
+                "base_output":1000,
                 "base_cost":125000,
                 "cost":125000,
                 "unlock_rps":175.0,
@@ -152,6 +158,7 @@ var vals = {
                 "description":"A city dedicated to your being.",
                 "amount":0,
                 "output":7500,
+                "base_output":7500,
                 "base_cost":800000,
                 "cost":800000,
                 "unlock_rps":1175.0,
@@ -162,6 +169,7 @@ var vals = {
                 "description":"Learning machine language to convert them to your cause.",
                 "amount":0,
                 "output":30000,
+                "base_output":30000,
                 "base_cost":5000000,
                 "cost":5000000,
                 "unlock_rps":8500.0,
@@ -172,6 +180,7 @@ var vals = {
                 "description":"Begin to bring microbial life itself into the fold.",
                 "amount":0,
                 "output":160000,
+                "base_output":160000,
                 "base_cost":80000000,
                 "cost":80000000,
                 "unlock_rps":40000.0,
@@ -182,6 +191,7 @@ var vals = {
                 "description":"Influence an entire planet's population.",
                 "amount":0,
                 "output":2000000,
+                "base_output":2000000,
                 "base_cost":6000000000,
                 "cost":6000000000,
                 "unlock_rps":160000.0,
@@ -193,6 +203,7 @@ var vals = {
                 "description":"An univiting small booth to slowly process followers.",
                 "amount":0,
                 "output":0.2,
+                "base_output":0.2,
                 "base_cost":25,
                 "cost":25,
                 "unlock_rps":0,
@@ -203,6 +214,7 @@ var vals = {
                 "description":"A small, plush lounge holding more followers at a time.",
                 "amount":0,
                 "output":1,
+                "base_output":1,
                 "base_cost":225,
                 "cost":225,
                 "unlock_rps":0.2,
@@ -213,6 +225,7 @@ var vals = {
                 "description":"An entire room where your followers can ascend.",
                 "amount":0,
                 "output":5,
+                "base_output":5,
                 "base_cost":1350,
                 "cost":1350,
                 "unlock_rps":1.2,
@@ -223,6 +236,7 @@ var vals = {
                 "description":"A repurposed Monastery for your followers.",
                 "amount":0,
                 "output":25,
+                "base_output":25,
                 "base_cost":8000,
                 "cost":8000,
                 "unlock_rps":5.0,
@@ -233,6 +247,7 @@ var vals = {
                 "description":"An entire Cathedral built to connect with you.",
                 "amount":0,
                 "output":150,
+                "base_output":150,
                 "base_cost":30000,
                 "cost":30000,
                 "unlock_rps":25.0,
@@ -243,6 +258,7 @@ var vals = {
                 "description":"Sacred grounds where your followers may ascend.",
                 "amount":0,
                 "output":1000,
+                "base_output":1000,
                 "base_cost":160000,
                 "cost":160000,
                 "unlock_rps":175.0,
@@ -253,6 +269,7 @@ var vals = {
                 "description":"A sprawling complex to convert followers.",
                 "amount":0,
                 "output":7500,
+                "base_output":7500,
                 "base_cost":1000000,
                 "cost":1000000,
                 "unlock_rps":1175.0,
@@ -263,6 +280,7 @@ var vals = {
                 "description":"A chip allowing conversion of followers through the internet.",
                 "amount":0,
                 "output":30000,
+                "base_output":30000,
                 "base_cost":6000000,
                 "cost":6000000,
                 "unlock_rps":8500.0,
@@ -273,16 +291,18 @@ var vals = {
                 "description":"A place where followers can be converted directly to essence.",
                 "amount":0,
                 "output":200000,
+                "base_output":200000,
                 "base_cost":100000000,
                 "cost":100000000,
                 "unlock_rps":40000.0,
-                "unlocked":false,
-            }, 
+                "unlocked":false
+            },
             "ascenda":{
                 "label":"Staff of destiny",
                 "description":"Staff which grants the wielder full control over the minds of mortals.",
                 "amount":0,
                 "output":2500000,
+                "base_output":2500000,
                 "base_cost":8000000000,
                 "cost":8000000000,
                 "unlock_rps":210000.0,
@@ -297,84 +317,84 @@ var vals = {
               "description":"Limited control of Earthly forces increases your Divine Power.",
               "unlocked":false,
               "cost":25,
-              "mul":1.25
+              "mul":1.4
             },
             "upgrade2":{
               "label":"Matter Manipulation",
               "description":"A small amount of control over matter makes your Power swell.",
               "unlocked":false,
               "cost":150,
-              "mul":1.5
+              "mul":1.8
             },
             "upgrade3":{
               "label":"Transmogrification",
               "description":"Convert entities into a form that enhances your Divine Power.",
               "unlocked":false,
               "cost":750,
-              "mul":1.75
+              "mul":2.2
             },
             "upgrade4":{
               "label":"Elementary conjuring",
               "description":"Fledgling control of the elements doubles your Divine power.",
               "unlocked":false,
               "cost":3500,
-              "mul":2
+              "mul":2.6
             },
              "upgrade5":{
               "label":"Studying Holy texts",
               "description":"Interpreting these ancient writings increases your Divine Power by even more.",
               "unlocked":false,
               "cost":18500,
-              "mul":2.25
+              "mul":3
             },
              "upgrade6":{
               "label":"Burning the Holy texts",
               "description":"Read them, have you? Page-turners they were not.",
               "unlocked":false,
               "cost":80000,
-              "mul":2.5
+              "mul":3.4
             },
             "upgrade7":{
               "label":"Astral projection",
               "description":"A double of yourself to act on your command.",
               "unlocked":false,
               "cost":375000,
-              "mul":2.75
+              "mul":3.8
             },
             "upgrade8":{
               "label":"Benign possession",
               "description":"Controlling some of your followers' forms to further your purpose.",
               "unlocked":false,
               "cost":1000000,
-              "mul":3
+              "mul":4.2
             },
             "upgrade9":{
               "label":"Power siphoning",
               "description":"Enhancing your power by extracting it from the World.",
               "unlocked":false,
               "cost":9000000,
-              "mul":3.25
+              "mul":4.6
             },
             "upgrade10":{
               "label":"Void gathering",
               "description":"Retrieving power from the void of space.",
               "unlocked":false,
               "cost":70000000,
-              "mul":3.5
+              "mul":5
             },
             "upgrade11":{
               "label":"Chaotic ritual",
               "description":"Harnessing chaos energy to increase your power.",
               "unlocked":false,
-              "cost":500000000,
-              "mul":4
+              "cost":800000000,
+              "mul":6
             },
             "upgrade11":{
               "label":"Deal with the devil",
               "description":"Sacrifice some of your divinity for greater control over space.",
               "unlocked":false,
-              "cost":4500000000,
-              "mul":5
+              "cost":9000000000,
+              "mul":8
             }
           },
           "2": {
@@ -448,7 +468,7 @@ var vals = {
               "label":"Unlock Quantum Leap",
               "description":"To infinity and beyond",
               "unlocked":false,
-              "cost":1000000000
+              "cost":15000000000
             }
           }
         },
@@ -1009,7 +1029,7 @@ var vals = {
                 "req_stage":1
               }
             }
-           },
+           }
 
 };
  //global variable
@@ -1080,8 +1100,7 @@ function loadBackgroundImage() {
 function resolveLastTime() {
   try {
     return new Date(lastTime);
-  }
-  catch(NoTimeDataException) {
+  } catch(NoTimeDataException) {
     return new Date();
   }
 }
@@ -1147,7 +1166,7 @@ function playAudio(bgm) {
   const play = bgm.play();
 
   if(play !== undefined) {
-    play.then(function(){
+    play.then(() => {
       return;
     }).catch(function(NoAudioException) {
       handleAudioFailure(bgm);
@@ -1158,9 +1177,9 @@ function playAudio(bgm) {
 function handleAudioFailure(bgm) {
     console.log('Audio Failed to play, retrying..');
     document.body.click();
-    setTimeout(function() {
+    setTimeout(() => {
         playAudio(bgm);
-    },1500);  
+    }, 1500);  
 }
 
 $(document).on('click','#playing', function(event) {
@@ -1174,8 +1193,8 @@ $(document).on('click','#playing', function(event) {
 });
 
 function setupContainers() {
-  var width = $(window).width();
-  var height = $(window).height();
+  const width = $(window).width();
+  const height = $(window).height();
   $('#miracle_lbl').text("Divine energy ");
   $('#upgrades-box').css("height", height * 0.8);
   $('#upgrades-box').css("margin-right", width * 0.25);
@@ -1190,30 +1209,31 @@ function start_game() {
   game_engine(0, 0);
 }
 
-const matched = x => ({
-  on: () => matched(x),
-  otherwise: () => x,
-})
-
-const match = x => ({  
-  on: (pred, fn) => (pred(x) ? matched(fn(x)) : match(x)),
-  otherwise: fn => fn(x),
-})
-
 function set_item_cost(item) {
   let amount_multiplier = 2.0;
 
   if (item.amount >= 1) {
-    item.output = match((item.amount))
-    .on(x => x < 10, () => item.output * 1 + (item.amount/100))
-    .on(x => x < 25 && x > 10, () => item.output * 1 + (item.amount/75))
-    .on(x => x < 50 && x > 25, () => item.output * 1 + (item.amount/50))
-    .on(x => x < 100 && x > 50, () => item.output * 1 + (item.amount/25))
-    .otherwise(x => item.output * 1 + (item.amount/10));
-    amount_multiplier = 2 + item.amount * (item.amount*0.15);  
-    if (item.amount % 10 === 0) {
-      generateToastMessage("Further purchases of this item are more valuable.", "Milestone reached!");
+    let multiplier = 1;
+    const values = [[0, 10, 5], [10, 25, 2.5], [25, 50, 1], [50, 75, 0.5], 
+                  [75, 100, 0.25], [100, 200, 0.1], [200, 350, 0.04], [350, 500, 0.01]];
+    for (let i = 0; i < values.length; i++) {
+      const lowerBound = values[i][0];
+      const upperBound = values[i][1];
+      const divisor = values[i][2];
+      if (item.amount >= lowerBound && item.amount < upperBound) {
+        amount_multiplier += item.amount * (item.amount*0.15);  
+        if (item.amount === lowerBound && lowerBound !== 0) {
+          generateToastMessage("Further purchases of this item are more valuable.", "Milestone reached!");
+        }
+        if (lowerBound !== 0) {
+          multiplier *= (lowerBound/3);
+          amount_multiplier *= (1 + lowerBound/40);
+        }
+        multiplier += item.amount / divisor;
+        break; 
+      }
     }
+    item.output = item.base_output * multiplier;
   }
 
   const status_multiplier = vals.god_status[vals.god_status.current].mul;
@@ -1994,18 +2014,18 @@ function fix_leap(vals) {
 
 //fix pantheon tabs, accounting for whether you can switch btw tabs
 function fix_pantheon(vals) {
-      //fix pantheon
-    var mul = vals.god_status[vals.god_status.current].mul;
-    if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
-
-      $('#pantheon_div_1').css('display', 'none');
-      $('#pantheon_unlocked').css('display','block');
-      $('#essence_amount').text( Math.round( vals.flame * 10) /10 );
-      for( var k in vals.pantheon.bosses ) {
-        var id = k.substr(k.length-1);
-      if( vals.pantheon.bosses[k].current ) {
+  let mul = vals.god_status[vals.god_status.current].mul;
+  if( vals.pantheon.unlocked && vals.current_tab === 'Pantheon') {
+    $('#pantheon_div_1').css('display', 'none');
+    $('#pantheon_unlocked').css('display','block');
+    $('#essence_amount').text( Math.round( vals.flame * 10) /10 );
+    for (let k in vals.pantheon.bosses) {
+      let id = k.substr(k.length-1);
+      if (vals.pantheon.bosses[k].current) {
+        if( $('#boss_num').text() != ': Upgrades') {
+          $('#boss_num').text(': ' + vals.god_status[vals.god_status.current].boss_label + ' Boss ' + id);
+        }
         $('#battle_1').attr('src', 'data/battle_' + id + '.png');
-        if( $('#boss_num').text() != ': Upgrades') $('#boss_num').text(': ' + vals.god_status[vals.god_status.current].boss_label + ' Boss ' + id);
         $('#battle_1_hp').text( truncate_bigint( mul * vals.pantheon.bosses[k].current_hp));
         $('#max_hp').text( truncate_bigint(mul * vals.pantheon.bosses[k].max_hp));
         $('#boss_hp_bar').css('width', 100 * ( (mul*vals.pantheon.bosses[k].current_hp)/(mul*vals.pantheon.bosses[k].max_hp) ) + '%');
@@ -2014,26 +2034,26 @@ function fix_pantheon(vals) {
         break;
       }
     }
-
-         for( var k in vals.pantheon.upgrades ) {
-           for( var i in vals.pantheon.upgrades[k] ) {
-             var item = vals.pantheon.upgrades[k][i];
-             if( !i.includes('hp') && !i.includes('regen')) {
-                if( $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '' )
-                 $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
-             } else {
-              if( $('#shop_' + i).html() === '' )
-                 $('#shop_' + i).html(item.label);
-             }
-            }
+    for (let k in vals.pantheon.upgrades) {
+      for (let i in vals.pantheon.upgrades[k]) {
+        let item = vals.pantheon.upgrades[k][i];
+        if(!i.includes('hp') && !i.includes('regen')) {
+          if( $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '' )
+            $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
+        } else {
+          if( $('#shop_' + i).html() === '' ) {
+            $('#shop_' + i).html(item.label);
           }
+        }
+      }
+    }
   }
 }
 
 function fix_corruption_bar(cor) {
   let desiredColor = '#B0BEC5';
   
-  if (cor >= -100) desiredColor = '#0D47A1';
+  if (cor >= -100 && cor < -80) desiredColor = '#0D47A1';
   else if (cor >= -80 && cor < -60) desiredColor = '#1976D2';
   else if (cor >= -60 && cor < -40) desiredColor = '#42A5F5';
   else if (cor >= -40 && cor < -20) desiredColor = '#90CAF9';
@@ -2066,19 +2086,23 @@ function fix_corruption_text(corruption) {
 
 //generalised function that handles both asc and conv tabs.
 function fix_conv_asc(vals) {
-  var currentTab = vals.current_tab;
+  const currentTab = vals.current_tab;
   if( currentTab != 'Conversion' && currentTab != 'Ascension' ) return;
-  var keyWord;
-  var title;
-    if( currentTab === 'Ascension') { keyWord = 'ascend'; title = 'ascend'; }
-    else { keyWord = 'miracle'; title = 'purchase'; }
-    for( var k in vals[keyWord] ) {
-      var purchase_num = k.substr(k.length -1 );
-      if( (currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && 
-        (vals.prod >= vals[keyWord][k].unlock_rps))) {
+  let keyWord, title;
+  if( currentTab === 'Ascension') { 
+    keyWord = 'ascend'; 
+    title = 'ascend'; 
+  } else { 
+    keyWord = 'miracle'; 
+    title = 'purchase'; 
+  }
+
+  for (let k in vals[keyWord]) {
+      var purchase_num = k.substr(k.length-1);
+      if ((currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && (vals.prod >= vals[keyWord][k].unlock_rps))) {
         vals[keyWord][k].unlocked = true;
         //dynammically create divs as needed, saves creating all in the html file.
-         if( !document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1") ){
+         if (!document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1")) {
               var clonedDiv_id = $('#' + title+ '_' + purchase_num + '_' + purchase_num);
               
               var html_to_append = '<div id="new_purchase" class="tab_div"> ' +
@@ -2105,19 +2129,18 @@ function fix_conv_asc(vals) {
               $('#new_purchase').attr('id', title + '_' + purchase_num);
            }
         $('#' + title + '_' + purchase_num).css("display", "block");
-        $('#'+ title + "_header_" + purchase_num).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals[keyWord][k].label);
+        $('#'+ title + "_header_" + purchase_num).contents().filter(function() { return this.nodeType == 3; }).first().replaceWith(vals[keyWord][k].label);
         $('#'+title + '_lbl_' + purchase_num).text(vals[keyWord][k].amount);
-        var cost = 1;
-        if( vals.god_status.current > 1 ) cost = vals.god_status[vals.god_status.current].mul * 0.80;
-        $('#'+title + '_cost_' + purchase_num).text( '[ ' + truncate_bigint(Math.round( vals.god_status[vals.god_status.current].mul * vals[keyWord][k].cost)) + ' energy ]');
+        let cost = 1;
+        if (vals.god_status.current > 1) cost = vals.god_status[vals.god_status.current].mul * 0.80;
+        $('#'+title + '_cost_' + purchase_num).text('[ ' + truncate_bigint(Math.round( vals.god_status[vals.god_status.current].mul * vals[keyWord][k].cost)) + ' energy ]');
         $('#'+title + '_text_' + purchase_num).text(vals[keyWord][k].description);
-        $('#'+ title + '_out_' + purchase_num).text( truncate_bigint(Math.round(cost * vals[keyWord][k].output *10)/10)+ " followers ");
+        $('#'+ title + '_out_' + purchase_num).text(truncate_bigint(Math.round(cost * vals[keyWord][k].output *10)/10)+ " followers ");
         if( currentTab != 'Conversion' ) {
-          $('#'+ title + '_out_' + purchase_num).text( truncate_bigint(Math.round(cost  * vals[keyWord][k].output*10)/10) + " energy ");
+          $('#'+ title + '_out_' + purchase_num).text(truncate_bigint(Math.round(cost  * vals[keyWord][k].output*10)/10) + " energy ");
           $('#ascend_out_' + purchase_num + '_' + purchase_num).text(truncate_bigint(Math.round(cost  * vals.ascend[k].output*10)/10) + " followers ");
         }
-    }
-    else {
+    } else {
       $('#'+ title + '_' + purchase_num).css("display", "none");
     }
   }
@@ -2711,7 +2734,7 @@ $(document).on("click", ".sell", function() {
 
   let valsType = deriveType(id);
   if(canSell(valsType) === true){
-    sell(valsType);  
+    sell(id);  
     fix_tab_buttons(vals);
     fix_names(vals);
   }
@@ -2733,19 +2756,28 @@ function canSell(valsType) {
   return valsType.amount >= 1;
 }
 
-function sell(valsType) {
+function sell(id) {
+  let valsType = deriveType(id);
+  //consider disabling ui sounds
   purchaseSound.play();
-  valsType.amount --;
-  var newCost = valsType.cost * 0.5;
+  console.log(valsType.output);
+  valsType.amount--;
+  const valueReturn = valsType.cost * 0.5;
 
-  if( valsType.amount === 0 ) {
+  if (valsType.amount === 0) {
     valsType.cost = valsType.base_cost;
+    valsType.output = valsType.base_output;
   } else {
     valsType.cost =  set_item_cost(valsType);
   }
-  vals.prod -= valsType.output;
-  vals.energy += newCost;
-  vals.stats.total_energy += newCost;
+  let output = valsType.output;
+  if (id.includes('purchase')) {
+    vals.prod -= valsType.output;
+  } else {
+    vals.prod += valsType.output;
+    vals.loss -= valsType.output;
+  }
+  vals.energy += valueReturn;
 }
 
 $(document).on("click", '#tab_btns .button', function(event) {

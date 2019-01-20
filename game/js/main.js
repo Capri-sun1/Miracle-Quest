@@ -1406,13 +1406,13 @@ function staticValuesToJson() {
   let save = {
   		'e':Math.round(vals.energy).toString(16),
         'p':vals.prod,
-        'cl':vals.click.toString(16),
+        'cl':vals.click,
         'f':(Math.round(vals.followers)).toString(16),
         'l':vals.loss,
         'c':vals.corruption.toString(16),
         'ac':vals.achievement_multiplier,
         't':(Math.round(vals.tick)).toString(16),
-        'fl':vals.flame.toString(16),
+        'fl':vals.flame,
         'dam':vals.pantheon.damage.toString(16),
         "tier":vals.god_status.current.toString(16),
         "sac":vals.sacrifice.unlocked,
@@ -1524,13 +1524,13 @@ function pantheonToJson(save) {
 function get_valsFromJSON(save) {
         vals.energy = parseInt(save.e,16);
         vals.prod = save.p;
-        vals.click = parseInt(save.cl, 16);
+        vals.click = save.cl;
         vals.followers = parseInt(save.f, 16);
         vals.loss = save.l;
         vals.corruption = parseInt(save.c, 16);
         vals.achievement_multiplier = save.ac;
         vals.tick = parseInt(save.t, 16);
-        vals.flame = parseInt(save.fl, 16);
+        vals.flame = save.fl;
         vals.pantheon.damage = parseInt(save.dam,16);
         vals.sacrifice.unlocked = save.sac;
         vals.pantheon.dps = save.dps;

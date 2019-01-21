@@ -2894,20 +2894,19 @@ function canSell(valsType) {
 
 function sell(id) {
   let valsType = deriveType(id);
-  //consider disabling ui sounds
   purchaseSound.play();
   valsType.amount--;
   let valueReturn = valsType.base_cost;
+
   if (valsType.amount <= 1) {
     valsType.cost = valsType.base_cost;
     valsType.output = valsType.base_output;
   } else {
     let nextItem = resolveItemCost((valsType.amount-1), valsType.base_cost);
-    valueReturn = nextItem[0];
     if (valsType.amount >= 5) {
       valsType.sell5 = determineValueOfNext([5, "sell"], valsType);
     }
-
+    valueReturn = nextItem[0];
     valsType.cost = valueReturn;
     valsType.output = valsType.base_output * nextItem[1];
     valsType.buy5 = determineValueOfNext([5, "buy"], valsType);
@@ -2919,6 +2918,7 @@ function sell(id) {
     vals.prod += valsType.output;
     vals.loss -= valsType.output;
   }
+  
   vals.energy += valueReturn/2;
 }
 

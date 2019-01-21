@@ -96,6 +96,8 @@ var vals = {
                 "base_output":0.2,
                 "base_cost":15,
                 "cost":15,
+                "buy5":100,
+                "sell5":100,
                 "unlock_rps":0,
                 "unlocked":true,
             },
@@ -107,6 +109,8 @@ var vals = {
                 "base_output":1,
                 "base_cost":160,
                 "cost":160,
+                "buy5":100,
+                "sell5":100,     
                 "unlock_rps":0.2,
                 "unlocked":false,
             },
@@ -118,6 +122,8 @@ var vals = {
                 "base_output":5,
                 "base_cost":1000,
                 "cost":1000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":1.2,
                 "unlocked":false,
             },
@@ -129,6 +135,8 @@ var vals = {
                 "base_output":25,
                 "base_cost":5000,
                 "cost":5000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":5.0,
                 "unlocked":false,
             },
@@ -140,6 +148,8 @@ var vals = {
                 "base_output":150,
                 "base_cost":22500,
                 "cost":22500,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":25.0,
                 "unlocked":false,
             },
@@ -151,6 +161,8 @@ var vals = {
                 "base_output":1000,
                 "base_cost":125000,
                 "cost":125000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":175.0,
                 "unlocked":false,
             },
@@ -162,6 +174,8 @@ var vals = {
                 "base_output":7500,
                 "base_cost":800000,
                 "cost":800000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":1400.0,
                 "unlocked":false,
             },
@@ -173,6 +187,8 @@ var vals = {
                 "base_output":30000,
                 "base_cost":5000000,
                 "cost":5000000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":10000.0,
                 "unlocked":false,
             },
@@ -184,6 +200,8 @@ var vals = {
                 "base_output":160000,
                 "base_cost":80000000,
                 "cost":80000000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":40000.0,
                 "unlocked":false,
             },
@@ -195,6 +213,8 @@ var vals = {
                 "base_output":200000000,
                 "base_cost":6000000000,
                 "cost":6000000000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":200000.0,
                 "unlocked":false,
             }
@@ -208,6 +228,8 @@ var vals = {
                 "base_output":0.2,
                 "base_cost":25,
                 "cost":25,
+                "buy5":100,
+                "sell5":100, 
                 "unlock_rps":0,
                 "unlocked":true,
             },
@@ -219,6 +241,8 @@ var vals = {
                 "base_output":1,
                 "base_cost":225,
                 "cost":225,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":0.2,
                 "unlocked":false,
             },
@@ -230,6 +254,8 @@ var vals = {
                 "base_output":5,
                 "base_cost":1350,
                 "cost":1350,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":1.2,
                 "unlocked":false,
             },
@@ -241,6 +267,8 @@ var vals = {
                 "base_output":25,
                 "base_cost":8000,
                 "cost":8000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":5.0,
                 "unlocked":false,
             },
@@ -252,6 +280,8 @@ var vals = {
                 "base_output":150,
                 "base_cost":30000,
                 "cost":30000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":25.0,
                 "unlocked":false,
             },
@@ -263,6 +293,8 @@ var vals = {
                 "base_output":1000,
                 "base_cost":160000,
                 "cost":160000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":175.0,
                 "unlocked":false,
             },
@@ -274,6 +306,8 @@ var vals = {
                 "base_output":7500,
                 "base_cost":1000000,
                 "cost":1000000,
+                "buy5":100,
+                "sell5":100,  
                 "unlock_rps":1400.0,
                 "unlocked":false,
             },
@@ -285,6 +319,8 @@ var vals = {
                 "base_output":30000,
                 "base_cost":6000000,
                 "cost":6000000,
+                "buy5":100,
+                "sell5":100, 
                 "unlock_rps":10000.0,
                 "unlocked":false,
             }, 
@@ -296,6 +332,8 @@ var vals = {
                 "base_output":200000,
                 "base_cost":100000000,
                 "cost":100000000,
+                "buy5":100,
+                "sell5":100, 
                 "unlock_rps":40000.0,
                 "unlocked":false
             },
@@ -307,6 +345,8 @@ var vals = {
                 "base_output":250000000,
                 "base_cost":8000000000,
                 "cost":8000000000,
+                "buy5":100,
+                "sell5":100, 
                 "unlock_rps":225000.0,
                 "unlocked":false,
             }
@@ -1262,36 +1302,39 @@ function start_game() {
 }
 
 function set_item_cost(item) {
-  let amount_multiplier = 2.0;
+  const nextItem = resolveItemCost(item.amount, item.base_cost);
+  item.output = item.base_output * nextItem[1];
+  return nextItem[0];
+}
 
-  if (item.amount >= 1) {
-    let multiplier = 1;
-    const values = [[0, 10, 5], [10, 25, 2.5], [25, 50, 1], [50, 75, 0.5], 
-                  [75, 100, 0.25], [100, 200, 0.1], [200, 350, 0.04], [350, 500, 0.01], [500, 10000, 0.004]];
+function resolveItemCost(index, base) {
+  let amount_multiplier = 1.8;
+  let multiplier = 1.0;
+
+  if (index >= 1) {
+    const values = [[0, 10, 5], [10, 25, 2.5], [25, 50, 1], [50, 75, 0.5], [75, 100, 0.25], [100, 200, 0.1], [200, 350, 0.04], [350, 500, 0.01], [500, 10000, 0.004]];
+
     for (let i = 0; i < values.length; i++) {
       const lowerBound = values[i][0];
       const upperBound = values[i][1];
       const divisor = values[i][2];
-      if (item.amount >= lowerBound && item.amount < upperBound) {
-        amount_multiplier += item.amount * (item.amount*0.15);  
-        if (item.amount === lowerBound && lowerBound !== 0) {
-          generateToastMessage("Further purchases of this item are more valuable.", "Milestone reached!");
-        }
+
+      if (index >= lowerBound && index < upperBound) {
+        amount_multiplier += index * (index * 0.2);  
         if (lowerBound !== 0) {
-          multiplier *= (lowerBound/3);
+          multiplier *= (lowerBound/2.85);
           amount_multiplier *= (1 + lowerBound/40);
         }
-        multiplier += item.amount / divisor;
+        multiplier += index / divisor;
         break; 
       }
     }
-    item.output = item.base_output * multiplier;
   }
 
   const status_multiplier = vals.god_status[vals.god_status.current].mul;
-  const newCost = amount_multiplier * (status_multiplier * item.base_cost);
+  const newCost = amount_multiplier * (status_multiplier * base);
 
-  return Math.round(newCost * 0.9);
+  return [Math.round(newCost * 0.9), multiplier];
 }
 
   function game_engine(iterations, cycles) {
@@ -2166,6 +2209,12 @@ function fix_conv_asc(vals) {
   for (let k in vals[keyWord]) {
       var purchase_num = k.substr(k.length-1);
       if ((currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && (vals.prod >= vals[keyWord][k].unlock_rps))) {
+        if (vals[keyWord][k].unlocked !== true || vals[keyWord][k].buy5 === 100) {
+          vals[keyWord][k].buy5 = determineValueOfNext([5, "buy"], vals[keyWord][k]);
+        } 
+        if (vals[keyWord][k].sell5 === 100 && vals[keyWord][k].amount >= 5) {
+          vals[keyWord][k].sell5 = determineValueOfNext([5, "sell"], vals[keyWord][k]);
+        }
         vals[keyWord][k].unlocked = true;
         //dynammically create divs as needed, saves creating all in the html file.
          if (!document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1")) {
@@ -2497,7 +2546,9 @@ class Producer extends Action {
     if(vals.energy >= this.object.cost) {
       vals.energy -= this.object.cost;
       this.object.amount ++;
-      this.object.cost =  set_item_cost(this.object);
+      this.object.cost = set_item_cost(this.object);
+      this.object.buy5 = determineValueOfNext([5, "buy"], this.object);
+      if (this.object.amount >= 5) this.object.sell5 = determineValueOfNext([5, "sell"], this.object);
       this.handleProduction();
     }
   }
@@ -2627,7 +2678,7 @@ class Sacrifice {
 	action() {
 	  const type = 'sacrifice' + this.id.substr(this.id.length-1);
 	  vals.sacrifice[type].amount++;
-      vals.sacrifice[type].cost = set_item_cost(vals.sacrifice[type]);
+    vals.sacrifice[type].cost = set_item_cost(vals.sacrifice[type]);
 	}
 
 	canSacrifice(corruptionOffset) {
@@ -2845,24 +2896,44 @@ function sell(id) {
   let valsType = deriveType(id);
   //consider disabling ui sounds
   purchaseSound.play();
-  console.log(valsType.output);
   valsType.amount--;
-  const valueReturn = valsType.cost * 0.5;
-
-  if (valsType.amount === 0) {
+  let valueReturn = valsType.base_cost;
+  if (valsType.amount <= 1) {
     valsType.cost = valsType.base_cost;
     valsType.output = valsType.base_output;
   } else {
-    valsType.cost =  set_item_cost(valsType);
+    let nextItem = resolveItemCost((valsType.amount-1), valsType.base_cost);
+    valueReturn = nextItem[0];
+    if (valsType.amount >= 5) {
+      valsType.sell5 = determineValueOfNext([5, "sell"], valsType);
+    }
+
+    valsType.cost = valueReturn;
+    valsType.output = valsType.base_output * nextItem[1];
+    valsType.buy5 = determineValueOfNext([5, "buy"], valsType);
   }
-  let output = valsType.output;
+
   if (id.includes('purchase')) {
     vals.prod -= valsType.output;
   } else {
     vals.prod += valsType.output;
     vals.loss -= valsType.output;
   }
-  vals.energy += valueReturn;
+  vals.energy += valueReturn/2;
+}
+
+function determineValueOfNext(loopValues, valsType) {
+  const toBuy = loopValues[1] === "buy";
+  const numberToCalculate = loopValues[0] + 1;
+  const increment = toBuy ? 1 : -1;
+  let totalValue = 0.0;
+
+  for (let i = 1; i < numberToCalculate; i++) {
+    const itemCost = resolveItemCost((valsType.amount-1) + (i * increment), valsType.base_cost)[0];
+    totalValue += toBuy ? itemCost : itemCost / 2;
+  }
+
+  return totalValue;
 }
 
 $(document).on("click", '#tab_btns .button', function(event) {

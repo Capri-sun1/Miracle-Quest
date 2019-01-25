@@ -1329,6 +1329,8 @@ function resolveItemCost(index, base) {
         break; 
       }
     }
+  } else {
+    return [base, multiplier];
   }
 
   const status_multiplier = vals.god_status[vals.god_status.current].mul;
@@ -2216,21 +2218,21 @@ function fix_conv_asc(vals) {
           vals[keyWord][k].sell5 = determineValueOfNext([5, "sell"], vals[keyWord][k]);
         }
         vals[keyWord][k].unlocked = true;
-        //dynammically create divs as needed, saves creating all in the html file.
+        //dynamically create divs as needed, saves creating all in the html file.
          if (!document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1")) {
               var clonedDiv_id = $('#' + title+ '_' + purchase_num + '_' + purchase_num);
               
               var html_to_append = '<div id="new_purchase" class="tab_div"> ' +
                 '<h3 id="purchase_head_temp" class="header_1">This is the field for upgrade for option one.' +
                 '<label id=purchase_lbl_ class="align_right">0</label></h3><p>' +
-                '<b><span id="purchase_cost_">10</span></b> - <em id="purchase_text_"> Text placeholder</em></p>' +
+                '<em id="purchase_text_"> Text placeholder</em></p>' +
                 '<p class = "align_right">Creates <b><span id="purchase_out_">0.1</span></b> per tick';
 
                 if( currentTab != 'Conversion' ) html_to_append += '<br>Costs <b><span id="ascend_out__2">0.1</span></b>per tick';
 
-                html_to_append += ' </p><button id="purchase_btn_" class="purchase" disabled="disabled">Purchase</button> '+
+                html_to_append += ' </p><button id="purchase_btn_" class="purchase" disabled="disabled">Buy <b><span id="purchase_cost_">10</span></b></button> ' +
                 '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
-                'disabled="disabled" >Sell</button></div>';
+                'disabled="disabled" >Sell <b><span id="purchase_sell_">10</span></b></button></div>';
                 $(html_to_append).prependTo('#' + currentTab);
               //now fix the fields
               $("#new_purchase").find('#purchase_lbl_').attr('id', title + "_lbl_" + purchase_num);
@@ -2239,19 +2241,23 @@ function fix_conv_asc(vals) {
               $("#new_purchase").find('#purchase_sell_btn_').attr('id',title + "_sell_btn_" + purchase_num);
               $("#new_purchase").find('#purchase_out_').attr('id', title + "_out_" + purchase_num);
               $("#new_purchase").find('#purchase_cost_').attr('id', title + "_cost_" + purchase_num);
+              $("#new_purchase").find('#purchase_sell_').attr('id', title + "_sell_" + purchase_num);
               $("#new_purchase").find('#purchase_head_temp').attr('id',title + "_header_" + purchase_num);
-              if( currentTab != 'Conversion' ) $("#new_purchase").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_' + purchase_num);
+              if (currentTab != 'Conversion') $("#new_purchase").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_' + purchase_num);
               $('#new_purchase').attr('id', title + '_' + purchase_num);
            }
         $('#' + title + '_' + purchase_num).css("display", "block");
-        $('#'+ title + "_header_" + purchase_num).contents().filter(function() { return this.nodeType == 3; }).first().replaceWith(vals[keyWord][k].label);
-        $('#'+title + '_lbl_' + purchase_num).text(vals[keyWord][k].amount);
+        $('#' + title + "_header_" + purchase_num).contents().filter(function() { return this.nodeType == 3; }).first().replaceWith(vals[keyWord][k].label);
+        $('#' + title + '_lbl_' + purchase_num).text(vals[keyWord][k].amount);
         let cost = 1;
         if (vals.god_status.current > 1) cost = vals.god_status[vals.god_status.current].mul * 0.80;
-        $('#'+title + '_cost_' + purchase_num).text('[ ' + truncate_bigint(Math.round( vals.god_status[vals.god_status.current].mul * vals[keyWord][k].cost)) + ' energy ]');
-        $('#'+title + '_text_' + purchase_num).text(vals[keyWord][k].description);
-        $('#'+ title + '_out_' + purchase_num).text(truncate_bigint(Math.round(cost * vals[keyWord][k].output *10)/10)+ " followers ");
-        if( currentTab != 'Conversion' ) {
+        let desiredCost = truncate_bigint(Math.round(vals.god_status[vals.god_status.current].mul * vals[keyWord][k].cost));
+        let sellCost = defaultValue(vals.god_status[vals.god_status.current].mul * resolveItemCost(vals[keyWord][k].amount-1, vals[keyWord][k].base_cost)[0], 12.5);
+        $('#' + title + '_cost_' + purchase_num).text('[ ' + desiredCost + ' energy ]');
+        $('#' + title + '_sell_' + purchase_num).text('[ ' + truncate_bigint(sellCost/2) + ' energy ]');
+        $('#' + title + '_text_' + purchase_num).text(vals[keyWord][k].description);
+        $('#' + title + '_out_' + purchase_num).text(truncate_bigint(Math.round(cost * vals[keyWord][k].output *10)/10)+ " followers ");
+        if (currentTab != 'Conversion') {
           $('#'+ title + '_out_' + purchase_num).text(truncate_bigint(Math.round(cost  * vals[keyWord][k].output*10)/10) + " energy ");
           $('#ascend_out_' + purchase_num + '_' + purchase_num).text(truncate_bigint(Math.round(cost  * vals.ascend[k].output*10)/10) + " followers ");
         }
@@ -2260,6 +2266,26 @@ function fix_conv_asc(vals) {
     }
   }
 }
+
+var rangeSlider = document.getElementById("range-slider");
+
+  var rangeLabel = document.getElementById("range-label");
+  rangeSlider.addEventListener("input", showSliderValue, false);
+
+  function showSliderValue() {
+      rangeLabel.innerHTML = rangeSlider.value;
+      var labelPosition = (rangeSlider.value /rangeSlider.max);
+      if(rangeSlider.value === rangeSlider.min) {
+     rangeLabel.style.left = ((labelPosition * 100) + 2) + "%";
+      } else if (rangeSlider.value === rangeSlider.max) {
+     rangeLabel.style.left = ((labelPosition * 100) - 2) + "%";
+      } else {
+      rangeLabel.style.left = (labelPosition * 100) + "%";
+      }
+  }
+
+// handle range animatio
+const defaultValue = (x, y) => {return (x !== null || x !== undefined) ? x : y};
 
 //fix all the upgrades
 function fix_upgrades(vals) {
@@ -2918,7 +2944,7 @@ function sell(id) {
     vals.prod += valsType.output;
     vals.loss -= valsType.output;
   }
-  
+
   vals.energy += valueReturn/2;
 }
 

@@ -89,6 +89,11 @@
 			<span class="button__inner">Statistics</span></button>
 	</div>
 
+	<div class="slider-wrapper">
+	  <input id="range-slider" class="fluid-slider" type="range" value="1" min="1" max="100">
+	  <span id="range-label" class="range-label"></span>
+	</div>
+
 	<div id="tab_divs" class='tabs'>
 
 	<div id="Leap" class="tabcontent">
@@ -139,15 +144,11 @@
 	</div>
 </div>
 	<div id="Conversion" class="tabcontent">
-	
 		<div id="purchase_1" class="tab_div">
 		<h3 id="purchase_header_1" class="header_1">This is the field for purchase for option one.
 			<label id="purchase_lbl_1" class="align_right">0</label>
 		</h3>
 		<p>
-			<b>
-			<span id="purchase_cost_1">10</span>
-			</b>
 			-
 			<em id="purchase_text_1">Text placeholder</em> 
 		</p>
@@ -158,10 +159,17 @@
 			</b>
 			per tick
 		</p>
-		<button id="purchase_btn_1" class="purchase" disabled="disabled">Purchase</button>
+		<button id="purchase_btn_1" class="purchase" disabled="disabled">Purchase
+					<b>
+			<span id="purchase_cost_1">10</span>
+			</b></button>
 		<button id="purchase_sell_btn_1" class="sell" 
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
-		disabled="disabled" >Sell</button>
+		disabled="disabled" >Sell
+			<b>
+			<span id="purchase_sell_1">10</span>
+			</b>
+		</button>
 		</div>
 	</div>
 	
@@ -172,10 +180,6 @@
 			<label id="ascend_lbl_1" class="align_right">0</label>
 		</h3>
 		<p>
-			<b>
-			<span id="ascend_cost_1">10</span>
-			</b>
-			-
 			<em id="ascend_text_1">Text placeholder</em> 
 		</p>
 		<p class = "align_right">
@@ -191,10 +195,18 @@
 			</b>
 			per tick
 		</p>
-		<button id="ascend_btn_1" class="purchase" disabled="disabled">Purchase</button>
+		<button id="ascend_btn_1" class="purchase" disabled="disabled">Buy 			
+			<b>
+			<span id="ascend_cost_1">10</span>
+			</b>
+		</button>
 		<button id="ascend_sell_btn_1" class="sell" 
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
-		disabled="disabled" >Sell</button>
+		disabled="disabled">Sell
+			<b>
+			<span id="ascend_sell_1">10</span>
+			</b>
+		</button>
 		</div>
 	</div>
 

@@ -8,6 +8,8 @@
 <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
 <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
 <script type = 'text/javascript' src="js/jquery.toaster.js"></script>
+<script type = "text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
+<script type = "text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TimelineLite.min.js"></script>
 <script type = 'text/javascript' src="js/main.js"></script>
 <link href="css/main.css" rel="stylesheet" type="text/css">
 <link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
@@ -39,7 +41,7 @@
     <div class="progress" style="margin: 0 10%">
   		<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" id="superclick_bar"
   			aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:0%; color:lightgrey">
-  			<strong style="color: #000000; text-align:center; text-transform:uppercase">Charge</strong>
+  			<strong style="color: #000000; text-align:center; text-transform:uppercase"></strong>
   		</div>
 	</div>
     <div id="miracle2_div">
@@ -76,8 +78,6 @@
 			<span class="button__inner" id="ascend-tab-text" style="background: transparent !important;"></span></button>
 		<button class="button square_btn" id="upgrade-tab-btn">
 			<span class="button__inner" id="augment-tab-text" style="background: transparent !important;"></span></button>
-		<button class="button square_btn" id="settings-tab-btn">
-			<span class="button__inner" style="background: transparent !important;">Settings</span></button>
 		<button class="button square_btn" id="sacrifice-tab-btn">		
 		<span class="button__inner" style="background: transparent !important;">Sacrifice</span></button>
 		<button class="button square_btn" id="pantheon-tab-btn">
@@ -470,85 +470,87 @@
 </div>
 	<div id="Stats" class="tabcontent">	
 			<div id="stats_div_1" class="tab_div">
-				<h3 id="stats_header_1">Game statistics</h3><br>
-				<p>
-					<h4 id='time_played'>Time played
-						<b>
-							<span id="stats_field_1">0.1</span>
-						</b>
-					</h4>
-					<h4 id='time_played'>Last saved
-						<b>
-							<label id="stats_field_saved">0.1</label>
-						</b>
-					</h4>
-					<br>
-					<h4 id='time_played'>Current energy
-						<b>
-							<span id="stats_field_2">0.1</span>
-						</b>
-						<span id="total_energy1">Total energy</span>
-						<b>
-							<span id="stats_field_3">0.1</span>
-						</b>
-					</h4>
-					<h4 id='time_played'>Current followers
-						<b>
-							<span id="stats_field_4">0.1</span>
-						</b>
-						<span id="total_energy4">Total followers</span>
-						<b>
-							<span id="stats_field_5">0.1</span>
-						</b>
-					</h4>
-					<h4 id='time_played'>Current Follower Prod
-						<b>
-							<span id="stats_field_8">0.1</span>
-						</b>
-						<span id="total_energy3">Max Follower Prod</span>
-						<b>
-							<span id="stats_field_9">0.1</span>
-						</b>
-					</h4>
+				<div id="stats_header_div"><h3 id="stats_header_1">Statistics <strong class="glyphicon glyphicon-stats"></strong></h3>
 
-					<h4 id='time_played'>Current energy production
-						<b>
-							<span id="stats_field_6">0.1</span>
-						</b>
-						<span id="total_energy2">Max energy production</span>
-						<b>
-							<span id="stats_field_7">0.1</span>
-						</b>
-					</h4>
-					<h4 id='time_played'>Miracle clicks
-						<b>
-							<span id="stats_field_13">0.1</span>
-						</b>
-						<span id="total_energy1">Ascension clicks</span>
-						<b>
-							<span id="stats_field_14">0.1</span>
-						</b>
-					</h4>
-					<h4 id='time_played' class="miracle_energy_stat">Ascension click energy
-						<b>
-							<span id="stats_field_15">0.1</span>
-						</b>
-						<span id="total_energy3">Miracle click followers</span>
-						<b>
-							<span id="stats_field_16">0.1</span>
-						</b>
-					</h4>
-					<br>
-					<h4 id='time_played'>Divine power
-						<b>
-							<label id="stats_field_11">0.1</label>
-						</b>
-					</h4>
-					<h4 id='time_played'>Current deity status
-						<b>
-							<span id="stats_field_10">Abstract presence</span>
-						</b>
-					</h4>
+				<div class="container">
+				  <div class="cube">
+				    <div class="plus">
+				      <div class="glyphicon glyphicon-cog" id="settings-main" style="color:white">
+				    </div>
+				    <div class="quadrant">
+				      <div class="quadrant__item">
+				        <div class="quadrant__item__content">
+				           <button class='purchase' id='delete_save'><strong class="glyphicon glyphicon-floppy-remove"></strong></button>
+				        </div>
+				      </div>
+				      <div class="quadrant__item">
+				        <div class="quadrant__item__content">
+				        	<button class="trigger"><strong class="glyphicon glyphicon-info-sign"></strong></button>
+				        </div>
+				      </div>
+				      <div class="quadrant__item">
+				        <div class="overlap quadrant__item__content">
+						<button class="btn btn-med" id="playing" style="background-color:#000000; color: #fff;"><span class="glyphicon glyphicon-volume-off"></span></button>
+				        </div>
+				      </div>
+				      <div class="quadrant__item">
+				        <div class="quadrant__item__content">
+						<button id='make_save' class='purchase' style="display: none"><strong class="glyphicon glyphicon-floppy-disk"></strong></button>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+			</div>
+		<div class="modal">
+		    <div class="modal-content">
+		        <span class="close-button"><strong class="glyphicon glyphicon-remove-sign"></strong></span>
+		        <h3 id="settings_header_1" style="padding-bottom:1em">Instructions:
+                <p style="font-weight: normal; font-size:0.8em; text-align:left"> <span><br>> Perform miracles to convert followers</span><br>
+                        <span>> Ascend followers to increase energy</span><br>
+                        <span>> Spend energy to improve production</span><br></p>
+                        <p style="font-weight: normal; font-size:0.8em;"><span>> Unlock more advanced features</span><br>
+                        <span>> Make your mark <strong class="glyphicon glyphicon-globe"></strong></span></p></h3>
+                </div>
+		    </div>
+		</div>
+	</div>
+<div class="table-background">
+  <div class="table-container">
+    <div class="panel pricing-table">
+      
+      <div class="pricing-plan">
+        <h2 class="pricing-header">Click</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Miracles</li>
+          <li class="pricing-features-item"><span id="stats_field_13">0.1</span></li>
+          <li class="pricing-features-item">Conversions</li>
+          <li class="pricing-features-item"><span id="stats_field_14">0.1</span></li>
+        </ul>
+      </div>
+      
+      <div class="pricing-plan">
+        <h2 class="pricing-header">Totals</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Energy</li>
+          <li class="pricing-features-item"><span id="stats_field_3">0.1</span></li>
+          <li class="pricing-features-item">Followers</li>          
+          <li class="pricing-features-item"><span id="stats_field_5">0.1</span></li>
+        </ul>
+      </div>
+      
+      <div class="pricing-plan">
+        <h2 class="pricing-header">Misc.</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Time</li>        	
+          <li class="pricing-features-item"><span id="stats_field_1">0.1</span></li>
+          <li class="pricing-features-item">Last save</li>
+          <li class="pricing-features-item"><label id="stats_field_saved">0.1</label></li>
+        </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
 			</div>
 	</div>
 	<div id="Challenges" class="tabcontent">	
@@ -643,24 +645,6 @@
 		</p>
 		</div>
 		</div>
-	</div>
-	</div>
-	<div id="Settings" class="tabcontent">	<div id="settings_1" style="text-align:center">
-		<div id="time_played" style="margin-left:5%;" class="tab_div">
-		<h3 id="settings_header_1" style="padding-bottom:1em">Instructions:
-		<p style="font-weight: normal; font-size:0.8em"> <span><br>-Perform miracles to convert followers</span><br>
-			<span>-Ascend followers to increase your divine energy</span><br>
-			<span>-Use your energy to improve your production</span><br>
-			<span>-Unlock advanced features as you progress</span></p></h3>	
-		</div>
-		<div id="settings_div_1" class="tab_div"><br>
-		<h3 id="settings_header_3">Save your game now.</h3>
-		<button id='make_save' class='purchase'>Save</button>
-		<h3 id="settings_header_2">Delete your save.</h3>
-		<button class='purchase' id='delete_save'>Delete save</button>
-		<h3 id="settings_header_3">Toggle Music</h3>
-		<button class="btn btn-med" id="playing" style="background-color:#000000; color: #fff;"><span class="glyphicon glyphicon-volume-off"></span></button></h4>
-		<h4 id="settings_header_4"><br>Created by abarkley123; BGM from www.zapsplat.com.</h4><br>
 	</div>
 	</div>
 	</div>

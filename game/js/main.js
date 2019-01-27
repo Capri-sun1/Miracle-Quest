@@ -2158,7 +2158,7 @@ function fix_corruption_bar(cor) {
   else if (cor >= -20 && cor < 0) desiredColor = '#BBDEFB';
   else if (cor <= 20 && cor > 0) desiredColor = '#EF9A9A';
   else if (cor <= 40 && cor > 20) desiredColor = '#E57373';
-  else if (cor <= 60 && cor > 40) desiredColor = '#F44336'
+  else if (cor <= 60 && cor > 40) desiredColor = '#F44336';
   else if (cor <= 80 && cor > 60) desiredColor = '#D32F2F';
   else if (cor <= 100 && cor > 80) desiredColor = '#B71C1C';
   

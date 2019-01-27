@@ -4,6 +4,7 @@ html {
   background-color: lightgrey;
   background-image: url('../data/background.jpg');
   transition: background 3s linear;
+
 }
 
 .button {
@@ -51,10 +52,6 @@ body, html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-body {
-  background-color: #ecf0f1;
 }
 
 .item_selector {
@@ -524,7 +521,7 @@ body {
 }
 .miracle { 
     border: none;
-    background-color: #1976D2;
+    background-color: #016FF9;
     color: white;
     padding: 8px 8px;
     text-align: center;
@@ -590,8 +587,9 @@ div.scroll_tabs button:hover {
     font-weight: bold;
     color: #ccc;
     text-shadow: 0px 1px 1px #333;
-    color: #263238;
+    color: #016FF9;
 }
+
 #settings_div_1,#pantheon_div_1 ,#sacrifice_div_1  {
   padding: 16px 16px;
 }
@@ -620,6 +618,7 @@ div.scroll_tabs button:hover {
 .purchase:hover {
   padding: 6px 6px;
   border: 2px solid  #880E4F;
+  color:  #880E4F !important;
 }
 .reset {
     border: none;
@@ -1654,8 +1653,8 @@ width: 100%; }
 
 .table-container {
   margin: 0 auto;
-  max-width: 960px;
   width: 100%;
+  overflow-x: scroll;
 }
 
 .panel {
@@ -1709,7 +1708,7 @@ width: 100%; }
     border-bottom: none;
     border-right: 1px solid #e1f1ff;
     flex-basis: 100%;
-    padding: 25px 50px;
+    padding: 0px 1%;
   }
 
   .pricing-plan:last-child {
@@ -1718,6 +1717,10 @@ width: 100%; }
     .pricing-table {
     flex-direction: row;
   }
+
+  #upgrades_table {
+    width:140%;
+  }
 }
 
 .pricing-img {
@@ -1725,8 +1728,11 @@ width: 100%; }
   max-width: 100%;
 }
 
+.wrap {
+  margin-bottom: 4%;
+}
 .pricing-header {
-  color: #888;
+  color: #000;
   font-weight: 600;
   letter-spacing: 1px;
 }
@@ -1752,7 +1758,7 @@ width: 100%; }
 .pricing-price {
   color: #016FF9;
   display: block;
-  font-size: 32px;
+  font-size: 1.5em;
   font-weight: 700;
 }
 
@@ -1789,3 +1795,130 @@ width: 100%; }
 .glyphicon glyphicon-menu-left {
   color: #000 !important;
   } 
+
+
+
+*:before,
+*:after {
+  z-index: -1;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.centerer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@-webkit-keyframes criss-cross-left {
+  0% {
+    left: -20px;
+  }
+  50% {
+    left: 50%;
+    width: 20px;
+    height: 20px;
+  }
+  100% {
+    left: 50%;
+    width: 375px;
+    height: 375px;
+  }
+}
+
+@keyframes criss-cross-left {
+  0% {
+    left: -20px;
+  }
+  50% {
+    left: 50%;
+    width: 20px;
+    height: 20px;
+  }
+  100% {
+    left: 50%;
+    width: 375px;
+    height: 375px;
+  }
+}
+@-webkit-keyframes criss-cross-right {
+  0% {
+    right: -20px;
+  }
+  50% {
+    right: 50%;
+    width: 20px;
+    height: 20px;
+  }
+  100% {
+    right: 50%;
+    width: 375px;
+    height: 375px;
+  }
+}
+@keyframes criss-cross-right {
+  0% {
+    right: -20px;
+  }
+  50% {
+    right: 50%;
+    width: 20px;
+    height: 20px;
+  }
+  100% {
+    right: 50%;
+    width: 375px;
+    height: 375px;
+  }
+}
+
+.btn-11 {
+  position: relative;
+  color: #016FF9;
+}
+.btn-11:before, .btn-11:after {
+  position: absolute;
+  top: 50%;
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: lightgrey;
+  border-radius: 50%;
+}
+.btn-11:before {
+  left: -20px;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+.btn-11:after {
+  right: -20px;
+  -webkit-transform: translate(50%, -50%);
+          transform: translate(50%, -50%);
+}
+.btn-11:hover {
+  color: #880E4F;
+}
+.btn-11:hover:before {
+  -webkit-animation: criss-cross-left 0.8s both;
+          animation: criss-cross-left 0.8s both;
+  -webkit-animation-direction: alternate;
+          animation-direction: alternate;
+}
+.btn-11:hover:after {
+  -webkit-animation: criss-cross-right 0.8s both;
+          animation: criss-cross-right 0.8s both;
+  -webkit-animation-direction: alternate;
+          animation-direction: alternate;
+}
+
+
+
+
+
+
+

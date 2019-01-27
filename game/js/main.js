@@ -500,7 +500,7 @@ var vals = {
           "4" : {
             "type":"superclick_mul",
             "upgrade1":{
-              "label":"Fight or flight",
+              "label":"Morning Coffee",
               "description":"You feel adrenaline surging through you as you click.",
               "unlocked":false,
               "cost":20000,
@@ -537,6 +537,7 @@ var vals = {
                 "cost":625000,
                 "mul":1.5
               },
+
               "upgrade2": {
                 "label":"Gravitational filaments",
                 "description":"Bend space-time, but just for a short time.",
@@ -2370,8 +2371,9 @@ function fix_upgrades(vals) {
                 $('<div id="new_upgrade" class="tab_div"> ' +
                 '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
                 '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
-                '<b><span id="upgrade_cost__">10</span></b> - <em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
-                ' data-balloon="Tick length - 20%" data-balloon-pos="right" disabled="disabled">Purchase</button></div>').prependTo($('#upgrade_' + purchase_num));
+                '<b><span id="upgrade_cost__">10</span><span class="glyphicon glyphicon-flash"></span> ]</b>  ' +
+                ' - <em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
+                '>Purchase</button></div>').prependTo($('#upgrade_' + purchase_num));
 
                 $('#new_upgrade').find('#upgrade_btn__').attr('id', "upgrade_btn_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
                 $("#new_upgrade").find('#upgrade_head_temp').attr('id', "upgrade_header_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
@@ -2381,20 +2383,25 @@ function fix_upgrades(vals) {
                 $('#new_upgrade').attr('id','upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
                 vals.upgrades[k][i].visible = true;
             }
-        $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).attr('data-balloon', vals.upgrades[k].type + ' x' + vals.upgrades[k][i].mul); 
         $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css("display", "block");
-        $("#upgrade_header_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.upgrades[k][i].label);
+        $("#upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].label);
         var cost = 1;
         if( vals.god_status.current > 1 ) {
           cost = vals.god_status[vals.god_status.current].mul * 0.67;
         }
-        $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text('[ ' + truncate_bigint(cost * vals.upgrades[k][i].cost) + ' energy ]');
+        let percentage = vals.upgrades[k][i].mul * 100;
+        let usedValue = percentage - 100;
+        if (purchase_num === '2') {
+          usedValue = 100 - percentage;
+        }
+        $("#upgrade_mul_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(usedValue + '%');
+        $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text('[ ' + truncate_bigint(cost * vals.upgrades[k][i].cost) + ' ');
         $('#upgrade_text_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].description);
         if( vals.upgrades[k][i].unlocked) {
           $('#upgrade_lbl_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).attr('class','glyphicon glyphicon-ok align_right');
           $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).remove();
-          $('#upgrade_cost_'+purchase_num + "_" + i.substr(i.indexOf('e') + 1)).remove();
-          $('#upgrade_' +purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('color', '#fff');
+          $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).remove();
+          $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('color', '#fff');
           $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('border', '2px solid #fff');
           $('#upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1)).detach().appendTo('#bought_upgrades');
          }
@@ -3292,7 +3299,7 @@ function handleMiracleClick(used_id, event) {
     new Audio('data/clicksound.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
-    click.setTargetColor(resolveColor(['#FFC400','#00FFFF']));
+    click.setTargetColor(resolveColor(['#FFC400','#016FF9']));
     click.revealTarget(divToAppend);
     click.generateOffset(divToAppend);
     click.animate();
@@ -3620,15 +3627,15 @@ function truncate_minutes(num) {
     var output_string = '';
     var remainder = Math.floor(num / 60);
     num -= (60 * remainder);
-    if( remainder >= 1 )
-      output_string = output_string + remainder + ' minutes, ';
-    if( remainder == 1 ) output_string = output_string.substr(0,output_string.length-3) +', ';
-    return output_string + truncate_seconds(num);
+    if (remainder >= 1)
+      output_string = output_string + remainder + ' minutes ';
+    if (remainder == 1) output_string = output_string.substr(0,output_string.length-2) + ' ';
+    return output_string  === '' ? output_string + truncate_seconds(num) : output_string;
 }
 
 function truncate_seconds(num) {
     var message = " seconds";
-    if( num == 1 ) message = message.substr(0,message.length-1);
+    if (num == 1) message = message.substr(0,message.length-1);
     return num + message + '.';
 }
 

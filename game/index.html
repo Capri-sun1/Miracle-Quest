@@ -244,100 +244,100 @@
 
 	<div id="Upgrades" class="tabcontent">
 
-		<div style="text-align:center; margin-bottom:0.5%" class="tab_div" id="main_upgrades_header">
-		<h3> Upgrades
-		<div class="btn btn-med" id="upgrades_shown" style="background-color:#fff;color:#000;"
-				data-balloon="See Purchased" data-balloon-pos="down">
-				<span style="font-size:1.5em;" class="glyphicon glyphicon-remove">
-				</span>
-		</div></h3>
-		<h3>Here you can buy upgrades to progress through the game.</h3><br>
+		<div style="margin-bottom:2.5%; margin-left: 1%" class="tab_div" id="main_upgrades_header">
+		<h3> Upgrades  <strong class="glyphicon glyphicon-dashboard"></strong></h3>
 	</div>
 		<div class="overlay" id="bought_upgrades" style="border-radius: 5px">	
 		<div class="wrap" id="achievements_wrap">
 		</div>
 		</div>
 
-		<div id="uncompleted" class="uncompleted" >
-		<div id="upgrade_1">
+		<div id="uncompleted" class="uncompleted">
+
+	<div class="table-background">
+    <div class="table-container">
+     <div class="panel pricing-table" id="upgrades_table" style="margin: 0px; overflow-y: hidden">
+      <div class="pricing-plan">
+        <h2 class="pricing-header">Power</h2>
+        <div id="upgrade_1">
 		<div id ="upgrade_1_1" class="tab_div">
-		<h3 id="upgrade_header_1_1" class="header_1">This is the field for upgrade for option one.
-			<label id="upgrade_lbl_1_1" class="glyphicon glyphicon-remove align_right"></label>
-		</h3>
-		<p>
-			<b>
-			<span id="upgrade_cost_1_1">10</span>
-			</b>
-			-
-			<em id="upgrade_text_1_1">Text placeholder</em> 
-		</p>
-		<button id="upgrade_btn_1_1" class="purchase" disabled="disabled" data-balloon-pos="right">Purchase</button>
-		</div>
-		</div>
-		<div id="upgrade_2">
-		<div id="upgrade_2_1" class="tab_div">
-		<h3 id="upgrade_header_2_1" class="header_1">This is the field for upgrade for option one.
-			<label id="upgrade_lbl_2_1" class="glyphicon glyphicon-remove align_right"></label>
-		</h3>
-		<p>
-			<b>
-			<span id="upgrade_cost_2_1">10</span>
-			</b>
-			-
-			<em id="upgrade_text_2_1">Text placeholder</em> 
-		</p>
-		<button id="upgrade_btn_2_1" class="purchase" 
-		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
-		</div>
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="upgrade_lbl_1_1" style="color: #880E4F"></span></li>
+          <li class="pricing-features-item"><span id="upgrade_mul_1_1">60% increased click power</span> increased click power.</li>
+          <li class="pricing-features-item"><span id="upgrade_text_1_1">0.1</span></li>
+        </ul>
+        <span class="pricing-price"><span id="upgrade_cost_1_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
+        <div class="wrap"><a class="btn-11" href="#"><button id="upgrade_btn_1_1" class="purchase" disabled="disabled" 
+        style="background:transparent; color:#016FF9">Purchase</button></a></div>
+      </div>    
+  		</div>
 	</div>
-	<div id="upgrade_3">
-		<div id="upgrade_3_1" class="tab_div">
-		<h3 id="upgrade_header_3_1" class="header_1">This is the field for upgrade for option one.
-			<label id="upgrade_lbl_3_1" class="glyphicon glyphicon-remove align_right"></label>
-		</h3>
-		<p>
-			<b>
-			<span id="upgrade_cost_3_1">10</span>
-			</b>
-			-
-			<em id="upgrade_text_3_1">Text placeholder</em> 
-		</p>
-		<button id="upgrade_btn_3_1" class="purchase" 
-		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
-		</div>
+      
+      <div class="pricing-plan">
+        <h2 class="pricing-header">Time</h2>
+        <div id="upgrade_2">
+		<div id ="upgrade_2_1" class="tab_div">
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="upgrade_lbl_2_1" style="color: #880E4F"></span></li>
+          <li class="pricing-features-item">Time speeds up by <span id="upgrade_mul_2_1">60% increased click power</span></li>
+          <li class="pricing-features-item"><span id="upgrade_text_2_1">0.1</span></li>
+        </ul>
+        <span class="pricing-price"><span id="upgrade_cost_2_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
+        <div class="wrap"><a class="btn-11" href="#"><button id="upgrade_btn_2_1" class="purchase" disabled="disabled" 
+        style="background:transparent; color:#016FF9">Purchase</button></a></div>
+      </div>    
+  		</div>
 	</div>
-	<div id="upgrade_4">
-		<div id="upgrade_4_1" class="tab_div">
-		<h3 id="upgrade_header_4_1" class="header_1">This is the field for upgrade for option one.
-			<label id="upgrade_lbl_4_1" class="glyphicon glyphicon-remove align_right"></label>
-		</h3>
-		<p>
-			<b>
-			<span id="upgrade_cost_4_1">10</span>
-			</b>
-			-
-			<em id="upgrade_text_4_1">Text placeholder</em> 
-		</p>
-		<button id="upgrade_btn_4_1" class="purchase" 
-		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
-		</div>
+
+      <div class="pricing-plan" style="display:none">
+        <h2 class="pricing-header">Power</h2>
+        <div id="upgrade_3">
+		<div id ="upgrade_3_1" class="tab_div">
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="upgrade_lbl_3_1" style="color: #880E4F"></span></li>
+          <li class="pricing-features-item"><span id="upgrade_text_3_1">0.1</span> increased click power</li>
+        </ul>
+        <span class="pricing-price"><span id="upgrade_cost_3_1"><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
+        <button id="upgrade_btn_3_1" class="purchase" disabled="disabled" data-balloon-pos="right">Purchase</button>
+      </div>    
+  		</div>
 	</div>
-	<div id="upgrade_5">
-		<div id="upgrade_5_1" class="tab_div">
-		<h3 id="upgrade_header_5_1" class="header_1">This is the field for upgrade for option one.
-			<label id="upgrade_lbl_5_1" class="glyphicon glyphicon-remove align_right"></label>
-		</h3>
-		<p>
-			<b>
-			<span id="upgrade_cost_5_1">10</span>
-			</b>
-			-
-			<em id="upgrade_text_5_1">Text placeholder</em> 
-		</p>
-		<button id="upgrade_btn_5_1" class="purchase" 
-		data-balloon='' data-balloon-pos="right" disabled="disabled">Purchase</button>
-		</div>
+
+      <div class="pricing-plan">
+        <h2 class="pricing-header">Blessings</h2>
+        <div id="upgrade_4">
+		<div id ="upgrade_4_1" class="tab_div">
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="upgrade_lbl_4_1" style="color: #880E4F"></span></li>
+          <li class="pricing-features-item"><span id="upgrade_mul_4_1">60%</span> stronger overcharge.</li>
+          <li class="pricing-features-item"><span id="upgrade_text_4_1">0.1</span></li>
+        </ul>
+        <span class="pricing-price"><span id="upgrade_cost_4_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
+        <div class="wrap"><a class="btn-11" href="#"><button id="upgrade_btn_4_1" class="purchase" disabled="disabled" 
+        style="background:transparent; color:#016FF9">Purchase</button></a></div>
+      </div>    
+  		</div>
 	</div>
+
+      <div class="pricing-plan">
+        <h2 class="pricing-header">Overcharge</h2>
+        <div id="upgrade_5">
+		<div id ="upgrade_5_1" class="tab_div">
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="upgrade_lbl_5_1" style="color: #880E4F"></span></li>
+          <li class="pricing-features-item"><span id="upgrade_mul_5_1">60% increased click power</span> longer overcharge.</li>
+          <li class="pricing-features-item"><span id="upgrade_text_5_1">0.1</span></li>
+        </ul>
+        <span class="pricing-price"><span id="upgrade_cost_5_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
+        <div class="wrap"><a class="btn-11" href="#"><button id="upgrade_btn_5_1" class="purchase" disabled="disabled" 
+        style="background:transparent; color:#016FF9">Purchase</button></a></div>
+      </div>    
+  		</div>
+	</div>
+      
+    </div>
+  </div>
+</div>
 	</div>
 </div>
 	<div id="Pantheon" class="tabcontent">

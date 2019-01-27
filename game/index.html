@@ -3,13 +3,12 @@
 <head>
 <meta charset='utf-8'> 
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script type = 'text/javascript' src="js/jquery.min.js"></script>
 <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
 <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
 <script type = 'text/javascript' src="js/jquery.toaster.js"></script>
-<script type="text/javascript" src="build/dat.gui.min.js"></script>
 <script type = 'text/javascript' src="js/main.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link href="css/main.css" rel="stylesheet" type="text/css">
 <link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
 <title>Miracle Clicker</title>
@@ -40,7 +39,7 @@
     <div class="progress" style="margin: 0 10%">
   		<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" id="superclick_bar"
   			aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:0%; color:lightgrey">
-  			<strong style="color: #000000;; text-align:center; text-transform:uppercase">Charge</strong>
+  			<strong style="color: #000000; text-align:center; text-transform:uppercase">Charge</strong>
   		</div>
 	</div>
     <div id="miracle2_div">
@@ -71,27 +70,22 @@
 	<div id = "tab_btns" class = "scroll_tabs">
 		<button class="button button--secondary" id="leap-tab-btn" style="display:none">
 			<span class="button__inner">Ascend</span></button>
-		<button class="button button--secondary" id="convert-tab-btn">
-			<span class="button__inner" id="convert-tab-text"></span></button>
-		<button class="button button--secondary" id="ascend-tab-btn">
-			<span class="button__inner" id="ascend-tab-text"></span></button>
-		<button class="button button--secondary" id="upgrade-tab-btn">
-			<span class="button__inner" id="augment-tab-text"></span></button>
-		<button class="button button--secondary" id="settings-tab-btn">
-			<span class="button__inner">Settings</span></button>
-		<button class="button button--secondary" id="sacrifice-tab-btn">		
-		<span class="button__inner">Sacrifice</span></button>
-		<button class="button button--secondary" id="pantheon-tab-btn">
-			<span class="button__inner">Pantheon</span></button>
-		<button class="button button--secondary" id="challenges-tab-btn">
-			<span class="button__inner" id="challenges-tab-text"></span></button>
-		<button class="button button--secondary" id="stats-tab-btn">
-			<span class="button__inner">Statistics</span></button>
-	</div>
-
-	<div class="slider-wrapper">
-	  <input id="range-slider" class="fluid-slider" type="range" value="1" min="1" max="100">
-	  <span id="range-label" class="range-label"></span>
+	    <button class="button square_btn" id="convert-tab-btn">
+			<span class="button__inner" id="convert-tab-text" style="background: transparent !important;"></span></button>
+		<button class="button square_btn" id="ascend-tab-btn">
+			<span class="button__inner" id="ascend-tab-text" style="background: transparent !important;"></span></button>
+		<button class="button square_btn" id="upgrade-tab-btn">
+			<span class="button__inner" id="augment-tab-text" style="background: transparent !important;"></span></button>
+		<button class="button square_btn" id="settings-tab-btn">
+			<span class="button__inner" style="background: transparent !important;">Settings</span></button>
+		<button class="button square_btn" id="sacrifice-tab-btn">		
+		<span class="button__inner" style="background: transparent !important;">Sacrifice</span></button>
+		<button class="button square_btn" id="pantheon-tab-btn">
+			<span class="button__inner" style="background: transparent !important;">Pantheon</span></button>
+		<button class="button square_btn" id="challenges-tab-btn">
+			<span class="button__inner" id="challenges-tab-text" style="background: transparent !important;"></span></button>
+		<button class="button square_btn" id="stats-tab-btn">
+			<span class="button__inner" style="background: transparent !important;">Statistics</span></button>
 	</div>
 
 	<div id="tab_divs" class='tabs'>
@@ -144,12 +138,29 @@
 	</div>
 </div>
 	<div id="Conversion" class="tabcontent">
+		
+		<div class="slider-wrapper" style="margin-bottom:1%; text-align: center">
+			<div class="share-button">
+                    <a href="#">Choose your amount <i class="glyphicon glyphicon-wrench"></i></a>
+                        <div class="icon-wrapper">
+                            <ul>
+                            	<li><a href="#" class="amount" id="1"><i class="number_circle">1</i></a>
+                            	<li><a href="#" class="amount"  id="5"><i class="number_circle">5</i></a>
+                            	<li><a href="#" class="amount"  id="10"><i class="number_circle">10</i></a>
+                            	<li><a href="#" class="amount" id="25"><i class="number_circle">25</i></a>
+                            	<li><a href="#" class="amount" id="50"><i class="number_circle">50</i></a>
+                            	<li><a href="#" class="amount" id="100"><i class="number_circle">100</i></a>
+                                <li><a href="#" class="close-social-icons"><i class="glyphicon glyphicon-menu-left"></i></a></li>
+                           </ul>
+                    </div>
+            </div>
+		</div>
+		<div id="miracle">
 		<div id="purchase_1" class="tab_div">
 		<h3 id="purchase_header_1" class="header_1">This is the field for purchase for option one.
 			<label id="purchase_lbl_1" class="align_right">0</label>
 		</h3>
 		<p>
-			-
 			<em id="purchase_text_1">Text placeholder</em> 
 		</p>
 		<p class = "align_right">
@@ -159,22 +170,41 @@
 			</b>
 			per tick
 		</p>
-		<button id="purchase_btn_1" class="purchase" disabled="disabled">Purchase
+		<button id="purchase_btn_1" class="purchase" disabled="disabled">Buy
 					<b>
-			<span id="purchase_cost_1">10</span>
+			<span id="purchase_cost_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
 			</b></button>
 		<button id="purchase_sell_btn_1" class="sell" 
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
 		disabled="disabled" >Sell
 			<b>
-			<span id="purchase_sell_1">10</span>
+			<span id="purchase_sell_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
 			</b>
 		</button>
 		</div>
 	</div>
+	</div>
 	
 	<div id="Ascension" class="tabcontent">
 	
+		<div class="slider-wrapper" style="margin-bottom:1%; text-align: center">
+			<div class="share-button">
+                    <a href="#">Choose your amount <i class="glyphicon glyphicon-wrench"></i></a>
+                        <div class="icon-wrapper">
+                            <ul>
+                            	<li><a href="#" class="amount_1"><i class="number_circle">1</i></a>
+                            	<li><a href="#" class="amount_5"><i class="number_circle">5</i></a>
+                            	<li><a href="#" class="amount_10"><i class="number_circle">10</i></a>
+                            	<li><a href="#" class="amount_25"><i class="number_circle">25</i></a>
+                            	<li><a href="#" class="amount_50"><i class="number_circle">50</i></a>
+                            	<li><a href="#" class="amount_100"><i class="number_circle">100</i></a>
+                                <li><a href="#" class="close-social-icons"><i class="glyphicon glyphicon-menu-left"></i></a></li>
+                           </ul>
+                    </div>
+            </div>
+		</div>
+
+		<div id="ascend">
 		<div id="ascend_1" class="tab_div">
 		<h3 id="ascend_header_1" class="header_1">This is the field for purchase for option one.
 			<label id="ascend_lbl_1" class="align_right">0</label>
@@ -197,17 +227,18 @@
 		</p>
 		<button id="ascend_btn_1" class="purchase" disabled="disabled">Buy 			
 			<b>
-			<span id="ascend_cost_1">10</span>
+			<span id="ascend_cost_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
 			</b>
 		</button>
 		<button id="ascend_sell_btn_1" class="sell" 
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
 		disabled="disabled">Sell
 			<b>
-			<span id="ascend_sell_1">10</span>
+			<span id="ascend_sell_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
 			</b>
 		</button>
 		</div>
+	</div>
 	</div>
 
 

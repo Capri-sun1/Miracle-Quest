@@ -88,6 +88,7 @@ var vals = {
     }
   },
   "miracle":{
+        "numSelected":1,
             "purchase1":{
                 "label":"Online Blogger",
                 "description":"An inspired teenager to spread the word.",
@@ -96,8 +97,7 @@ var vals = {
                 "base_output":0.2,
                 "base_cost":15,
                 "cost":15,
-                "buy5":100,
-                "sell5":100,
+                "sell_cost":7.5, 
                 "unlock_rps":0,
                 "unlocked":true,
             },
@@ -109,8 +109,7 @@ var vals = {
                 "base_output":1,
                 "base_cost":160,
                 "cost":160,
-                "buy5":100,
-                "sell5":100,     
+                "sell_cost":80,   
                 "unlock_rps":0.2,
                 "unlocked":false,
             },
@@ -122,8 +121,7 @@ var vals = {
                 "base_output":5,
                 "base_cost":1000,
                 "cost":1000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":500, 
                 "unlock_rps":1.2,
                 "unlocked":false,
             },
@@ -135,8 +133,7 @@ var vals = {
                 "base_output":25,
                 "base_cost":5000,
                 "cost":5000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":5000, 
                 "unlock_rps":5.0,
                 "unlocked":false,
             },
@@ -148,8 +145,7 @@ var vals = {
                 "base_output":150,
                 "base_cost":22500,
                 "cost":22500,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":11250,  
                 "unlock_rps":25.0,
                 "unlocked":false,
             },
@@ -161,8 +157,7 @@ var vals = {
                 "base_output":1000,
                 "base_cost":125000,
                 "cost":125000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":62500,  
                 "unlock_rps":175.0,
                 "unlocked":false,
             },
@@ -174,8 +169,7 @@ var vals = {
                 "base_output":7500,
                 "base_cost":800000,
                 "cost":800000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":400000, 
                 "unlock_rps":1400.0,
                 "unlocked":false,
             },
@@ -187,8 +181,7 @@ var vals = {
                 "base_output":30000,
                 "base_cost":5000000,
                 "cost":5000000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":2500000, 
                 "unlock_rps":10000.0,
                 "unlocked":false,
             },
@@ -200,8 +193,7 @@ var vals = {
                 "base_output":160000,
                 "base_cost":80000000,
                 "cost":80000000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":40000000,  
                 "unlock_rps":40000.0,
                 "unlocked":false,
             },
@@ -213,13 +205,13 @@ var vals = {
                 "base_output":200000000,
                 "base_cost":6000000000,
                 "cost":6000000000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":3000000000, 
                 "unlock_rps":200000.0,
                 "unlocked":false,
             }
          },  
          "ascend":{
+           "numSelected":1,
             "ascend1":{
                 "label":"Step-in-booth",
                 "description":"An univiting small booth to slowly process followers.",
@@ -228,8 +220,7 @@ var vals = {
                 "base_output":0.2,
                 "base_cost":25,
                 "cost":25,
-                "buy5":100,
-                "sell5":100, 
+                "sell_cost":12.5, 
                 "unlock_rps":0,
                 "unlocked":true,
             },
@@ -241,8 +232,7 @@ var vals = {
                 "base_output":1,
                 "base_cost":225,
                 "cost":225,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":112.5,  
                 "unlock_rps":0.2,
                 "unlocked":false,
             },
@@ -254,8 +244,7 @@ var vals = {
                 "base_output":5,
                 "base_cost":1350,
                 "cost":1350,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":625, 
                 "unlock_rps":1.2,
                 "unlocked":false,
             },
@@ -267,8 +256,7 @@ var vals = {
                 "base_output":25,
                 "base_cost":8000,
                 "cost":8000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":4000,  
                 "unlock_rps":5.0,
                 "unlocked":false,
             },
@@ -280,8 +268,7 @@ var vals = {
                 "base_output":150,
                 "base_cost":30000,
                 "cost":30000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":1500,
                 "unlock_rps":25.0,
                 "unlocked":false,
             },
@@ -293,8 +280,7 @@ var vals = {
                 "base_output":1000,
                 "base_cost":160000,
                 "cost":160000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":80000,  
                 "unlock_rps":175.0,
                 "unlocked":false,
             },
@@ -306,8 +292,7 @@ var vals = {
                 "base_output":7500,
                 "base_cost":1000000,
                 "cost":1000000,
-                "buy5":100,
-                "sell5":100,  
+                "sell_cost":500000, 
                 "unlock_rps":1400.0,
                 "unlocked":false,
             },
@@ -319,8 +304,7 @@ var vals = {
                 "base_output":30000,
                 "base_cost":6000000,
                 "cost":6000000,
-                "buy5":100,
-                "sell5":100, 
+                "sell_cost":3000000,
                 "unlock_rps":10000.0,
                 "unlocked":false,
             }, 
@@ -332,8 +316,7 @@ var vals = {
                 "base_output":200000,
                 "base_cost":100000000,
                 "cost":100000000,
-                "buy5":100,
-                "sell5":100, 
+                "sell_cost":500000000,
                 "unlock_rps":40000.0,
                 "unlocked":false
             },
@@ -345,8 +328,7 @@ var vals = {
                 "base_output":250000000,
                 "base_cost":8000000000,
                 "cost":8000000000,
-                "buy5":100,
-                "sell5":100, 
+                "sell_cost":4000000000,
                 "unlock_rps":225000.0,
                 "unlocked":false,
             }
@@ -904,16 +886,16 @@ var vals = {
               "type":"quantity",
               "visible":true,
               "unlocked":false,
-              "label":"Your first Miracle",
-              "description":"You performed your first miracle.",
+              "label":"First Miracle",
+              "description":"You carried out your first miracle.",
               "click_req":1,
               },
               "1_1": {
               "type":"total",
               "visible":true,  
               "unlocked":false,
-              "label":"The first to your cause.",
-              "description":"You've gained 10 followers through your miracles.",
+              "label":"Starting small.",
+              "description":"Gained 10 followers from miracles.",
               "val_req":10
               },
               "2" : {
@@ -921,23 +903,23 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Miracle happy",
-              "description":"You've performed 100 miracles.",
+              "description":"You've now performed 100 miracles.",
               "click_req":100
               },
               "2_2" : {
                 "type":"total",
               "visible":false,  
               "unlocked":false,
-              "label":"It's a miracle..!",
-              "description":"You've gained 500 followers through your miracles.",
+              "label":"It's a miracle!",
+              "description":"Gained 500 followers from miracles.",
               "val_req":500
               },
               "3" : {
               "type":"quantity",
               "visible":false,  
               "unlocked":false,
-              "label":"Qualified exercise",
-              "description":"You've performed 1000 miracles.",
+              "label":"These miracles are making me thirsty!",
+              "description":"You have performed 1000 miracles.",
               "click_req":1000
               },
               "3_3" : {
@@ -945,7 +927,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Ten thousand strong at least!",
-              "description":"You've gained 10000 followers through your miracles.",
+              "description":"Gained 10000 followers from miracles.",
               "val_req":10000
               },
               "4" : {
@@ -953,15 +935,15 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Carpal tunnel",
-              "description":"You've performed 15000 miracles.",
+              "description":"You made it to a whole 15000 miracles!",
               "click_req":15000
               },
               "4_4" : {
                 "type":"total",
               "visible":false,  
               "unlocked":false,
-              "label":"Iceland x 3",
-              "description":"You've gained 1M followers through your miracles.",
+              "label":"Six figures",
+              "description":"Gained 1M followers from miracles.",
               "val_req":1000000
               },
             },
@@ -971,8 +953,8 @@ var vals = {
                 "type":"quantity",
                 "visible":true,
                 "unlocked":false,
-                "label":"Your first Conversion",
-                "description":"You converted your first follower into energy.", 
+                "label":"Beginning",
+                "description":"First follower was transformed to energy.", 
                 "click_req":1
               },
                 "1_1": {
@@ -980,7 +962,7 @@ var vals = {
               "visible":true,  
               "unlocked":false,
               "label":"Fast-tracking",
-              "description":"You've gained 10 Divine Energy through converting followers.",
+              "description":"Gained 10 Divine Energy from conversion.",
               "val_req":10
               },
                "2" : {
@@ -1038,8 +1020,8 @@ var vals = {
               "1" : {
                 "visible":true,
                 "unlocked":false,
-                "label":"Zeus, take the wheel",
-                "description":"Your followers have started converting others to your cause.",
+                "label":"Autopilot",
+                "description":"Your followers have begun to start converting others.",
                 "req_tier":1,
                 "req_num":1
               },
@@ -1124,6 +1106,10 @@ var vals = {
            }
 
 };
+
+
+const defaultValue = (x, y) => {return (x !== null || x !== undefined) ? x : y};
+
  //global variable
 var upgrade_box_size = 0;
 
@@ -1146,7 +1132,9 @@ var upgrade_box_size = 0;
   $(document).ready(function() {
     loadBackgroundImage();
     loadData();
-
+    $('.amount').click();
+    fix_corruption_bar(vals.corruption);
+    fix_corruption_text(vals.corruption);
     lastTime = resolveLastTime();
     handleTimeSinceLastVisit();
 
@@ -2058,8 +2046,6 @@ function deleteSave() {
    function fix_names( vals ) {
     //fix conv and asc
     fix_conv_asc(vals);
-    fix_corruption_bar(vals.corruption);
-    fix_corruption_text(vals.corruption);
     //check on each update cycle for now - later only update once the desired event has occured
     $('#god_status').text(vals.god_status[vals.god_status.current].label);
     //todo- move this to its own method.
@@ -2188,6 +2174,7 @@ function fix_corruption_text(corruption) {
   if (corruption < 0) {
     alignment = " Good";
     corruption *= -1
+    if (corruption - 0.01 > 98) corruption = 100;
   } else if (corruption > 0) {
     alignment = " Evil";
   }
@@ -2198,9 +2185,9 @@ function fix_corruption_text(corruption) {
 //generalised function that handles both asc and conv tabs.
 function fix_conv_asc(vals) {
   const currentTab = vals.current_tab;
-  if( currentTab != 'Conversion' && currentTab != 'Ascension' ) return;
+  if (currentTab != 'Conversion' && currentTab != 'Ascension') return;
   let keyWord, title;
-  if( currentTab === 'Ascension') { 
+  if (currentTab === 'Ascension') { 
     keyWord = 'ascend'; 
     title = 'ascend'; 
   } else { 
@@ -2210,6 +2197,7 @@ function fix_conv_asc(vals) {
 
   for (let k in vals[keyWord]) {
       var purchase_num = k.substr(k.length-1);
+
       if ((currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && (vals.prod >= vals[keyWord][k].unlock_rps))) {
         if (vals[keyWord][k].unlocked !== true || vals[keyWord][k].buy5 === 100) {
           vals[keyWord][k].buy5 = determineValueOfNext([5, "buy"], vals[keyWord][k]);
@@ -2230,10 +2218,12 @@ function fix_conv_asc(vals) {
 
                 if( currentTab != 'Conversion' ) html_to_append += '<br>Costs <b><span id="ascend_out__2">0.1</span></b>per tick';
 
-                html_to_append += ' </p><button id="purchase_btn_" class="purchase" disabled="disabled">Buy <b><span id="purchase_cost_">10</span></b></button> ' +
-                '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right" '+
-                'disabled="disabled" >Sell <b><span id="purchase_sell_">10</span></b></button></div>';
-                $(html_to_append).prependTo('#' + currentTab);
+                html_to_append += ' </p><button id="purchase_btn_" class="purchase" disabled="disabled">Buy <b><span id="purchase_cost_">10</span>' +
+                "<span class='glyphicon glyphicon-flash'></span></b></button> " +
+                '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right"' +
+                'disabled="disabled" >Sell <b><span id="purchase_sell_">10</span>' +
+                "<span class='glyphicon glyphicon-flash'></span></b></button></b></button></div>";
+                $(html_to_append).prependTo('#' + keyWord);
               //now fix the fields
               $("#new_purchase").find('#purchase_lbl_').attr('id', title + "_lbl_" + purchase_num);
               $("#new_purchase").find('#purchase_text_').attr('id', title + "_text_" + purchase_num);
@@ -2252,9 +2242,9 @@ function fix_conv_asc(vals) {
         let cost = 1;
         if (vals.god_status.current > 1) cost = vals.god_status[vals.god_status.current].mul * 0.80;
         let desiredCost = truncate_bigint(Math.round(vals.god_status[vals.god_status.current].mul * vals[keyWord][k].cost));
-        let sellCost = defaultValue(vals.god_status[vals.god_status.current].mul * resolveItemCost(vals[keyWord][k].amount-1, vals[keyWord][k].base_cost)[0], 12.5);
-        $('#' + title + '_cost_' + purchase_num).text('[ ' + desiredCost + ' energy ]');
-        $('#' + title + '_sell_' + purchase_num).text('[ ' + truncate_bigint(sellCost/2) + ' energy ]');
+        let sellCost = truncate_bigint(Math.round(vals.god_status[vals.god_status.current].mul * vals[keyWord][k].sell_cost));
+        $('#' + title + '_cost_' + purchase_num).text(desiredCost);
+        $('#' + title + '_sell_' + purchase_num).text(sellCost);
         $('#' + title + '_text_' + purchase_num).text(vals[keyWord][k].description);
         $('#' + title + '_out_' + purchase_num).text(truncate_bigint(Math.round(cost * vals[keyWord][k].output *10)/10)+ " followers ");
         if (currentTab != 'Conversion') {
@@ -2267,25 +2257,98 @@ function fix_conv_asc(vals) {
   }
 }
 
-var rangeSlider = document.getElementById("range-slider");
-
-  var rangeLabel = document.getElementById("range-label");
-  rangeSlider.addEventListener("input", showSliderValue, false);
-
-  function showSliderValue() {
-      rangeLabel.innerHTML = rangeSlider.value;
-      var labelPosition = (rangeSlider.value /rangeSlider.max);
-      if(rangeSlider.value === rangeSlider.min) {
-     rangeLabel.style.left = ((labelPosition * 100) + 2) + "%";
-      } else if (rangeSlider.value === rangeSlider.max) {
-     rangeLabel.style.left = ((labelPosition * 100) - 2) + "%";
-      } else {
-      rangeLabel.style.left = (labelPosition * 100) + "%";
-      }
+$(document).on("click", ".amount", function() {
+  const tab = vals.currentTab;
+  const numberToPurchase = parseInt(this.id);
+  let keyWord, title;
+  if (tab === 'Ascension') { 
+    keyWord = 'ascend'; 
+    title = 'ascend'; 
+  } else { 
+    keyWord = 'miracle'; 
+    title = 'purchase'; 
   }
 
-// handle range animatio
-const defaultValue = (x, y) => {return (x !== null || x !== undefined) ? x : y};
+  vals[keyWord].numSelected = numberToPurchase;
+  for (let k in vals[keyWord]) {
+    if (vals[keyWord][k].unlocked === true) {
+        assignValues([keyWord, k], [numberToPurchase, "buy"]).then(result => { vals[keyWord][k].cost = result; });
+        determineSellPrice(keyWord, k);
+    }
+  }
+
+ $('.icon-wrapper').children().first().children().each((value, element) => {
+   let thisElement = $(element).children().first();
+    $(thisElement).children().each((val, elem) => {
+     if (parseInt(thisElement.attr('id')) === numberToPurchase) {
+        $(elem).first().css('color', '#67c5ff');
+      } else {
+        $(elem).first().css('color', '#fff');
+      }
+    });
+  });
+});
+
+async function assignValues(keywords, choice) {
+    let key = keywords[0];
+    let index = keywords[1];
+    let purchase_num = index.substr(index.length-1);
+    return await determineValueOfNext(choice, vals[key][index])
+}
+
+function determineSellPrice(key, index) {
+  let values = [1, 5, 10, 25, 50, 100];
+  if (vals[key].numSelected === 1 || (vals[key][index].amount < 5 && vals[key].numSelected > 1)) {
+    vals[key][index].sell_cost = vals.god_status[vals.god_status.current].mul * resolveItemCost(vals[key][index].amount-1, vals[key][index].base_cost)[0]/2;
+  } else {
+    let trueValue = vals[key].numSelected;
+    let numberSelected = values.filter((value) => {
+      if (value <= vals[key][index].amount && value <= vals[key].numSelected) {
+        return value;
+      } 
+    });
+
+    assignValues([key, index], [numberSelected[numberSelected.length-1], "sell"]).then(result => { vals[key][index].sell_cost = result; });
+  }
+}
+
+const postShareButtonClick = $(() => {
+    var buttonWrapper = $(".share-button"),
+        button = $(".share-button > a"),
+        icons = $(".share-button > .icon-wrapper"),
+        close = $(".close-social-icons");
+    
+    let init = () => {
+        button.on("click", toggle);
+        close.on("click", closeIcons);
+    }
+    
+    let toggle = e => {
+        if (buttonWrapper.hasClass("active")) {
+            closeIcons();
+        } else{
+            openIcons();
+        }
+
+        e.preventDefault();
+    }
+    
+    let openIcons = () => {
+        buttonWrapper.addClass("active");
+        button.addClass("hidden");
+        buttonWrapper.animate({width: ((buttonWrapper.width()/$(".slider-wrapper").width()) * 100)  + 20 + "%"}, 500);
+        icons.animate({left: "0"}, 500);
+    }
+    
+    let closeIcons = () => {
+        buttonWrapper.removeClass("active");
+        button.removeClass("hidden");
+        icons.animate({left: "-99%"}, 0);
+        buttonWrapper.animate({width: ((buttonWrapper.width()/$(".slider-wrapper").width()) * 100) - 20 + "%"}, 400);
+    }
+    
+    init();
+});
 
 //fix all the upgrades
 function fix_upgrades(vals) {
@@ -2375,7 +2438,7 @@ function fix_challenges(vals) {
               if( vals.challenges[k][String(parseInt(i)-1)].unlocked ) can_clone = true;
             break;
           }
-          if( can_clone) {
+          if (can_clone) {
               var clonedDiv_id = $('#challenges_' + challenge_num + '_' + i);
               $('<div id="new_challenge" class="tab_div"> ' +
                 '<h3 id="challenge_head_temp" class="header_1">This is the field for upgrade for option one.' +
@@ -2395,16 +2458,17 @@ function fix_challenges(vals) {
         if( vals.challenges[k][i].visible) {
           $('#challenges_header_'+ challenge_num + '_' + i).css('padding-left', '2.5%');
           $('#challenges_header_' + challenge_num + '_' + i).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.challenges[k][i].label);
-          $('#challenges_text_'+challenge_num + '_' + i).css('padding-left', '1%');
-          $('#challenges_text_'+challenge_num + '_' + i).text(vals.challenges[k][i].description);
+          $('#challenges_text_' + challenge_num + '_' + i).css('padding-left', '1%');
+          $('#challenges_text_' + challenge_num + '_' + i).text(vals.challenges[k][i].description);
         
-        if( vals.challenges[k][i].unlocked) {
+        if (vals.challenges[k][i].unlocked) {
           $('#challenges_lbl_' + challenge_num + '_' + i).attr('class','glyphicon glyphicon-ok align_right');
           $('#challenges_' + challenge_num + '_' + i).css('color', '#fff');
+          $('#challenges_' + challenge_num + '_' + i).css('display', 'inline-block');
+          $('#challenges_' + challenge_num + '_' + i).css('width', '48%');
           $('#challenges_' + challenge_num + '_' + i).css('border', '2px solid #fff');
           $('#challenges_' + challenge_num + "_" + i).detach().appendTo('#completed_challenges');
-         }
-         else {
+         } else {
           $('#challenges_lbl_' + challenge_num + '_' + i).attr('class','glyphicon glyphicon-remove align_right');
           $('#challenges_' + challenge_num + '_' + i).css('color', '#fff');
           $('#challenges_' + challenge_num + '_' + i).css('border', '2px solid #fff');
@@ -2565,17 +2629,20 @@ class Producer extends Action {
 
   constructor(id) {
     super(id);
+    this.purchaseNum = id;
+    this.id = generateUseableId(id) === 'purchase' ? 'miracle' : 'ascend';
     this.object = generateUseableId(id) === 'purchase' ? vals.miracle[id] : vals.ascend[id];
   }
 
   action() {
-    if(vals.energy >= this.object.cost) {
-      vals.energy -= this.object.cost;
-      this.object.amount ++;
-      this.object.cost = set_item_cost(this.object);
-      this.object.buy5 = determineValueOfNext([5, "buy"], this.object);
-      if (this.object.amount >= 5) this.object.sell5 = determineValueOfNext([5, "sell"], this.object);
-      this.handleProduction();
+    for (let i = 0; i < vals[this.id].numSelected; i++) {
+      if(vals.energy >= this.object.cost) {
+        vals.energy -= this.object.cost;
+        determineSellPrice(this.id, this.purchaseNum);
+        this.object.amount++;
+        this.handleProduction();
+        this.object.cost = set_item_cost(this.object);
+      }
     }
   }
 
@@ -2683,7 +2750,7 @@ class Sacrificer extends Action {
 
 	action() {
 		const corruptionOffset = this.sacrifice.offset;
-		if(this.sacrifice.canSacrifice(corruptionOffset)) {
+		if (this.sacrifice.canSacrifice(corruptionOffset)) {
 			this.sacrifice.action();
 		} else {
 			this.sacrifice.handleCorruptionMessage();
@@ -2705,6 +2772,8 @@ class Sacrifice {
 	  const type = 'sacrifice' + this.id.substr(this.id.length-1);
 	  vals.sacrifice[type].amount++;
     vals.sacrifice[type].cost = set_item_cost(vals.sacrifice[type]);
+    fix_corruption_bar(vals.corruption);
+    fix_corruption_text(vals.corruption);
 	}
 
 	canSacrifice(corruptionOffset) {
@@ -2712,7 +2781,6 @@ class Sacrifice {
 	}
 
 	getClass() {
-
 		const type = this.id.substr(this.id.length-1); 
 		if(type === '1') return new FollowerSacrifice(this.id);
 		else if (type === '2') return new MixedSacrifice(this.id);
@@ -2751,8 +2819,8 @@ class FollowerSacrifice extends Sacrifice {
 	action() {
 		vals.followers -= vals.sacrifice['sacrifice1'].cost;
 		vals.corruption +=5;
-        generateToastMessage("Your power has grown.","Sacrifice");
-        super.action();
+    generateToastMessage("Your power has grown.","Sacrifice");
+    super.action();
 	}
 
 	handleCorruptionMessage() {
@@ -2784,23 +2852,23 @@ class EnergySacrifice extends Sacrifice {
 	
 	constructor(id) {
 		super(id);
-		this.offset = -95;
+		this.offset = 95;
 	}
 
 	action() {
-	    vals.energy-= vals.sacrifice['sacrifice3'].cost;
-        vals.corruption -=5;
+    if (this.canSacrifice(this.offset)) {
+	      vals.energy -= vals.sacrifice['sacrifice3'].cost;
+        vals.corruption -= vals.corruption === -95 ? 4.99 : 5;
         generateToastMessage("Your sanctity increased.","Sacrifice");
         super.action();
-	}
+    } else {
+      handleCorruptionMessage();
+    }
+  }
 
 	handleCorruptionMessage() {
 		generateToastMessage("Your sanctity is maxed.","Sacrifice rejected");
 	}	
-
-	canSacrifice(corruptionOffset) {
-		return Math.abs(vals.corruption) >= corruptionOffset;
-	}
 }
 
 function generateToastMessage(toast, heading) {
@@ -2895,10 +2963,13 @@ $(document).on("click", ".sell", function() {
   const id = btn.substr(0, btn.indexOf('_')) + btn.substr(btn.length-1);
 
   let valsType = deriveType(id);
-  if(canSell(valsType) === true){
-    sell(id);  
-    fix_tab_buttons(vals);
-    fix_names(vals);
+  let purchaseType = generateUseableId(id) === 'purchase' ? 'miracle' : 'ascend';
+  for (let i = 0; i < vals[purchaseType].numSelected; i++) {
+    if(canSell(valsType) === true) {
+      sell(id);  
+      fix_tab_buttons(vals);
+      fix_names(vals);
+    }
   }
 });
 
@@ -2923,19 +2994,18 @@ function sell(id) {
   purchaseSound.play();
   valsType.amount--;
   let valueReturn = valsType.base_cost;
+  vals.energy += valsType.sell_cost;
 
   if (valsType.amount <= 1) {
     valsType.cost = valsType.base_cost;
+    valsType.sell_cost = valsType.cost/2;
     valsType.output = valsType.base_output;
   } else {
     let nextItem = resolveItemCost((valsType.amount-1), valsType.base_cost);
-    if (valsType.amount >= 5) {
-      valsType.sell5 = determineValueOfNext([5, "sell"], valsType);
-    }
     valueReturn = nextItem[0];
     valsType.cost = valueReturn;
     valsType.output = valsType.base_output * nextItem[1];
-    valsType.buy5 = determineValueOfNext([5, "buy"], valsType);
+    valsType.sell_cost = resolveItemCost((valsType.amount-2), valsType.base_cost)[0]/2;
   }
 
   if (id.includes('purchase')) {
@@ -2944,8 +3014,6 @@ function sell(id) {
     vals.prod += valsType.output;
     vals.loss -= valsType.output;
   }
-
-  vals.energy += valueReturn/2;
 }
 
 function determineValueOfNext(loopValues, valsType) {
@@ -3503,7 +3571,7 @@ function openTab(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
     vals.current_tab = tabName;
-    if( upgrade_box_size != 0 ) {
+    if (upgrade_box_size != 0) {
       $('#upgrades-box').css("height", upgrade_box_size);
     }
     fix_names(vals);
@@ -3589,3 +3657,5 @@ function truncate_int(num) {
     var num_str = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
     return num_str;
 }
+
+const debugPrint = args => args.forEach((element) => console.log(element + ' '));

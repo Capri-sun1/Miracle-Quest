@@ -226,14 +226,15 @@ body {
 }
 
 .share-button .icon-wrapper ul li a i{
-    color: white;
     font-size: 14px;
 }
+
 .share-button .icon-wrapper ul li:last-child a{
     background-color: white;
 }
+
 .share-button .icon-wrapper ul li:last-child a i {
-    color: #2d3847;
+    color: #2d3847 !important;
     position: relative;
     left: 1px;
 }
@@ -1784,3 +1785,10 @@ width: 100%; }
 .overlap {
   z-index: 1;
 }
+
+.glyphicon glyphicon-menu-left {
+  color: #000 !important;
+  } 
+
+
+  } #000 !important"

@@ -1075,7 +1075,7 @@ var vals = {
                 "visible":true,
                 "unlocked":false,
                 "label":"Straying from the path",
-                "description":"You sacrificed your first followers to enhance your power.. at what cost?",
+                "description":"Sacrificed followers to enhance your power.. at what cost?",
                 "req_corrupt":5
               },
               "2": {
@@ -2044,7 +2044,7 @@ function deleteSave() {
        $('#stats_field_16').text(truncate_bigint(vals.stats.miracle_click_energy));
   }
 
-   function fix_names( vals ) {
+   function fix_names (vals) {
     //fix conv and asc
     fix_conv_asc(vals);
     //check on each update cycle for now - later only update once the desired event has occured
@@ -2158,7 +2158,7 @@ function fix_corruption_bar(cor) {
   else if (cor >= -20 && cor < 0) desiredColor = '#BBDEFB';
   else if (cor <= 20 && cor > 0) desiredColor = '#EF9A9A';
   else if (cor <= 40 && cor > 20) desiredColor = '#E57373';
-  else if (cor <= 60 && cor > 40) desiredColor = '#F44336';
+  else if (cor <= 60 && cor > 40) desiredColor = '#F44336'
   else if (cor <= 80 && cor > 60) desiredColor = '#D32F2F';
   else if (cor <= 100 && cor > 80) desiredColor = '#B71C1C';
   
@@ -2200,12 +2200,6 @@ function fix_conv_asc(vals) {
       var purchase_num = k.substr(k.length-1);
 
       if ((currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && (vals.prod >= vals[keyWord][k].unlock_rps))) {
-        if (vals[keyWord][k].unlocked !== true || vals[keyWord][k].buy5 === 100) {
-          vals[keyWord][k].buy5 = determineValueOfNext([5, "buy"], vals[keyWord][k]);
-        } 
-        if (vals[keyWord][k].sell5 === 100 && vals[keyWord][k].amount >= 5) {
-          vals[keyWord][k].sell5 = determineValueOfNext([5, "sell"], vals[keyWord][k]);
-        }
         vals[keyWord][k].unlocked = true;
         //dynamically create divs as needed, saves creating all in the html file.
          if (!document.getElementById( title + '_' + purchase_num) && !document.getElementById('new_' + title) && k != (title + "1")) {
@@ -2269,7 +2263,7 @@ $(document).on("click", ".close-button", () => {
 });
 
 $(document).on("click", ".amount", function() {
-  const tab = vals.currentTab;
+  const tab = vals.current_tab;
   const numberToPurchase = parseInt(this.id);
   let keyWord, title;
   if (tab === 'Ascension') { 
@@ -2287,8 +2281,8 @@ $(document).on("click", ".amount", function() {
         determineSellPrice(keyWord, k);
     }
   }
-
- $('.icon-wrapper').children().first().children().each((value, element) => {
+  let thisDiv = $("#" + tab).children().first().children().first().children().last();
+  $(thisDiv).children().first().children().each((value, element) => {
    let thisElement = $(element).children().first();
     $(thisElement).children().each((val, elem) => {
      if (parseInt(thisElement.attr('id')) === numberToPurchase) {
@@ -2318,12 +2312,11 @@ function determineSellPrice(key, index) {
         return value;
       } 
     });
-
     assignValues([key, index], [numberSelected[numberSelected.length-1], "sell"]).then(result => { vals[key][index].sell_cost = result; });
   }
 }
 
-const postShareButtonClick = $(() => {
+const itemBarClick = $(() => {
     var buttonWrapper = $(".share-button"),
         button = $(".share-button > a"),
         icons = $(".share-button > .icon-wrapper"),
@@ -2471,13 +2464,16 @@ function fix_challenges(vals) {
           $('#challenges_header_' + challenge_num + '_' + i).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.challenges[k][i].label);
           $('#challenges_text_' + challenge_num + '_' + i).css('padding-left', '1%');
           $('#challenges_text_' + challenge_num + '_' + i).text(vals.challenges[k][i].description);
-        
-        if (vals.challenges[k][i].unlocked) {
-          $('#challenges_lbl_' + challenge_num + '_' + i).attr('class','glyphicon glyphicon-ok align_right');
           $('#challenges_' + challenge_num + '_' + i).css('color', '#fff');
           $('#challenges_' + challenge_num + '_' + i).css('display', 'inline-block');
-          $('#challenges_' + challenge_num + '_' + i).css('width', '48%');
+          if (challenge_num < 3 || vals.challenges[k][i].unlocked) {
+            $('#challenges_' + challenge_num + '_' + i).css('width', '48%');
+          } else if (vals.challenges[k][i].unlocked !== true) {
+            $('#challenges_' + challenge_num + '_' + i).css('width', '100%');
+          }
           $('#challenges_' + challenge_num + '_' + i).css('border', '2px solid #fff');
+        if (vals.challenges[k][i].unlocked) {
+          $('#challenges_lbl_' + challenge_num + '_' + i).attr('class','glyphicon glyphicon-ok align_right');
           $('#challenges_' + challenge_num + "_" + i).detach().appendTo('#completed_challenges');
          } else {
           $('#challenges_lbl_' + challenge_num + '_' + i).attr('class','glyphicon glyphicon-remove align_right');
@@ -2646,19 +2642,20 @@ class Producer extends Action {
   }
 
   action() {
-    for (let i = 0; i < vals[this.id].numSelected; i++) {
-      if(vals.energy >= this.object.cost) {
-        vals.energy -= this.object.cost;
-        determineSellPrice(this.id, this.purchaseNum);
-        this.object.amount++;
-        this.handleProduction();
-        this.object.cost = set_item_cost(this.object);
-      }
+    if(vals.energy >= this.object.cost) {
+      vals.energy -= this.object.cost;
+      for (let i = 0; i < vals[this.id].numSelected; i++) {
+          this.object.amount++;
+          this.handleProduction();
+          this.object.cost = set_item_cost(this.object);
+        }
+      determineSellPrice(this.id, this.purchaseNum);
+      assignValues([this.id, this.purchaseNum], [vals[this.id].numSelected, "buy"]).then(result => { vals[this.id][this.purchaseNum].cost = result; });
     }
   }
 
   handleProduction() {
-    if(generateUseableId(this.id) === 'purchase') {
+    if(this.id === 'miracle') {
         vals.prod += this.object.output;
       } else {
         vals.loss += this.object.output;
@@ -2863,7 +2860,7 @@ class EnergySacrifice extends Sacrifice {
 	
 	constructor(id) {
 		super(id);
-		this.offset = 95;
+		this.offset = -95;
 	}
 
 	action() {
@@ -2875,6 +2872,10 @@ class EnergySacrifice extends Sacrifice {
     } else {
       handleCorruptionMessage();
     }
+  }
+
+  canSacrifice(corruptionOffset) {
+    return vals.corruption >= corruptionOffset;
   }
 
 	handleCorruptionMessage() {
@@ -3002,40 +3003,44 @@ function canSell(valsType) {
 
 function sell(id) {
   let valsType = deriveType(id);
+  let purchaseType = generateUseableId(id) === 'purchase' ? 'miracle' : 'ascend';
   purchaseSound.play();
   valsType.amount--;
   let valueReturn = valsType.base_cost;
   vals.energy += valsType.sell_cost;
 
-  if (valsType.amount <= 1) {
-    valsType.cost = valsType.base_cost;
-    valsType.sell_cost = valsType.cost/2;
-    valsType.output = valsType.base_output;
-  } else {
-    let nextItem = resolveItemCost((valsType.amount-1), valsType.base_cost);
+  if (valsType.amount < 1) valsType.output = valsType.base_output;
+  else {
+    let nextItem = resolveItemCost((valsType.amount), valsType.base_cost);
     valueReturn = nextItem[0];
-    valsType.cost = valueReturn;
     valsType.output = valsType.base_output * nextItem[1];
-    valsType.sell_cost = resolveItemCost((valsType.amount-2), valsType.base_cost)[0]/2;
   }
-
   if (id.includes('purchase')) {
     vals.prod -= valsType.output;
   } else {
     vals.prod += valsType.output;
     vals.loss -= valsType.output;
   }
+  determineSellPrice(purchaseType, id);
+  assignValues([purchaseType, id], [vals[purchaseType].numSelected, "buy"]).then(result => { vals[purchaseType][id].cost = result; });
 }
 
 function determineValueOfNext(loopValues, valsType) {
   const toBuy = loopValues[1] === "buy";
-  const numberToCalculate = loopValues[0] + 1;
-  const increment = toBuy ? 1 : -1;
+  let numberToCalculate = loopValues[0] + 1;
+  let startingValue = 1;
+  let increment = 1;
+  if (toBuy !== true) {
+    increment = -1;
+    startingValue--;
+    numberToCalculate--;
+  }
+
   let totalValue = 0.0;
 
-  for (let i = 1; i < numberToCalculate; i++) {
+  for (let i = startingValue; i < numberToCalculate; i++) {
     const itemCost = resolveItemCost((valsType.amount-1) + (i * increment), valsType.base_cost)[0];
-    totalValue += toBuy ? itemCost : itemCost / 2;
+    totalValue += (toBuy === true) ? itemCost : itemCost / 2;
   }
 
   return totalValue;

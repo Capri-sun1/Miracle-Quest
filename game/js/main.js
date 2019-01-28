@@ -338,28 +338,28 @@ var vals = {
           "type":"Click amount",
             "upgrade1":{
               "label":"Basic telekinetics",
-              "description":"Limited control of Earthly forces increases your Divine Power.",
+              "description":"Control of Earthly forces increases your power.",
               "unlocked":false,
               "cost":75,
               "mul":1.6
             },
             "upgrade2":{
               "label":"Matter Manipulation",
-              "description":"A small amount of control over matter makes your Power swell.",
+              "description":"Control over matter makes your Power swell.",
               "unlocked":false,
               "cost":400,
               "mul":2
             },
             "upgrade3":{
               "label":"Transmogrification",
-              "description":"Convert entities into a form that enhances your Divine Power.",
+              "description":"Convert entities to enhances your power.",
               "unlocked":false,
               "cost":2750,
               "mul":2.4
             },
             "upgrade4":{
               "label":"Elementary conjuring",
-              "description":"Fledgling control of the elements doubles your Divine power.",
+              "description":"Fledgling control of elements increases power.",
               "unlocked":false,
               "cost":12500,
               "mul":2.8
@@ -2348,7 +2348,7 @@ const itemBarClick = $(() => {
     let closeIcons = () => {
         buttonWrapper.removeClass("active");
         button.removeClass("hidden");
-        icons.animate({left: "-99%"}, 0);
+        icons.animate({left: "-127.5%"}, 0);
         buttonWrapper.animate({width: ((buttonWrapper.width()/$(".slider-wrapper").width()) * 100) - 20 + "%"}, 400);
     }
     
@@ -2364,48 +2364,61 @@ function fix_upgrades(vals) {
       for( var i in vals.upgrades[k] ) {
         if( i != "type") {
           //set up new div for same challenge unlock
-        if( (i.substr(i.indexOf('e') + 1) === '1') || 
-          (vals.upgrades[k]["upgrade" + (String(parseInt(i.substr(i.indexOf('e') + 1)) -1))].unlocked && i.substr(i.indexOf('e') + 1) != '1') )  {
-          if(!document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)) && !document.getElementById('new_upgrade') && i != "upgrade1"){
-                var clonedDiv_id = $('#upgrade_' + purchase_num + '_' + i);
-                $('<div id="new_upgrade" class="tab_div"> ' +
-                '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
-                '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
-                '<b><span id="upgrade_cost__">10</span><span class="glyphicon glyphicon-flash"></span> ]</b>  ' +
-                ' - <em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
-                '>Purchase</button></div>').prependTo($('#upgrade_' + purchase_num));
+          if (vals.upgrades[k][i].unlocked != true) {
+                      var cost = 1;
+          if( vals.god_status.current > 1 ) {
+            cost = vals.god_status[vals.god_status.current].mul * 0.67;
+          }
+          let percentage = vals.upgrades[k][i].mul * 100;
+          let usedValue = percentage - 100;
+          if (purchase_num === '2') {
+            usedValue = 100 - percentage;
+          }
+          //let nextUpgrade = 'upgrade' + String(parseInt(i.substr(-1)) + 1);
+          let nextUpgrade = i;
+          $("#upgrade_mul_" + purchase_num + "_" + nextUpgrade.substr(nextUpgrade.indexOf('e') + 1)).text(usedValue + '%');
+          $('#upgrade_cost_' + purchase_num + "_" + nextUpgrade.substr(nextUpgrade.indexOf('e') + 1)).text('[ ' + 
+            truncate_bigint(cost * vals.upgrades[k][nextUpgrade].cost) + ' ');
+          // console.log($('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)));
+          $('#upgrade_text_' + purchase_num + "_" + nextUpgrade.substr(nextUpgrade.indexOf('e') + 1)).text(vals.upgrades[k][nextUpgrade].description);
+          break;
+          }
+        // if( (i.substr(i.indexOf('e') + 1) === '1') || 
+        //   (vals.upgrades[k]["upgrade" + (String(parseInt(i.substr(i.indexOf('e') + 1)) -1))].unlocked && i.substr(i.indexOf('e') + 1) != '1') )  {
+        //   if(!document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)) && !document.getElementById('new_upgrade') && i != "upgrade1") {
+        //         var clonedDiv_id = $('#upgrade_' + purchase_num + '_' + i);
+        //         // $('<div id="new_upgrade" class="tab_div"> ' +
+        //         // '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
+        //         // '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
+        //         // '<b><span id="upgrade_cost__">10</span><span class="glyphicon glyphicon-flash"></span> ]</b>  ' +
+        //         // ' - <em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
+        //         // '>Purchase</button></div>').prependTo($('#upgrade_' + purchase_num));
 
-                $('#new_upgrade').find('#upgrade_btn__').attr('id', "upgrade_btn_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-                $("#new_upgrade").find('#upgrade_head_temp').attr('id', "upgrade_header_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-                $("#new_upgrade").find('#upgrade_lbl_').attr('id', "upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-                $("#new_upgrade").find('#upgrade_text').attr('id', "upgrade_text_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-                $('#new_upgrade').find('#upgrade_cost__').attr('id', 'upgrade_cost_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
-                $('#new_upgrade').attr('id','upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
-                vals.upgrades[k][i].visible = true;
-            }
-        $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css("display", "block");
-        $("#upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].label);
-        var cost = 1;
-        if( vals.god_status.current > 1 ) {
-          cost = vals.god_status[vals.god_status.current].mul * 0.67;
-        }
-        let percentage = vals.upgrades[k][i].mul * 100;
-        let usedValue = percentage - 100;
-        if (purchase_num === '2') {
-          usedValue = 100 - percentage;
-        }
-        $("#upgrade_mul_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(usedValue + '%');
-        $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text('[ ' + truncate_bigint(cost * vals.upgrades[k][i].cost) + ' ');
-        $('#upgrade_text_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].description);
-        if( vals.upgrades[k][i].unlocked) {
-          $('#upgrade_lbl_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).attr('class','glyphicon glyphicon-ok align_right');
-          $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).remove();
-          $('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).remove();
-          $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('color', '#fff');
-          $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('border', '2px solid #fff');
-          $('#upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1)).detach().appendTo('#bought_upgrades');
-         }
-        }
+        //         // $('#new_upgrade').find('#upgrade_btn__').attr('id', "upgrade_btn_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+        //         // $("#new_upgrade").find('#upgrade_head_temp').attr('id', "upgrade_header_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+        //         // $("#new_upgrade").find('#upgrade_lbl_').attr('id', "upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+        //         // $("#new_upgrade").find('#upgrade_text').attr('id', "upgrade_text_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
+        //         // $('#new_upgrade').find('#upgrade_cost__').attr('id', 'upgrade_cost_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
+        //         // $('#new_upgrade').attr('id','upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
+        //         vals.upgrades[k][i].visible = true;
+        //     }
+        //   $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css("display", "block");
+        //   $("#upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].label);
+        //   var cost = 1;
+        //   if( vals.god_status.current > 1 ) {
+        //     cost = vals.god_status[vals.god_status.current].mul * 0.67;
+        //   }
+        //   let percentage = vals.upgrades[k][i].mul * 100;
+        //   let usedValue = percentage - 100;
+        //   if (purchase_num === '2') {
+        //     usedValue = 100 - percentage;
+        //   }
+        // if( vals.upgrades[k][i].unlocked) {
+        //   $('#upgrade_lbl_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).attr('class','glyphicon glyphicon-ok align_right');
+        //   $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('color', '#fff');
+        //   $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('border', '2px solid #fff');
+        //  }
+        // }
        }
      }
     }
@@ -2817,6 +2830,8 @@ class EntrySacrifice extends Sacrifice {
       vals.corruption += 5;
       vals.followers -= 1000000;
       generateToastMessage("Sacrifice tab unlocked!","Dark path");
+      fix_corruption_bar(vals.corruption);
+      fix_corruption_text(vals.corruption);
 	}
 
 	handleCorruptionMessage() {
@@ -3281,7 +3296,6 @@ $(document).on('contextmenu', '.miracle', function(event) {
   $(this).click();
 });
 
-//TODO - fix this for when you scroll down screen on achievements etc.
 $(document).on("click", '.miracle', function(event) { 
   var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
 
@@ -3299,7 +3313,7 @@ function handleMiracleClick(used_id, event) {
     new Audio('data/clicksound.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
-    click.setTargetColor(resolveColor(['#FFC400','#016FF9']));
+    click.setTargetColor(resolveColor(['#FFC400','#00ffff']));
     click.revealTarget(divToAppend);
     click.generateOffset(divToAppend);
     click.animate();

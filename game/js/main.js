@@ -1898,10 +1898,10 @@ function deleteSave() {
       var purchase_num = k.substr(k.length -1 );
       var cost = 1;
       if( mul > 1 ) cost = mul * 0.67;
-      for( var i in vals.upgrades[k] ) {
-      if( vals.energy >= (cost * vals.upgrades[k][i].cost) && !vals.upgrades[k][i].unlocked)
-        $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e')+1)).prop('disabled', false);
-      else $('#upgrade_btn_' + purchase_num + "_" + i.substr(i.indexOf('e')+1)).prop('disabled', true);
+      for (var i in vals.upgrades[k] ) {
+      if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].unlocked != true) {
+        $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
+      } else $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
       }
     }
   }
@@ -2375,12 +2375,12 @@ function fix_upgrades(vals) {
             usedValue = 100 - percentage;
           }
           //let nextUpgrade = 'upgrade' + String(parseInt(i.substr(-1)) + 1);
+
           let nextUpgrade = i;
-          $("#upgrade_mul_" + purchase_num + "_" + nextUpgrade.substr(nextUpgrade.indexOf('e') + 1)).text(usedValue + '%');
-          $('#upgrade_cost_' + purchase_num + "_" + nextUpgrade.substr(nextUpgrade.indexOf('e') + 1)).text('[ ' + 
-            truncate_bigint(cost * vals.upgrades[k][nextUpgrade].cost) + ' ');
+          $("#upgrade_mul_" + purchase_num + "_1").text(usedValue + '%');
+          $('#upgrade_cost_' + purchase_num + '_1').text('[ ' + truncate_bigint(cost * vals.upgrades[k][nextUpgrade].cost) + ' ');
           // console.log($('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)));
-          $('#upgrade_text_' + purchase_num + "_" + nextUpgrade.substr(nextUpgrade.indexOf('e') + 1)).text(vals.upgrades[k][nextUpgrade].description);
+          $('#upgrade_text_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].description);
           break;
           }
         // if( (i.substr(i.indexOf('e') + 1) === '1') || 
@@ -2709,7 +2709,7 @@ class Upgrader extends Action {
 class Upgrade {
 
   constructor(id, purchaseType) {
-    let btn = id.substr(0, id.indexOf('_')) + id.substr(id.lastIndexOf('_') + 1);
+    let btn = this.determineCurrentUpgrade(id, purchaseType);
     this.upgrade = vals.upgrades[purchaseType[0]][btn];
   }
 
@@ -2720,6 +2720,18 @@ class Upgrade {
 
   canUpgrade() {
     return vals.energy >= this.upgrade.cost;
+  }
+
+  determineCurrentUpgrade(id, purchaseType) {
+     let upgradeNum = id.substr(-1);
+     let upgrade = 'upgrade';
+     for (let i = parseInt(upgradeNum); i < 11; i++) {
+       if (vals.upgrades[String(purchaseType[0])][upgrade + String(i)].unlocked !== true) {
+        upgrade += i;
+        break;
+       } 
+     }
+     return upgrade;
   }
 }
 

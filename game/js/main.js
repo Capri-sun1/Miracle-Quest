@@ -25,34 +25,34 @@ var vals = {
   "god_status": {
     "current": 1,
     "1": {
-      "label":"Abstract presence",
+      "label": "Monk",
       "mul": 1,
-      "boss_label":"",
+      "boss_label": "",
       "max_tier":3
     },
     "2":{
-      "label":"Entity",
+      "label": "Alchemist",
       "mul": 2,
-      "boss_label":"Angry",
-      "max_tier":4
+      "boss_label": "Angry",
+      "max_tier": 4
     }, 
     "3":{
-      "label":"Apparition",
+      "label": "Sorceror",
       "mul": 4,
-      "boss_label":"Furious",
-      "max_tier":4
+      "boss_label": "Furious",
+      "max_tier": 4
     },
     "4":{
-      "label":"Phantom",
+      "label": "Arch Mage",
       "mul": 7,
-      "boss_label":"Incandescent",
-      "max_tier":4
+      "boss_label": "Star venturer",
+      "max_tier": 4
     },
     "5":{
-      "label":"Deity",
+      "label": "Phantasm",
       "mul": 12,
-      "boss_label":"Cruel",
-      "max_tier":4
+      "boss_label": "Cruel",
+      "max_tier": 4
     }
   },
   "leap" : {
@@ -366,7 +366,7 @@ var vals = {
             },
              "upgrade5":{
               "label":"Studying Holy texts",
-              "description":"Interpreting these ancient writings increases your Divine Power by even more.",
+              "description":"Interpreting these ancient writings increases your mystic Power by even more.",
               "unlocked":false,
               "cost":80000,
               "mul":3.2
@@ -569,7 +569,7 @@ var vals = {
             },
             "sacrifice3" : {
               "type":"Benevolent",
-              "description":"Surrender some of your divine essence to increase your sanctity.",
+              "description":"Surrender some of your mystic essence to increase your sanctity.",
               "corruption_inc":-5,
               "base_cost":2500000,
               "cost":2500000,
@@ -600,7 +600,7 @@ var vals = {
                   "max_amount":8
                 },
                 "click2":{
-                  "label":"Deal +0.025x Divine Power/Tick",
+                  "label":"Deal +0.025x mystic Power/Tick",
                   "amount":0,
                   "base_cost":2,
                   "cost":2,
@@ -651,7 +651,7 @@ var vals = {
                   "max_amount":8
                 },
                 "click2":{
-                  "label":"Deal +0.01x Divine Power/Tick",
+                  "label":"Deal +0.01x mystic Power/Tick",
                   "amount":0,
                   "base_cost":2.75,
                   "cost":2.75,
@@ -701,7 +701,7 @@ var vals = {
                   "max_amount":8
                 },
                 "click2":{
-                  "label":"Deal +0.01x Divine Power/Tick",
+                  "label":"Deal +0.01x mystic Power/Tick",
                   "amount":0,
                   "base_cost":2.5,
                   "cost":2.5,
@@ -751,7 +751,7 @@ var vals = {
                   "max_amount":8
                 },
                 "click2":{
-                  "label":"Deal +0.01x Divine Power/Tick",
+                  "label":"Deal +0.01x mystic Power/Tick",
                   "amount":0,
                   "base_cost":2.75,
                   "cost":2.75,
@@ -801,7 +801,7 @@ var vals = {
                   "max_amount":8
                 },
                 "click2":{
-                  "label":"Deal +0.01x Divine Power/Tick",
+                  "label":"Deal +0.01x mystic Power/Tick",
                   "amount":0,
                   "base_cost":3.5,
                   "cost":3.5,
@@ -963,7 +963,7 @@ var vals = {
               "visible":true,  
               "unlocked":false,
               "label":"Fast-tracking",
-              "description":"Gained 10 Divine Energy from conversion.",
+              "description":"Gained 10 mystic Energy from conversion.",
               "val_req":10
               },
                "2" : {
@@ -995,7 +995,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Ascend this.",
-              "description":"You've gained 10000 Divine Energy through Conversions.",
+              "description":"You've gained 10000 mystic Energy through Conversions.",
               "val_req":10000
               },
               "4" : {
@@ -1111,7 +1111,28 @@ var vals = {
 
 const defaultValue = (x, y) => {return (x !== null || x !== undefined) ? x : y};
 
- //global variable
+function showBackground() {
+  let shouldLoad = false;
+  try {
+    let lastTime = new Date();
+    let timeNow = new Date();
+    let diffInDays = dateDiffInDays(lastTime, timeNow);
+    let diffInSeconds = diffInDays >= 1 ? diffInDays * 86400 : (timeNow.getTime() - lastTime.getTime()) / 1000;
+    if (diffInSeconds > 300) shouldLoad = true;
+  } catch (NoSuchDateException) {
+    //swallow exception
+  }
+
+  console.log(shouldLoad);
+  if (shouldLoad === true) {
+    $("#scene").delay(7000).fadeOut(1500);
+    $("#background-fill").delay(8750).fadeOut(3000);
+    $('#loading-screen').delay(14000).fadeOut(() => $('#loading-screen').empty());
+  } else {
+    $('#loading-screen').empty();
+  }
+}
+
 var upgrade_box_size = 0;
 
 (function($) {
@@ -1131,8 +1152,9 @@ var upgrade_box_size = 0;
   }});
 
   $(document).ready(function() {
-    loadBackgroundImage();
+    //loadBackgroundImage();
     loadData();
+    showBackground();
     $('#1').click();
     fix_corruption_bar(vals.corruption);
     fix_corruption_text(vals.corruption);
@@ -1235,7 +1257,8 @@ function setupAudio() {
   tabSound = new Audio("data/tabsound.mp3");
   purchaseSound = new Audio("data/purchasesound.mp3");
   saveSound = new Audio("data/save.mp3");
-  bgm = new Audio('data/bgm.mp3');
+  bgm = new Audio('data/scifi.mp3');
+  bgm.volume = 0.;
   bgm.addEventListener('ended', function() {
     this.currentTime = 0;
     this.play();
@@ -1276,7 +1299,6 @@ $(document).on('click','#playing', function(event) {
 function setupContainers() {
   const width = $(window).width();
   const height = $(window).height();
-  $('#miracle_lbl').text("Divine energy ");
   $('#upgrades-box').css("height", height * 0.8);
   $('#upgrades-box').css("margin-right", width * 0.25);
   $('#upgrades-box').css("width", width * 0.65);
@@ -1346,7 +1368,9 @@ function resolveItemCost(index, base) {
       cycles = handleSaveData(cycles, false);
       handleGameLoop(iterations, cycles);
       handleGameLogic(corrected_prod, cost);
-
+      if (bgm.volume < 0.45) {
+        bgm.volume += 0.01;
+      }
     }, vals.tick);
   }
 
@@ -2374,51 +2398,13 @@ function fix_upgrades(vals) {
           if (purchase_num === '2') {
             usedValue = 100 - percentage;
           }
-          //let nextUpgrade = 'upgrade' + String(parseInt(i.substr(-1)) + 1);
-
           let nextUpgrade = i;
           $("#upgrade_mul_" + purchase_num + "_1").text(usedValue + '%');
           $('#upgrade_cost_' + purchase_num + '_1').text('[ ' + truncate_bigint(cost * vals.upgrades[k][nextUpgrade].cost) + ' ');
-          // console.log($('#upgrade_cost_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)));
           $('#upgrade_text_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].description);
+          $('#upgrade_lbl_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].label);
           break;
           }
-        // if( (i.substr(i.indexOf('e') + 1) === '1') || 
-        //   (vals.upgrades[k]["upgrade" + (String(parseInt(i.substr(i.indexOf('e') + 1)) -1))].unlocked && i.substr(i.indexOf('e') + 1) != '1') )  {
-        //   if(!document.getElementById('upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)) && !document.getElementById('new_upgrade') && i != "upgrade1") {
-        //         var clonedDiv_id = $('#upgrade_' + purchase_num + '_' + i);
-        //         // $('<div id="new_upgrade" class="tab_div"> ' +
-        //         // '<h3 id="upgrade_head_temp" class="header_1">This is the field for upgrade for option one.' +
-        //         // '<label id=upgrade_lbl_ class="glyphicon glyphicon-remove align_right"></label></h3><p>' +
-        //         // '<b><span id="upgrade_cost__">10</span><span class="glyphicon glyphicon-flash"></span> ]</b>  ' +
-        //         // ' - <em id="upgrade_text">Text placeholder</em> </p><button id="upgrade_btn__" class="purchase" ' +
-        //         // '>Purchase</button></div>').prependTo($('#upgrade_' + purchase_num));
-
-        //         // $('#new_upgrade').find('#upgrade_btn__').attr('id', "upgrade_btn_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-        //         // $("#new_upgrade").find('#upgrade_head_temp').attr('id', "upgrade_header_"+ purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-        //         // $("#new_upgrade").find('#upgrade_lbl_').attr('id', "upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-        //         // $("#new_upgrade").find('#upgrade_text').attr('id', "upgrade_text_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1));
-        //         // $('#new_upgrade').find('#upgrade_cost__').attr('id', 'upgrade_cost_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
-        //         // $('#new_upgrade').attr('id','upgrade_' + purchase_num + '_' + i.substr(i.indexOf('e') + 1));
-        //         vals.upgrades[k][i].visible = true;
-        //     }
-        //   $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css("display", "block");
-        //   $("#upgrade_lbl_" + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).text(vals.upgrades[k][i].label);
-        //   var cost = 1;
-        //   if( vals.god_status.current > 1 ) {
-        //     cost = vals.god_status[vals.god_status.current].mul * 0.67;
-        //   }
-        //   let percentage = vals.upgrades[k][i].mul * 100;
-        //   let usedValue = percentage - 100;
-        //   if (purchase_num === '2') {
-        //     usedValue = 100 - percentage;
-        //   }
-        // if( vals.upgrades[k][i].unlocked) {
-        //   $('#upgrade_lbl_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).attr('class','glyphicon glyphicon-ok align_right');
-        //   $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('color', '#fff');
-        //   $('#upgrade_' + purchase_num + "_" + i.substr(i.indexOf('e') + 1)).css('border', '2px solid #fff');
-        //  }
-        // }
        }
      }
     }
@@ -3325,7 +3311,7 @@ function handleMiracleClick(used_id, event) {
     new Audio('data/clicksound.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
-    click.setTargetColor(resolveColor(['#FFC400','#00ffff']));
+    click.setTargetColor(resolveColor(["#FFC400",'#1E90FF']));
     click.revealTarget(divToAppend);
     click.generateOffset(divToAppend);
     click.animate();
@@ -3397,7 +3383,7 @@ function attack(id, dam) {
   let bossClick = new BossClick({}, setAttackTarget(damage));
 
   bossClick.revealTarget(divToAppend);
-  bossClick.setTargetColor(resolveColor(["#FFC400",'#00FFFF']));
+  bossClick.setTargetColor(resolveColor([p]));
   bossClick.generateOffset(divToAppend);
   bossClick.animate();
 
@@ -3753,4 +3739,87 @@ function reverseTimeline(e) {
   tl.timeScale(1.8);
   tl.reverse();
 }
+});
+
+
+$(document).ready(() => {
+  var canvas = document.querySelector("#scene"),
+    ctx = canvas.getContext("2d"),
+    particles = [],
+    amount = 0,
+    radius = 1;
+
+  var colors = ["#fff","#880e4f", "#016FF9","#34B484", "#f0f0f0"];
+  var windowWidth = canvas.width = window.innerWidth;
+  var windowHeight = canvas.height = window.innerHeight;
+
+  function Particle(x,y) {
+    this.x =  Math.random() * windowWidth;
+    this.y =  Math.random() * windowHeight;
+    this.dest = {
+      x : x,
+      y: y
+    };
+    this.r =  Math.random() * 5 + 1.5;
+    this.vx = (Math.random() -0.5) * 25;
+    this.vy = (Math.random() -0.5) * 25;
+    this.accX = 0;
+    this.accY = 0;
+    this.friction = Math.random() * 0.02 + 0.94;
+
+    this.color = colors[Math.floor(Math.random() * 6)];
+  }
+
+  Particle.prototype.render = function() {
+    this.accX = (this.dest.x - this.x)/400;
+    this.accY = (this.dest.y - this.y)/400;
+    this.vx += this.accX;
+    this.vy += this.accY;
+    this.vx *= this.friction;
+    this.vy *= this.friction;
+
+    this.x += this.vx;
+    this.y +=  this.vy;
+
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, Math.PI * 2, false);
+    ctx.fill();
+  }
+
+  function initScene() {
+    windowWidth = canvas.width = window.innerWidth;
+    windowHeight = canvas.height = window.innerHeight;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = "bold "+ (windowWidth/10) +"px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Miracle Clicker", windowWidth/2, windowHeight/2);
+
+    let data  = ctx.getImageData(0, 0, windowWidth, windowHeight).data;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "screen";
+
+    particles = [];
+    for (let i=0;i < windowWidth; i += Math.round(windowWidth/150)){
+      for (let j=0;j < windowHeight * 1.2; j += Math.round(windowWidth/150)){
+        if (data[((i + j * windowWidth) * 4) + 3] > 150){
+          particles.push(new Particle(i,j));
+        }
+      }
+    }
+    amount = particles.length;
+  }
+
+  function render(a) {
+    requestAnimationFrame(render);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < amount; i++) {
+      particles[i].render();
+    }
+  };
+
+  initScene();
+  requestAnimationFrame(render);
 });

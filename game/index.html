@@ -16,27 +16,31 @@
 <title>Miracle Clicker</title>
 </head>
 <body>
-<img id="background-async" class="asyncImage" data-src="data/background_async.jpg" alt="Space-themed">
+<div id="loading-screen">
+	<canvas id="scene"></canvas>
+	<div id="background-fill"></div>
+</div>
+<div id='smallStar'></div>
+<div id='largeStar'></div>
 <div id="left_wrap" class="left_width">
 	<div id="make_sell_spacer"></div>
     <div id="left_floatable">
     <div id="above_div">
     	<p>
-            <span id="power_label">Divine Power </span>
+    		<strong>[<span id="god_status"> Abstract presence </spn>]</strong><br/>
+            <span id="power_label">Mystic Power </span>
             <strong><span id="click_amount">0</span></strong><br/>
-            <span id="god_label">Godly Status </span>
-            <strong>[<span id="god_status"> Abstract presence </span>]</strong><br/>
         </p>
     </div>
     <div id="miracle_wrap">
     <div id="miracle_div">
         <p>
-            <span id="miracle_lbl">Divine energy</span><br>
-            <strong><span id="power">0</span></strong>
-            <br><small><span id="prod_energy">0</span> energy per tick</small>
+            <strong><span id="power">0</span> <span class="glyphicon glyphicon-flash"></span></strong><br>
+            Net: <span id="prod_energy">0</span>
             <small><span id="clicker_rps_g"></span></small>
         </p>
-        <button class="miracle" id='miracle_button'>Perform Miracle</button>
+        <button class="miracle" id='miracle_button' style="background: transparent;">
+        	<img id="miracle_img" src="data/Magic_button_blue.png" alt="miracle" style="height:25vh; width:25vh;"></button>
     </div>
     <div class="progress" style="margin: 0 10%">
   		<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" id="superclick_bar"
@@ -46,12 +50,11 @@
 	</div>
     <div id="miracle2_div">
         <p>
-            <span id="follower_label">Followers</span><br>
-            <strong><span id="counter">0</span></strong><br/>
-            <small><span id="production_net">0</span> followers per tick(net)</small>
-            <br><small><span id="production_gross">0</span> followers per tick(total)</small><br/>
+            <strong><span id="counter">0</span> <span class="glyphicon glyphicon-user"></span><br/></strong>
+            Net: <span id="production_net">0</span>
         </p>
-        <button class="miracle" id= "miracle_button2nd">Convert</button>
+        <button class="miracle" id= "miracle_button2nd" style="background: transparent;">
+        	<img id="miracle_img" src="data/Magic_button_purple.png" alt="miracle" style="height:25vh; width:25vh;"></button>
     </div>
     <div class="clear"></div>
     </div>
@@ -343,7 +346,7 @@
 	<div id="Pantheon" class="tabcontent">
 		<div id="pantheon_div_1" class="tab_div" style="text-align:center">
 			<h3 class="header_1" >Enter the arena of the Gods.</h3>
-			<span id="pantheon_lbl_1">You have insufficient divine power to challenge these beings.</span>
+			<span id="pantheon_lbl_1">You have insufficient Mystic power to challenge these beings.</span>
 		</div>
 		<div id="pantheon_unlocked" style="display:none" class="tab_div">
 			
@@ -447,7 +450,7 @@
 				<b>
 					<span id="sacrifice_cost_2_2">5000000</span>	
 				</b>
-				Divine Energy
+				Mystic Energy
 
 			</p>
 				<button id="sacrifice_btn_2" class="purchase" data-balloon="Corruption &uarr; 15%." data-balloon-pos="right"
@@ -461,7 +464,7 @@
 				<b>
 					<span id="sacrifice_cost_3">5000000</span>	
 				</b>
-				Divine energy
+				Mystic energy
 			</p>
 				<button id="sacrifice_btn_3" class="purchase" data-balloon="Corruption &darr; 5%." data-balloon-pos="right"
 				disabled="disabled" style="margin-bottom:1em">Sacrifice</button>	

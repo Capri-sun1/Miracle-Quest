@@ -722,16 +722,14 @@ body, html {
  #miracle_button2nd {
   padding: 10px 20px;
 }
+
+#miracle_img {
+    -webkit-animation: rotation 40s infinite linear;
+}
 #miracle_button, #miracle_button2nd {
   background-color: #000000;
 }
-#miracle_button:hover, #miracle_button2nd:hover {
-  border: 2px solid  #880E4F;
-  padding: 6px 6px;
-}
-#miracle_button2nd:hover {
-  padding: 8px 18px;
-}
+
 #challenges_main_header_div {
   padding-bottom: 4%;
 }

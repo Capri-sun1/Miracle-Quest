@@ -413,7 +413,7 @@ var vals = {
               "cost":9000000000,
               "mul":8
             },
-            "upgrade11":{
+            "upgrade12":{
               "label":"Deal with the devil",
               "description":"Sacrifice some of your divinity for greater control over space.",
               "unlocked":false,
@@ -479,7 +479,7 @@ var vals = {
               "cost":1000000000,
               "mul":0.87
             },
-            "upgrade8":{
+            "upgrade9":{
                "label":"Demon's paw",
               "description":"A monkey's paw - but far more potent.",
               "unlocked":false,
@@ -1108,26 +1108,37 @@ var vals = {
 
 };
 
+function dateDiffInDays(a, b) {
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  return Math.floor((utc2 - utc1) / 86400000);
+}
 
 const defaultValue = (x, y) => {return (x !== null || x !== undefined) ? x : y};
 
 function showBackground() {
   let shouldLoad = false;
   try {
-    let lastTime = new Date();
+    let time = new Date(lastTime);
     let timeNow = new Date();
-    let diffInDays = dateDiffInDays(lastTime, timeNow);
-    let diffInSeconds = diffInDays >= 1 ? diffInDays * 86400 : (timeNow.getTime() - lastTime.getTime()) / 1000;
+    let diffInDays = dateDiffInDays(time, timeNow);
+    let diffInSeconds = diffInDays >= 1 ? diffInDays * 86400 : (timeNow.getTime() - time.getTime()) / 1000;
+    console.log(diffInSeconds);
     if (diffInSeconds > 300) shouldLoad = true;
   } catch (NoSuchDateException) {
-    //swallow exception
+    console.log("Error occured resolving last visit: \n" + NoSuchDateException);
+    shouldLoad = true;
   }
-
-  console.log(shouldLoad);
   if (shouldLoad === true) {
     $("#scene").delay(7000).fadeOut(1500);
     $("#background-fill").delay(8750).fadeOut(3000);
-    $('#loading-screen').delay(14000).fadeOut(() => $('#loading-screen').empty());
+    $('#loading-screen').delay(11750).fadeOut(() => { 
+      $('#loading-screen').empty();     
+      $('#1').click(); 
+    }).promise().then(() => {
+      return $('.trigger').click().promise();
+    });
   } else {
     $('#loading-screen').empty();
   }
@@ -1152,7 +1163,6 @@ var upgrade_box_size = 0;
   }});
 
   $(document).ready(function() {
-    //loadBackgroundImage();
     loadData();
     showBackground();
     $('#1').click();
@@ -1182,6 +1192,7 @@ var upgrade_box_size = 0;
     start_game();
   });
 
+//placeholder for async loading - will be used in background loading section for lazy loading
 function loadBackgroundImage() {
   var objects = document.getElementsByClassName('asyncImage');
 
@@ -1215,13 +1226,6 @@ function handleTimeSinceLastVisit() {
     let diffInSeconds = diffInDays >= 1 ? diffInDays * 86400 : (timeNow.getTime() - lastTime.getTime()) / 1000;
     handleSecondsIdle(diffInSeconds);
   }
-}
-
-function dateDiffInDays(a, b) {
-  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-
-  return Math.floor((utc2 - utc1) / 86400000);
 }
 
 function handleSecondsIdle(diffInSeconds) {
@@ -1767,7 +1771,6 @@ function loadData() {
       get_valsFromJSON(JSON.parse(atob(localStorage.sv1)));
   } catch(NoSuchSaveException) { 
     console.log("No saved data to load: " + NoSuchSaveException);
-    $('.trigger').click();
   }
   fix_tab_buttons(vals);
   fix_names(vals);
@@ -1917,15 +1920,24 @@ function deleteSave() {
       else $('#ascend_sell_btn_' + purchase_num).prop('disabled', true);
     }
   }
-  if( vals.current_tab === 'Upgrades' ) {
-    for( var k in vals.upgrades ) {
-      var purchase_num = k.substr(k.length -1 );
-      var cost = 1;
+  if (vals.current_tab === 'Upgrades') {
+    for (let k in vals.upgrades) {
+      const purchase_num = k.substr(k.length -1 );
+      let cost = 1;
       if( mul > 1 ) cost = mul * 0.67;
-      for (var i in vals.upgrades[k] ) {
-      if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].unlocked != true) {
-        $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
-      } else $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
+      for (let i in vals.upgrades[k]) {
+        if (i === 'type') continue;
+        if (vals.upgrades[k][i].unlocked === true) {
+            $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
+            continue;
+        } else if (vals.upgrades[k][i].unlocked != true) {
+          if (vals.energy >= (cost * vals.upgrades[k][i].cost)) {
+            $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
+          } else {
+            $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
+          }
+          break;
+        }
       }
     }
   }
@@ -2155,7 +2167,7 @@ function fix_pantheon(vals) {
         break;
       }
     }
-    if( $('#boss_num').text() != ': Upgrades') {
+    if ($('#boss_num').text() != ': Upgrades') {
       for (let k in vals.pantheon.upgrades) {
         for (let i in vals.pantheon.upgrades[k]) {
           let item = vals.pantheon.upgrades[k][i];
@@ -2163,7 +2175,7 @@ function fix_pantheon(vals) {
             if($('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text() === '')
               $('#shop_' + i.substr(0, i.length-1) + '_' + i.substr(i.length-1)).text(item.label);
           } else {
-            if( $('#shop_' + i).html() === '' ) {
+            if ($('#shop_' + i).html() === '') {
               $('#shop_' + i).html(item.label);
             }
           }
@@ -2381,32 +2393,39 @@ const itemBarClick = $(() => {
 
 //fix all the upgrades
 function fix_upgrades(vals) {
-  if( vals.current_tab === 'Upgrades'){
-   for( var k in vals.upgrades ) {
+  if (vals.current_tab === 'Upgrades') {
+   for (let k in vals.upgrades) {
       var purchase_num = k.substr(k.length-1);
-
-      for( var i in vals.upgrades[k] ) {
-        if( i != "type") {
+      let hasDisplayed = false;
+      for (let i in vals.upgrades[k]) {
+        if (i != "type") {
           //set up new div for same challenge unlock
           if (vals.upgrades[k][i].unlocked != true) {
-                      var cost = 1;
-          if( vals.god_status.current > 1 ) {
-            cost = vals.god_status[vals.god_status.current].mul * 0.67;
+            let cost = 1;
+            if (vals.god_status.current > 1) {
+              cost = vals.god_status[vals.god_status.current].mul * 0.67;
+            }
+            let percentage = vals.upgrades[k][i].mul * 100;
+            let usedValue = percentage - 100;
+            if (purchase_num === '2') {
+              usedValue = 100 - percentage;
+            }
+            let nextUpgrade = i;
+            $("#upgrade_mul_" + purchase_num + "_1").text(usedValue + '%');
+            $('#upgrade_cost_' + purchase_num + '_1').text('[ ' + truncate_bigint(cost * vals.upgrades[k][nextUpgrade].cost) + ' ');
+            $('#upgrade_text_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].description);
+            $('#upgrade_lbl_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].label);
+            hasDisplayed = true;
+            break;
           }
-          let percentage = vals.upgrades[k][i].mul * 100;
-          let usedValue = percentage - 100;
-          if (purchase_num === '2') {
-            usedValue = 100 - percentage;
-          }
-          let nextUpgrade = i;
-          $("#upgrade_mul_" + purchase_num + "_1").text(usedValue + '%');
-          $('#upgrade_cost_' + purchase_num + '_1').text('[ ' + truncate_bigint(cost * vals.upgrades[k][nextUpgrade].cost) + ' ');
-          $('#upgrade_text_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].description);
-          $('#upgrade_lbl_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].label);
-          break;
-          }
-       }
-     }
+        }
+      }
+      if (hasDisplayed !== true) {
+        $("#upgrade_mul_" + purchase_num + "_1").text('1337%');
+        $('#upgrade_cost_' + purchase_num + '_1').text('[ NaN');
+        $('#upgrade_text_' + purchase_num + '_1').text('You cannot progress this any further.');
+        $('#upgrade_lbl_' + purchase_num + '_1').text('Power maxed.');  
+      }
     }
   }
 }
@@ -2701,6 +2720,7 @@ class Upgrade {
 
   action() {
     vals.energy -= this.upgrade.cost;
+    console.log('here');
     this.upgrade.unlocked = true;
   }
 
@@ -2711,7 +2731,7 @@ class Upgrade {
   determineCurrentUpgrade(id, purchaseType) {
      let upgradeNum = id.substr(-1);
      let upgrade = 'upgrade';
-     for (let i = parseInt(upgradeNum); i < 11; i++) {
+     for (let i = parseInt(upgradeNum); i < 13; i++) {
        if (vals.upgrades[String(purchaseType[0])][upgrade + String(i)].unlocked !== true) {
         upgrade += i;
         break;
@@ -3383,7 +3403,7 @@ function attack(id, dam) {
   let bossClick = new BossClick({}, setAttackTarget(damage));
 
   bossClick.revealTarget(divToAppend);
-  bossClick.setTargetColor(resolveColor([p]));
+  bossClick.setTargetColor(resolveColor(["#FFC400",'#1E90FF']));
   bossClick.generateOffset(divToAppend);
   bossClick.animate();
 
@@ -3743,7 +3763,9 @@ function reverseTimeline(e) {
 
 
 $(document).ready(() => {
-  var canvas = document.querySelector("#scene"),
+  let canvas, ctx, particles, amount, radius;
+  try {
+    canvas = document.querySelector("#scene"),
     ctx = canvas.getContext("2d"),
     particles = [],
     amount = 0,
@@ -3822,4 +3844,7 @@ $(document).ready(() => {
 
   initScene();
   requestAnimationFrame(render);
+    } catch (NoSuchCanvasException) {
+    console.log("No canvas present.");
+  }
 });

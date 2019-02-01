@@ -114,7 +114,7 @@ body, html {
   display:inline-block;
 }
 
-.square_btn{
+.square_btn {
    position: relative;
    display: inline-block;
    padding: 0.25em 0 !important;
@@ -294,6 +294,7 @@ body, html {
   width: 100%;
   overflow-x: scroll;
   border-radius:10px;
+  background: white;
 }
 
 .panel {
@@ -306,7 +307,6 @@ body, html {
 }
 
 .pricing-table {
-  box-shadow: 0px 10px 13px -6px rgba(0, 0, 0, 0.08), 0px 20px 31px 3px rgba(0, 0, 0, 0.09), 0px 8px 20px 7px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: row;
 }
@@ -374,13 +374,14 @@ body, html {
   color: #000;
   font-weight: 600;
   letter-spacing: 1px;
+  margin-bottom: 10%;
 }
 
 .pricing-features {
   color: #016FF9;
   font-weight: 600;
   letter-spacing: 1px;
-  margin: 50px 0 25px;
+  margin: 50px 0 0px;
 }
 
 .pricing-features-item {
@@ -399,6 +400,7 @@ body, html {
   display: block;
   font-size: 1.5em;
   font-weight: 700;
+  margin-top: 5%;
 }
 
 .pricing-button {
@@ -596,6 +598,7 @@ body, html {
 #stats_div_1 {
   padding: 5%;
   padding-top: 0;
+  height:90vh;
 }
 .sacrifice {
   text-align: center;
@@ -723,9 +726,7 @@ body, html {
   padding: 10px 20px;
 }
 
-#miracle_img {
-    -webkit-animation: rotation 40s infinite linear;
-}
+
 #miracle_button, #miracle_button2nd {
   background-color: #000000;
 }
@@ -1330,6 +1331,9 @@ button:disabled, button.disabled {
     width: 20vh !important;
     height:20vh !important;
    }
+    #battle_1 {
+      width: 20% !important;
+    }
 }
 @media screen and (min-width: 1300px) { 
     .scroll_tabs button .button__inner { 
@@ -1350,6 +1354,7 @@ button:disabled, button.disabled {
         width: 70%;
         margin-left: 2%;
     }
+
     #time_played {
       font-size: 1.2em !important;
     }
@@ -1829,16 +1834,19 @@ width: 100%; }
 
 .close-button {
     float: right;
-    width: 1.5rem;
-    line-height: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
     text-align: center;
     cursor: pointer;
-    border-radius: 0.25rem;
-    background-color: lightgray;
+    color: white;
+    border-radius: 5em;
+    background-color: black;
+    font-size:2.5em;
 }
 
 .close-button:hover {
-    background-color: darkgray;
+    background-color: #880E4F;
 }
 
 .show-modal {
@@ -2150,3 +2158,50 @@ a {
   z-index: 19999;
   position:absolute;
 }
+
+.progress_bar{
+    height: 25px;
+    background-color:#231E26;
+    border-radius:15px;
+    box-shadow:0 4px 7px -5px #000 inset;
+    width:100%;
+    margin: 2%;
+}
+.progress_bar:first-child{
+    margin: 5% 4%;
+}
+.progress_bar .pro-bar{
+    position: relative;
+    height: 100%;
+    box-shadow: 0 1px 11px -4px #fff insept;
+    border-radius:15px;
+    animation: animate-positive 4s;
+}
+.progress_bar .pro-bar > span{
+    background: linear-gradient(to top, #3d4131 35%, #fff 233%);
+    color: #a5a5a4;
+    box-shadow: 1px 1px  3px #1d1a1f;
+    font-size: 14px;
+    font-weight: 700;
+    position: absolute;
+    top: -37px;
+    right: -10%;
+    padding: 4px 10px;
+    border-radius: 3px 3px 3px 0px;
+}
+.progress_bar .pro-bar > span:after{
+    content: "";
+    border-top: 6px solid #3d4131;
+    border-right: 6px solid transparent;
+    position: absolute;
+    bottom: -6px;
+    left:0;
+}
+@-webkit-keyframes animate-positive {
+    0% { width: 0%;}
+}
+@keyframes animate-positive {
+    0% { width:0%; }
+}
+
+

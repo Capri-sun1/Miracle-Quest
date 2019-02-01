@@ -34,25 +34,25 @@ var vals = {
       "label": "Alchemist",
       "mul": 2,
       "boss_label": "Angry",
-      "max_tier": 4
+      "max_tier": 5
     }, 
     "3":{
       "label": "Sorceror",
       "mul": 4,
       "boss_label": "Furious",
-      "max_tier": 4
+      "max_tier": 6
     },
     "4":{
       "label": "Arch Mage",
       "mul": 7,
       "boss_label": "Star venturer",
-      "max_tier": 4
+      "max_tier": 7
     },
     "5":{
       "label": "Phantasm",
       "mul": 12,
       "boss_label": "Cruel",
-      "max_tier": 4
+      "max_tier": 8
     }
   },
   "leap" : {
@@ -79,7 +79,7 @@ var vals = {
       "tier":{
         "label":"True Ascension",
         "description":"You Ascend to a new God status, with new unlocks but increased difficulty.",
-        "cost": 30,
+        "cost": 0,
         "amount": 0,
         "mul": 1,
         "req": 30,
@@ -493,7 +493,7 @@ var vals = {
               "label":"Unlock Quantum Leap",
               "description":"To infinity and beyond",
               "unlocked":false,
-              "cost":200000000000,
+              "cost":100000,
               "mul":" infinity"
             }
           },
@@ -1654,6 +1654,7 @@ function get_valsFromJSON(save) {
         vals.leap.unlocked = save.asc;
         vals.events.superclick.mul = parseInt(save.sc);
         vals.events.superclick.max_clicks = parseInt(save.sm);
+        vals.upgrades["3"]["upgrade1"] = save.lc;
         if( save.tier ) vals.god_status.current = parseInt(save.tier,16);
         lastTime = save.time;
 
@@ -1931,10 +1932,11 @@ function deleteSave() {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
             continue;
         } else if (vals.upgrades[k][i].unlocked != true) {
-          if (vals.energy >= (cost * vals.upgrades[k][i].cost)) {
+          if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < vals.upgrades["3"]["upgrade1"].cost) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
           } else {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
+            $('#upgrade_btn_' + purchase_num + "_1").parent().css("display", "none");
           }
           break;
         }
@@ -1979,7 +1981,8 @@ function deleteSave() {
       }
 
       let defeated = vals.pantheon.bosses['boss' + String(boss_num)].defeated;
-      if (boss_num >= parseInt(vals.god_status[vals.god_status.current].max_tier) || defeated != true) {
+      let maxTier = parseInt(vals.god_status[vals.god_status.current].max_tier - 2);
+      if (boss_num >= maxTier || defeated != true) {
         $('#next_boss').prop('disabled', true);
         $('#next_boss').css('display', "none");  
       } else {
@@ -2003,7 +2006,7 @@ function deleteSave() {
           }
         }
     }
-    if( vals.current_tab === 'Leap' ) {
+    if (vals.current_tab === 'Leap') {
       const leapUpgrades = ['click', 'boss', 'tier'];
       for (upg in leapUpgrades) {
         let leapUpgrade = leapUpgrades[upg];
@@ -2034,7 +2037,7 @@ function deleteSave() {
     var total_conv = 0, total_ascend = 0, total_aug = 0;
       for (let k in vals.upgrades) {
         for (let i in vals.upgrades[k]) {
-          if (vals.upgrades[k][i].unlocked ) unlock_aug++;
+          if (vals.upgrades[k][i].unlocked) unlock_aug++;
           if (vals.upgrades[k][i] != "Click amount" && vals.upgrades[k][i] != "Tick speed") total_aug++;
         }
       }
@@ -2079,6 +2082,19 @@ function deleteSave() {
        else $('#stats_field_saved').text(" never");
        $('#stats_field_15').text(truncate_bigint(vals.stats.ascension_click_energy));
        $('#stats_field_16').text(truncate_bigint(vals.stats.miracle_click_energy));
+
+       let cent = vals.stats.total_energy / vals.upgrades["3"]["upgrade1"].cost * 100;
+       let percentage = cent > 100 ? 100 : cent;
+       if (cent === 100 && vals.leap.unlocked !== true) {
+        vals.upgrades["3"]["upgrade1"].unlocked = true;
+        vals.leap.unlocked = true;
+       }
+       percentage = percentage < 1 ? 0 : percentage;
+       let diff = vals.upgrades["3"]["upgrade1"].cost - vals.stats.total_energy;
+       diff = diff < 0 ? 0 : diff;
+
+       $('#energy_to_next').text(truncate_bigint(Math.floor(diff)));
+       $('.pro-bar').css('width', percentage + '%');
   }
 
    function fix_names (vals) {
@@ -2123,7 +2139,7 @@ function fix_leap(vals) {
       //$('.wrap-nav').attr('id', 'leap_tier_' + String(parseInt(tier)+1));
 
       //boss lbl boss desc
-      for( var k in vals.leap[tier] ) {
+      for (let k in vals.leap[tier]) {
         $('#' + k + '_lbl_' + tier).text(vals.leap[tier][k].label);
         $('#' + k + '_desc_' + tier).text(vals.leap[tier][k].description);
         if( k === 'tier' ) $('#' + k+ '_cost_' + tier).html('Costs ' + vals.leap[tier][k].cost + '<span class="glyphicon glyphicon-fire"></span>');
@@ -2235,7 +2251,7 @@ function fix_conv_asc(vals) {
 
   for (let k in vals[keyWord]) {
       var purchase_num = k.substr(k.length-1);
-
+      if (purchase_num > vals.god_status[vals.god_status.current].max_tier) break;
       if ((currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && (vals.prod >= vals[keyWord][k].unlock_rps))) {
         vals[keyWord][k].unlocked = true;
         //dynamically create divs as needed, saves creating all in the html file.
@@ -2251,10 +2267,10 @@ function fix_conv_asc(vals) {
                 if( currentTab != 'Conversion' ) html_to_append += '<br>Costs <b><span id="ascend_out__2">0.1</span></b>per tick';
 
                 html_to_append += ' </p><button id="purchase_btn_" class="purchase" disabled="disabled">Buy <b><span id="purchase_cost_">10</span>' +
-                "<span class='glyphicon glyphicon-flash'></span></b></button> " +
+                "<span class='glyphicon glyphicon-flash' style='color: #880E4F'></span></b></button> " +
                 '<button id="purchase_sell_btn_" class="sell" data-balloon="Sells for 50% original value." data-balloon-pos="right"' +
                 'disabled="disabled" >Sell <b><span id="purchase_sell_">10</span>' +
-                "<span class='glyphicon glyphicon-flash'></span></b></button></b></button></div>";
+                "<span class='glyphicon glyphicon-flash' style='color: #880E4F'></span></b></button></b></button></div>";
                 $(html_to_append).prependTo('#' + keyWord);
               //now fix the fields
               $("#new_purchase").find('#purchase_lbl_').attr('id', title + "_lbl_" + purchase_num);
@@ -2398,7 +2414,14 @@ function fix_upgrades(vals) {
       var purchase_num = k.substr(k.length-1);
       let hasDisplayed = false;
       for (let i in vals.upgrades[k]) {
-        if (i != "type") {
+        if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost) {
+            $("#upgrade_mul_" + purchase_num + "_1").text('1337%');
+            $('#upgrade_cost_' + purchase_num + '_1').text('[ NaN ');
+            $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle this power.");
+            $('#upgrade_lbl_' + purchase_num + '_1').text("Unavailable");
+            hasDisplayed = true;
+          break;
+        } else if (i != "type") {
           //set up new div for same challenge unlock
           if (vals.upgrades[k][i].unlocked != true) {
             let cost = 1;
@@ -2542,7 +2565,7 @@ function staticLeapValuesToJson() {
     const tierMul = generateLeapOffset(vals.god_status.current);
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
-
+    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"] * 100;
     let save = {
         'e':0,
         'p':0,
@@ -2557,7 +2580,8 @@ function staticLeapValuesToJson() {
         "tier":vals.god_status.current.toString(16),
         "stage":0,
         "sc":2,
-        "sm":100
+        "sm":100,
+        'lc':newLeapUpgradeCost
     };	
 
     return save;	
@@ -2575,8 +2599,8 @@ function generateLeapOffset(tier) {
 function generateTotalValueFor(type, startValue) {
     let totalValue = startValue;
 
-    for (var k in vals.leap) {
-        if(k != 'unlocked' && k!='selected') {
+    for (let k in vals.leap) {
+        if (k != 'unlocked' && k != 'selected') {
           totalValue = Math.pow(vals.leap[k][type].mul, vals.leap[k][type].amount);
         }
     }
@@ -2586,15 +2610,15 @@ function generateTotalValueFor(type, startValue) {
 
 function leapStatsToJson() {
       const temp_s = {
-          't':vals.stats.time_played.toString(16),
-          't_e':Math.round(vals.stats.total_energy).toString(16),
-          't_f':Math.round(vals.stats.total_followers).toString(16),
-          'm_p':vals.stats.max_prod,
-          'm_l':vals.stats.max_loss,
-          'm_c':vals.stats.miracle_clicks.toString(16),
-          'a_c':vals.stats.ascension_clicks.toString(16),
-          'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
-          'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
+        't':vals.stats.time_played.toString(16),
+        't_e':Math.round(vals.stats.total_energy).toString(16),
+        't_f':Math.round(vals.stats.total_followers).toString(16),
+        'm_p':vals.stats.max_prod,
+        'm_l':vals.stats.max_loss,
+        'm_c':vals.stats.miracle_clicks.toString(16),
+        'a_c':vals.stats.ascension_clicks.toString(16),
+        'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
+        'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
       };
 
       return temp_s;
@@ -3848,3 +3872,5 @@ $(document).ready(() => {
     console.log("No canvas present.");
   }
 });
+
+

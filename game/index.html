@@ -35,7 +35,7 @@
     <div id="miracle_wrap">
     <div id="miracle_div">
         <p>
-            <strong><span id="power">0</span> <span class="glyphicon glyphicon-flash"></span></strong><br>
+            <strong><span id="power">0</span> <span class="glyphicon glyphicon-flash" style="color: #880E4F"></span></strong><br>
             Net: <span id="prod_energy">0</span>
             <small><span id="clicker_rps_g"></span></small>
         </p>
@@ -50,7 +50,7 @@
 	</div>
     <div id="miracle2_div">
         <p>
-            <strong><span id="counter">0</span> <span class="glyphicon glyphicon-user"></span><br/></strong>
+            <strong><span id="counter">0</span> <span class="glyphicon glyphicon-user" style="color: #67c5ff"></span><br/></strong>
             Net: <span id="production_net">0</span>
         </p>
         <button class="miracle" id= "miracle_button2nd" style="background: transparent;">
@@ -73,7 +73,7 @@
     </div> 
 </div> 
 	<div id = "tab_btns" class = "scroll_tabs">
-		<button class="button button--secondary" id="leap-tab-btn" style="display:none">
+		<button class="button square_btn" id="leap-tab-btn" style="display:none">
 			<span class="button__inner">Ascend</span></button>
 	    <button class="button square_btn" id="convert-tab-btn">
 			<span class="button__inner" id="convert-tab-text" style="background: transparent !important;"></span></button>
@@ -175,13 +175,13 @@
 		</p>
 		<button id="purchase_btn_1" class="purchase" disabled="disabled">Buy
 					<b>
-			<span id="purchase_cost_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
+			<span id="purchase_cost_1">10</span><span class='glyphicon glyphicon-flash' style="color: #880E4F"></span></b></button> 
 			</b></button>
 		<button id="purchase_sell_btn_1" class="sell" 
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
 		disabled="disabled" >Sell
 			<b>
-			<span id="purchase_sell_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
+			<span id="purchase_sell_1">10</span><span class='glyphicon glyphicon-flash' style="color: #880E4F"></span></b></button> 
 			</b>
 		</button>
 		</div>
@@ -230,14 +230,14 @@
 		</p>
 		<button id="ascend_btn_1" class="purchase" disabled="disabled">Buy 			
 			<b>
-			<span id="ascend_cost_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
+			<span id="ascend_cost_1">10</span><span class='glyphicon glyphicon-flash' style="color: #880E4F"></span></b></button> 
 			</b>
 		</button>
 		<button id="ascend_sell_btn_1" class="sell" 
 		data-balloon="Sells for 50% original value." data-balloon-pos="right"
 		disabled="disabled">Sell
 			<b>
-			<span id="ascend_sell_1">10</span><span class='glyphicon glyphicon-flash'></span></b></button> 
+			<span id="ascend_sell_1">10</span><span class='glyphicon glyphicon-flash' style="color: #880E4F"></span></b></button> 
 			</b>
 		</button>
 		</div>
@@ -331,7 +331,7 @@
           <li class="pricing-features-item"><span id="upgrade_mul_5_1">60% increased click power</span> longer overcharge.</li>
           <li class="pricing-features-item"><span id="upgrade_text_5_1">0.1</span></li>
         </ul>
-        <span class="pricing-price"><span id="upgrade_cost_5_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
+        <span class="pricing-price"><span id="upgrade_cost_5_1"></span><span style="color: #880E4F; margin-top:2.5%" class='glyphicon glyphicon-flash' style="color: #880E4F"></span> ]</span><br>
         <div class="wrap"><a class="btn-11" href="#"><button id="upgrade_btn_5_1" class="purchase" disabled="disabled" 
         style="background:transparent; color:#016FF9">Purchase</button></a></div>
       </div>    
@@ -506,7 +506,7 @@
 			</div>
 		<div class="modal">
 		    <div class="modal-content">
-		        <span class="close-button"><strong class="glyphicon glyphicon-remove-sign"></strong></span>
+		        <span class="close-button"><strong class="glyphicon glyphicon-remove-sign" style="vertical-align: middle"></strong></span>
 		        <h3 id="settings_header_1" style="padding-bottom:1em">Instructions:
                 <p style="font-weight: normal; font-size:0.8em; text-align:left"> <span><br>> Perform miracles to convert followers</span><br>
                         <span>> Ascend followers to increase energy</span><br>
@@ -547,14 +547,26 @@
           <li class="pricing-features-item" style="color: #880E4F">Time</li>        	
           <li class="pricing-features-item"><span id="stats_field_1">0.1</span></li>
           <li class="pricing-features-item" style="color: #880E4F">Last save</li>
-          <li class="pricing-features-item" style="padding-bottom:3.3%; border-bottom:none;"><label id="stats_field_saved">0.1</label></li>
+          <li class="pricing-features-item" style="border-bottom:none;"><label id="stats_field_saved">0.1</label></li>
         </ul>
        </div>  
+
+		  </div>
+		  <div class="container" style="text-align:center; width: 100%">
+    <div class="row" style="color: black; font-size: 1.5em; padding-top: 2.5%">
+    	<strong id="energy_to_next">100000</strong><span class="glyphicon glyphicon-flash" style="color: #880E4F"></span><strong style="margin-top:2%"> until next tier</strong>
+        <div class="col-md-6" style="width: 90%;">
+            <div class="progress_bar">
+                <div class="pro-bar" style="width: 0%; background: linear-gradient(to right,  #cf5d81 35%,#5c8ab7 68%);">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+	    </div>
 	   </div>
-	  </div>
 	</div>
-   </div>
-	</div>
+</div>
 	<div id="Challenges" class="tabcontent">	
 		<div id="challenges_main_header_div" class="tab_div" style="text-align:center">
 				<h3 id="challenges_header">

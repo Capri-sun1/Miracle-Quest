@@ -86,13 +86,12 @@ async function showBackground() {
       return $('.trigger').click().promise();
     });
   } else {
-    $("#scene").delay(4000).fadeOut(1500);
-    $("#background-fill").delay(3000).fadeOut(2000);
-    $('#loading-screen').delay(5000).fadeOut(() => { 
+      $("#scene").fadeOut();
+      $('#loading-screen').delay(1000).fadeOut(() => { 
       $('#loading-screen').empty();     
       $('#1').click(); 
     });
-  }
+  } 
 }
 
 async function scanJsonFile(file, backup) {
@@ -228,17 +227,20 @@ function handleAudioFailure(bgm) {
 }
 
 function handleVisibilityChange() {
+  try {
     if (document.hidden){
         bgm.pause();
     } else {
         setupAudio();
     }
+  } catch (NoSuchAudioException) {
+    console.log("Unable to change state of audio.");
+  }
 }
 
 document.addEventListener("visibilitychange", handleVisibilityChange, false);
 
 $(document).on('click','#playing', function(event) {
-  console.log(bgm.ended + ' ' + bgm.paused);
   if(bgm.ended !== true && bgm.paused !== true) {
     bgm.pause();
   } else if (bgm.paused === true) {
@@ -294,7 +296,7 @@ function resolveItemCost(index, base) {
     return [base, multiplier];
   }
 
-  const status_multiplier = vals.god_status[vals.god_status.current].mul;
+  const status_multiplier = vals.god_status[vals.god_status.current].mul * 0.8;
   const newCost = amount_multiplier * (status_multiplier * base);
 
   return [Math.round(newCost * 0.9), multiplier];
@@ -482,7 +484,8 @@ function staticValuesToJson() {
       "time":new Date(),
       "sc":vals.events.superclick.mul,
       "sm":vals.events.superclick.max_clicks,
-      "lc":Math.round(vals.upgrades["3"]["upgrade1"].cost).toString(16)
+      "lc":Math.round(vals.upgrades["3"]["upgrade1"].cost).toString(16),
+      "cst":vals.leap["1"].tier.cost.toString(16)
   };
  	return save;
 }
@@ -610,8 +613,11 @@ function get_valsFromJSON(save) {
         vals.leap.unlocked = save.asc;
         vals.events.superclick.mul = parseInt(save.sc);
         vals.events.superclick.max_clicks = parseInt(save.sm);
+        vals.leap["1"].tier.cost = parseInt(save.cst, 16);
         vals.upgrades["3"]["upgrade1"].cost = parseInt(save.lc, 16);
         if (save.tier) vals.god_status.current = parseInt(save.tier,16);
+        if (vals.upgrades["3"]["upgrade1"].cost <= 100000 && vals.god_status.current > 1) 
+          vals.upgrades["3"]["upgrade1"].cost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.2 * 25);
         lastTime = save.time;
 
         for( var k in vals.pantheon.bosses ) {
@@ -924,7 +930,7 @@ function setButtonAvailability(vals) {
       }
 
       let defeated = vals.pantheon.bosses['boss' + String(boss_num)].defeated;
-      let maxTier = parseInt(vals.god_status[vals.god_status.current].max_tier - 2);
+      let maxTier = parseInt(vals.god_status[vals.god_status.current].max_tier - 4);
       if (boss_num >= maxTier || defeated != true) {
         $('#next_boss').prop('disabled', true);
         $('#next_boss').css('display', "none");  
@@ -955,11 +961,16 @@ function setButtonAvailability(vals) {
         let leapUpgrade = leapUpgrades[upg];
         const id = $('.wrap-nav').attr('id');
         const tier = id.substr(id.length-1);
-        if (vals.flame >= vals.leap[tier][leapUpgrade].req 
+        if (leapUpgrade !== 'tier' && vals.god_status.current === 1) {
+          $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', true); 
+          $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Currently unavailable.");
+          continue;
+        }
+        if (vals.flame >= vals.leap[tier][leapUpgrade].cost 
           && vals.leap[tier][leapUpgrade].amount < (vals.leap[tier][leapUpgrade].max + (parseInt(vals.god_status.current)-1))) {
           $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', false);  
           if (leapUpgrade !== 'tier') {
-            $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', leapUpgrade + " potency increase");
+            $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', leapUpgrade.charAt(0).toUpperCase() + leapUpgrade.slice(1) + " potency increase");
           } else {
             $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Ascend your divinity.");
           }
@@ -1085,7 +1096,7 @@ function fix_leap(vals) {
       var id = $('.wrap-nav').attr('id');
       var tier = id.substr(id.length-1);
       //$('.wrap-nav').attr('id', 'leap_tier_' + String(parseInt(tier)+1));
-
+      $('#flame').text(vals.flame);
       //boss lbl boss desc
       for (let k in vals.leap[tier]) {
         $('#' + k + '_lbl_' + tier).text(vals.leap[tier][k].label);
@@ -1303,10 +1314,32 @@ async function assignValues(keywords, choice) {
     return await determineValueOfNext(choice, vals[key][index])
 }
 
+
+function determineValueOfNext(loopValues, valsType) {
+  const toBuy = loopValues[1] === "buy";
+  let numberToCalculate = loopValues[0] + 1;
+  let startingValue = 1;
+  let increment = 1;
+  if (toBuy !== true) {
+    increment = -1;
+    startingValue--;
+    numberToCalculate--;
+  }
+
+  let totalValue = 0.0;
+
+  for (let i = startingValue; i < numberToCalculate; i++) {
+    const itemCost = resolveItemCost((valsType.amount-1) + (i * increment), valsType.base_cost)[0];
+    totalValue += (toBuy === true) ? itemCost : itemCost / 2;
+  }
+
+  return totalValue;
+}
+
 function determineSellPrice(key, index) {
   let values = [1, 5, 10, 25, 50, 100];
   if (vals[key].numSelected === 1 || (vals[key][index].amount < 5 && vals[key].numSelected > 1)) {
-    vals[key][index].sell_cost = vals.god_status[vals.god_status.current].mul * resolveItemCost(vals[key][index].amount-1, vals[key][index].base_cost)[0]/2;
+    vals[key][index].sell_cost = resolveItemCost(vals[key][index].amount-1, vals[key][index].base_cost)[0]/2;
   } else {
     let trueValue = vals[key].numSelected;
     let numberSelected = values.filter((value) => {
@@ -1363,7 +1396,7 @@ function fix_upgrades(vals) {
       var purchase_num = k.substr(k.length-1);
       let hasDisplayed = false;
       for (let i in vals.upgrades[k]) {
-        if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost) {
+        if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost / 2) {
             $("#upgrade_mul_" + purchase_num + "_1").text('1337%');
             $('#upgrade_cost_' + purchase_num + '_1').text('[ NaN ');
             $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle this power.");
@@ -1515,7 +1548,8 @@ function staticLeapValuesToJson() {
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
     const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.2 * 25);
-    console.log(newLeapUpgradeCost);
+    const nextLeapCost = (vals.god_status[vals.god_status.current].mul * vals.god_status.current);
+
     let save = {
         'e':0,
         'p':0,
@@ -1527,11 +1561,13 @@ function staticLeapValuesToJson() {
         't':(500).toString(16),
         'fl':0,
         'dam':totalDamageMul.toString(16),
+        "dps":0,
         "tier":vals.god_status.current.toString(16),
         "stage":0,
         "sc":2,
         "sm":100,
-        'lc':newLeapUpgradeCost.toString(16)
+        'lc':newLeapUpgradeCost.toString(16),
+        "cst":nextLeapCost.toString(16)
     };	
 
     return save;	
@@ -1561,8 +1597,8 @@ function generateTotalValueFor(type, startValue) {
 function leapStatsToJson() {
       const temp_s = {
         't':vals.stats.time_played.toString(16),
-        't_e':Math.round(vals.stats.total_energy).toString(16),
-        't_f':Math.round(vals.stats.total_followers).toString(16),
+        't_e':0,
+        't_f':0,
         'm_p':vals.stats.max_prod,
         'm_l':vals.stats.max_loss,
         'm_c':vals.stats.miracle_clicks.toString(16),
@@ -1699,7 +1735,6 @@ class Upgrade {
 
   action() {
     vals.energy -= this.upgrade.cost;
-    console.log('here');
     this.upgrade.unlocked = true;
   }
 
@@ -2042,27 +2077,6 @@ function sell(id) {
   }
   determineSellPrice(purchaseType, id);
   assignValues([purchaseType, id], [vals[purchaseType].numSelected, "buy"]).then(result => { vals[purchaseType][id].cost = result; });
-}
-
-function determineValueOfNext(loopValues, valsType) {
-  const toBuy = loopValues[1] === "buy";
-  let numberToCalculate = loopValues[0] + 1;
-  let startingValue = 1;
-  let increment = 1;
-  if (toBuy !== true) {
-    increment = -1;
-    startingValue--;
-    numberToCalculate--;
-  }
-
-  let totalValue = 0.0;
-
-  for (let i = startingValue; i < numberToCalculate; i++) {
-    const itemCost = resolveItemCost((valsType.amount-1) + (i * increment), valsType.base_cost)[0];
-    totalValue += (toBuy === true) ? itemCost : itemCost / 2;
-  }
-
-  return totalValue;
 }
 
 $(document).on("click", '#tab_btns .button', function(event) {
@@ -2761,7 +2775,7 @@ $(document).ready(() => {
       x : x,
       y: y
     };
-    this.r =  Math.random() * 5 + 1.5;
+    this.r =  window.innerWidth/250;
     this.vx = (Math.random() -0.5) * 25;
     this.vy = (Math.random() -0.5) * 25;
     this.accX = 0;
@@ -2803,8 +2817,8 @@ $(document).ready(() => {
     ctx.globalCompositeOperation = "screen";
 
     particles = [];
-    for (let i=0;i < windowWidth; i += Math.round(windowWidth/150)){
-      for (let j=0;j < windowHeight * 1.2; j += Math.round(windowWidth/150)){
+    for (let i=0;i < windowWidth; i += Math.round(windowWidth/100)){
+      for (let j=0;j < windowHeight; j += Math.round(windowWidth/100)){
         if (data[((i + j * windowWidth) * 4) + 3] > 150){
           particles.push(new Particle(i,j));
         }

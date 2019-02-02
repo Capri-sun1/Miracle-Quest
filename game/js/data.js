@@ -30,19 +30,19 @@ var data = {
     "2":{
       "label": "Alchemist",
       "mul": 2,
-      "boss_label": "Angry",
+      "boss_label": "",
       "max_tier": 5
     }, 
     "3":{
       "label": "Sorceror",
       "mul": 4,
-      "boss_label": "Furious",
+      "boss_label": "Angry",
       "max_tier": 6
     },
     "4":{
       "label": "Arch Mage",
       "mul": 7,
-      "boss_label": "Star venturer",
+      "boss_label": "Furious",
       "max_tier": 7
     },
     "5":{
@@ -60,6 +60,7 @@ var data = {
       "click":{
         "label":"Improved Power",
         "description":"Your clicks are more powerful.",
+        "cost": 0,
         "amount":0,
         "mul": 2,
         "max": 3,
@@ -68,6 +69,7 @@ var data = {
       "boss":{
         "label":"Boss Killer",
         "description":"You do increased damage to bosses.",
+        "cost": 0,
         "amount":0,
         "mul": 4,
         "max": 5,
@@ -1137,19 +1139,19 @@ var vals = {
     "2":{
       "label": "Alchemist",
       "mul": 2,
-      "boss_label": "Angry",
+      "boss_label": "",
       "max_tier": 5
     }, 
     "3":{
       "label": "Sorceror",
       "mul": 4,
-      "boss_label": "Furious",
+      "boss_label": "Angry",
       "max_tier": 6
     },
     "4":{
       "label": "Arch Mage",
       "mul": 7,
-      "boss_label": "Star venturer",
+      "boss_label": "Furious",
       "max_tier": 7
     },
     "5":{
@@ -1167,6 +1169,7 @@ var vals = {
       "click":{
         "label":"Improved Power",
         "description":"Your clicks are more powerful.",
+        "cost": 0,
         "amount":0,
         "mul": 2,
         "max": 3,
@@ -1175,6 +1178,7 @@ var vals = {
       "boss":{
         "label":"Boss Killer",
         "description":"You do increased damage to bosses.",
+        "cost": 0,
         "amount":0,
         "mul": 4,
         "max": 5,

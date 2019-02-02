@@ -1694,7 +1694,6 @@ a {
   position: absolute;
   top: 50%;
   content: '';
-  width: 20px;
   height: 20px;
   background-color: lightgrey;
   border-radius: 50%;
@@ -1992,7 +1991,7 @@ a {
 
    .modal-content {
       width: 80%;
-      height: 45%;
+      height: 55%;
       overflow-y: scroll;
    }
 
@@ -2071,7 +2070,7 @@ a {
   }
     .modal-content {
       width: 50%;
-      height: 37%;
+      height: 42%;
       overflow-y: hidden;
    }
 }

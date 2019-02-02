@@ -71,7 +71,6 @@ async function showBackground() {
     let timeNow = new Date();
     let diffInDays = dateDiffInDays(time, timeNow);
     let diffInSeconds = diffInDays >= 1 ? diffInDays * 86400 : (timeNow.getTime() - time.getTime()) / 1000;
-    console.log(diffInSeconds);
     if (diffInSeconds > 300) shouldLoad = true;
   } catch (NoSuchDateException) {
     console.log("Error occured resolving last visit: \n" + NoSuchDateException);
@@ -228,14 +227,23 @@ function handleAudioFailure(bgm) {
     }, 1500);  
 }
 
+function handleVisibilityChange() {
+    if (document.hidden){
+        bgm.pause();
+    } else {
+        setupAudio();
+    }
+}
+
+document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
 $(document).on('click','#playing', function(event) {
-  const offHtml = '<span class="glyphicon glyphicon-volume-off"></span>';
-  if($('#playing').html() === offHtml) {
+  console.log(bgm.ended + ' ' + bgm.paused);
+  if(bgm.ended !== true && bgm.paused !== true) {
     bgm.pause();
-  } else {
+  } else if (bgm.paused === true) {
     playAudio(bgm);
   }
-  $('#playing').toggleIcon('<span class="glyphicon glyphicon-volume-up"></span>', offHtml);
 });
 
 function setupContainers() {
@@ -865,8 +873,10 @@ function setButtonAvailability(vals) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
             continue;
         } else if (vals.upgrades[k][i].unlocked != true) {
+          console.log(vals.upgrades["3"]["upgrade1"].cost);
           if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < vals.upgrades["3"]["upgrade1"].cost) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
+            $('#upgrade_btn_' + purchase_num + "_1").parent().css("display", "block");
           } else {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
             $('#upgrade_btn_' + purchase_num + "_1").parent().css("display", "none");
@@ -1023,7 +1033,7 @@ function setButtonAvailability(vals) {
 
        let cent = vals.stats.total_energy / vals.upgrades["3"]["upgrade1"].cost * 100;
        let percentage = cent > 100 ? 100 : cent;
-       if (cent === 100 && vals.leap.unlocked !== true) {
+       if (percentage === 100 && vals.leap.unlocked !== true) {
         vals.upgrades["3"]["upgrade1"].unlocked = true;
         vals.leap.unlocked = true;
        }
@@ -1504,7 +1514,8 @@ function staticLeapValuesToJson() {
     const tierMul = generateLeapOffset(vals.god_status.current);
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
-    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"] * 100;
+    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.2 * 25);
+    console.log(newLeapUpgradeCost);
     let save = {
         'e':0,
         'p':0,
@@ -1520,7 +1531,7 @@ function staticLeapValuesToJson() {
         "stage":0,
         "sc":2,
         "sm":100,
-        'lc':newLeapUpgradeCost
+        'lc':newLeapUpgradeCost.toString(16)
     };	
 
     return save;	
@@ -2329,13 +2340,13 @@ class Click {
   resolveVerticalOffset() {
     var width = $(window).width();
 
-    if(width > 1300)  {
+    if (width > 1300)  {
         return this.event.pageY + 40;
-    } else if(width <= 700) {
+    } else if (width <= 700) {
         return this.event.pageY * 1.1;
-    } else if(width <= 1100) {
+    } else if (width <= 1100) {
         return this.event.pageY + 25;
-    } else if(width <= 1300) {
+    } else if (width <= 1300) {
         return this.event.pageY + 25;
     }
   }
@@ -2484,19 +2495,19 @@ function handleError() {
 
 function gen_boss_offset(id, target) {
     var width = $(window).width();
-    if( width <= 700) 
+    if (width <= 700) 
       target.offset( {'top': $(id).offset().top* 1.05, 'left': $(window).width()/ 2});
-    else if( width <= 750) 
+    else if (width <= 750) 
       target.offset( {'top': $(id).offset().top*1.15, 'left': $(window).width()});
-    else if( width <= 1100) 
+    else if (width <= 1100) 
       target.offset( {left: 2 *  $(id).offset().left, 'top': $(id).offset().top*1.1});
-    else if( width <= 1300) 
+    else if (width <= 1300) 
       target.offset( {left: 2 * $(id).offset().left, 'top': $(id).offset().top*1.2});
-    else if( width <= 1600) 
+    else if (width <= 1600) 
       target.offset( {left: 2.05 * $(id).offset().left, 'top': $(id).offset().top*1.2});
-    else if( width <= 1900)  
+    else if (width <= 1900)  
       target.offset({left: 2.2 * $(id).offset().left, top: $(id).offset().top * 1.5});
-    else if(width > 1900) {
+    else if (width > 1900) {
       target.offset({left: 2.4 * $(id).offset().left, top: $(id).offset().top * 1.5});
     }
 }
@@ -2641,30 +2652,30 @@ function truncate_seconds(num) {
 
 function truncate_bigint(num) { 
     var sn = '';
-    if(num >= 1000000000000000000000000) { 
+    if (num >= 1000000000000000000000000) { 
         return truncate_int(num)
     }    
-    if(num >= 1000000000000000000000) { 
+    if (num >= 1000000000000000000000) { 
         sn = Math.round((num / 1000000000000000000000) * 100) / 100;
         return sn + 'S';
     }
-    if(num >= 1000000000000000000) { 
+    if (num >= 1000000000000000000) { 
         sn = Math.round((num / 1000000000000000000) * 100) / 100;
         return sn + 'Qt';
     }
-    if(num >= 1000000000000000) { 
+    if (num >= 1000000000000000) { 
         sn = Math.round((num / 1000000000000000)*100) / 100;
         return sn + 'Q';
     }
-    if(num >= 1000000000000) { 
+    if (num >= 1000000000000) { 
         sn = Math.round((num / 1000000000000) * 100) / 100;
         return sn + 'T';
     }
-    if(num >= 1000000000) { 
+    if (num >= 1000000000) { 
         sn = Math.round((num / 1000000000) * 100) / 100;
         return sn + 'B';
     }
-    if(num >= 1000000) { 
+    if (num >= 1000000) { 
         sn = Math.round((num / 1000000) * 100) / 100;
         return sn + 'M';
     } 

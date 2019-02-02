@@ -492,7 +492,7 @@ var data = {
               "label":"Unlock Quantum Leap",
               "description":"To infinity and beyond",
               "unlocked":false,
-              "cost":100000,
+              "cost":50000,
               "mul":"1337"
             }
           },
@@ -1601,7 +1601,7 @@ var vals = {
               "label":"Unlock Quantum Leap",
               "description":"To infinity and beyond",
               "unlocked":false,
-              "cost":100000,
+              "cost":50000,
               "mul":" infinity"
             }
           },

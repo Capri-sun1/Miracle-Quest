@@ -21,8 +21,6 @@
 	<canvas id="scene"></canvas>
 	<div id="background-fill"></div>
 </div>
-<div id='smallStar'></div>
-<div id='largeStar'></div>
 <div id="left_wrap" class="left_width">
 	<div id="make_sell_spacer"></div>
     <div id="left_floatable">
@@ -259,7 +257,7 @@
 
 		<div id="uncompleted" class="uncompleted">
 
-	<div class="table-background">
+	<div class="table-background" id="upgrade_table">
     <div class="table-container">
      <div class="panel pricing-table" id="upgrades_table" style="margin: 0px; overflow-y: hidden">
       <div class="pricing-plan">
@@ -268,7 +266,7 @@
 		<div id ="upgrade_1_1" class="tab_div">
         <ul class="pricing-features">
           <li class="pricing-features-item"><span id="upgrade_lbl_1_1" style="color: #880E4F"></span></li>
-          <li class="pricing-features-item"><span id="upgrade_mul_1_1">60% increased click power</span> increased click power.</li>
+          <li class="pricing-features-item" id="upg_text_1"><span id="upgrade_mul_1_1">60% increased click power</span> more click power.</li>
           <li class="pricing-features-item"><span id="upgrade_text_1_1">0.1</span></li>
         </ul>
         <span class="pricing-price"><span id="upgrade_cost_1_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
@@ -284,7 +282,7 @@
 		<div id ="upgrade_2_1" class="tab_div">
         <ul class="pricing-features">
           <li class="pricing-features-item"><span id="upgrade_lbl_2_1" style="color: #880E4F"></span></li>
-          <li class="pricing-features-item">Time speeds up by <span id="upgrade_mul_2_1">60% increased click power</span></li>
+          <li class="pricing-features-item" id="upg_text_2">Time speeds up by <span id="upgrade_mul_2_1">60% increased click power</span></li>
           <li class="pricing-features-item"><span id="upgrade_text_2_1">0.1</span></li>
         </ul>
         <span class="pricing-price"><span id="upgrade_cost_2_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
@@ -300,7 +298,7 @@
 		<div id ="upgrade_3_1" class="tab_div">
         <ul class="pricing-features">
           <li class="pricing-features-item"><span id="upgrade_lbl_3_1" style="color: #880E4F"></span></li>
-          <li class="pricing-features-item"><span id="upgrade_text_3_1">0.1</span> increased click power</li>
+          <li class="pricing-features-item" id="upg_text_3"><span id="upgrade_text_3_1">0.1</span> increased click power</li>
         </ul>
         <span class="pricing-price"><span id="upgrade_cost_3_1"><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
         <button id="upgrade_btn_3_1" class="purchase" disabled="disabled" data-balloon-pos="right">Purchase</button>
@@ -309,12 +307,12 @@
 	</div>
 
       <div class="pricing-plan">
-        <h2 class="pricing-header">Blessings</h2>
+        <h2 class="pricing-header">Augment</h2>
         <div id="upgrade_4">
 		<div id ="upgrade_4_1" class="tab_div">
         <ul class="pricing-features">
           <li class="pricing-features-item"><span id="upgrade_lbl_4_1" style="color: #880E4F"></span></li>
-          <li class="pricing-features-item"><span id="upgrade_mul_4_1">60%</span> stronger overcharge.</li>
+          <li class="pricing-features-item" id="upg_text_4"><span id="upgrade_mul_4_1">60%</span> stronger overcharge.</li>
           <li class="pricing-features-item"><span id="upgrade_text_4_1">0.1</span></li>
         </ul>
         <span class="pricing-price"><span id="upgrade_cost_4_1"></span><span style="color: #880E4F" class='glyphicon glyphicon-flash'></span> ]</span><br>
@@ -330,7 +328,7 @@
 		<div id ="upgrade_5_1" class="tab_div">
         <ul class="pricing-features">
           <li class="pricing-features-item"><span id="upgrade_lbl_5_1" style="color: #880E4F"></span></li>
-          <li class="pricing-features-item"><span id="upgrade_mul_5_1">60% increased click power</span> longer overcharge.</li>
+          <li class="pricing-features-item" id="upg_text_5"><span id="upgrade_mul_5_1">60% more click power</span> longer overcharge.</li>
           <li class="pricing-features-item"><span id="upgrade_text_5_1">0.1</span></li>
         </ul>
         <span class="pricing-price"><span id="upgrade_cost_5_1"></span><span style="color: #880E4F; margin-top:2.5%" class='glyphicon glyphicon-flash' style="color: #880E4F"></span> ]</span><br>
@@ -509,12 +507,12 @@
 		<div class="modal">
 		    <div class="modal-content">
 		        <span class="close-button"><strong class="glyphicon glyphicon-remove-sign" style="vertical-align: middle"></strong></span>
-		        <h3 id="settings_header_1" style="padding-bottom:1em">Instructions:
-                <p style="font-weight: normal; font-size:0.8em; text-align:left"> <span><br>> Perform miracles to convert followers</span><br>
-                        <span>> Ascend followers to increase energy</span><br>
-                        <span>> Spend energy to improve production</span><br></p>
-                        <p style="font-weight: normal; font-size:0.8em;"><span>> Unlock more advanced features</span><br>
-                        <span>> Make your mark <strong class="glyphicon glyphicon-globe"></strong></span></p></h3>
+		        <h3 id="settings_header_1" style="padding-bottom:1em">Instructions
+                <p style="font-weight: normal; font-size:0.8em; text-align:left"> <span><br> Perform miracles to gain followers</span><br>
+                        <span> Convert followers to increase energy</span><br>
+                        <span> Use energy to improve production</span><br></p>
+                        <p style="font-weight: normal; font-size:0.8em;"><span> Unlock more advanced features</span><br>
+                        </p></h3>
                 </div>
 		    </div>
 		</div>
@@ -557,12 +555,13 @@
 	    </div>
 		  <div class="container" style="text-align:center; width: 100%">
     <div class="row" style="color: white; font-size: 1.5em; padding-top: 2.5%">
-    	<strong id="energy_to_next">100000</strong><span class="glyphicon glyphicon-flash" style="color: #880E4F"></span><strong style="margin-top:2%"> until next tier</strong>
         <div class="col-md-6" style="width: 90%;">
             <div class="progress_bar">
                 <div class="pro-bar" style="width: 0%; background: linear-gradient(to right,  #cf5d81 35%,#5c8ab7 68%);">
                 </div>
+                Next tier in <strong id="energy_to_next">100000</strong><span class="glyphicon glyphicon-flash" style="color: #880E4F"></span> 
             </div>
+
         </div>
     </div>
 </div>

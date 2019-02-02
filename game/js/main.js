@@ -397,7 +397,6 @@ function resolveItemCost(index, base) {
     let currentBoss = vals.pantheon.bosses[boss];
     const bossHpPlusRegen = (mul * currentBoss.current_hp) + (mul * currentBoss.regen);
     const bossHpMax = mul * currentBoss.max_hp;
-    handleBossMovement(boss);
     if(bossHpPlusRegen <= bossHpMax) {
       currentBoss.current_hp += (mul * currentBoss.regen);
     } else {
@@ -408,15 +407,7 @@ function resolveItemCost(index, base) {
       attack('#battle' + (vals.pantheon.stage+1), vals.pantheon.dps);
     }
   }
-
-  function handleBossMovement(currentBoss) {
-    if(currentBoss === 'boss1') {
-      $('#battle_1').css('-webkit-animation', 'rotation 10s infinite linear');
-    } else {
-      $('#battle_1').css('-webkit-animation', 'none');
-    }
-  }
-
+  
   function handleStats() {
     if( vals.current_tab==="Stats") fix_stats(vals);
     vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000)/1000;
@@ -879,8 +870,7 @@ function setButtonAvailability(vals) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
             continue;
         } else if (vals.upgrades[k][i].unlocked != true) {
-          console.log(vals.upgrades["3"]["upgrade1"].cost);
-          if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < vals.upgrades["3"]["upgrade1"].cost) {
+          if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < (vals.upgrades["3"]["upgrade1"].cost/2)) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
             $('#upgrade_btn_' + purchase_num + "_1").parent().css("display", "block");
           } else {
@@ -892,10 +882,10 @@ function setButtonAvailability(vals) {
       }
     }
   }
-  if( vals.current_tab === 'Sacrifice' ) {
+  if (vals.current_tab === 'Sacrifice') {
     //locked screen
-    if( vals.followers >= 1000000 && !vals.sacrifice.unlocked ) $('#entry_sacrifice_btn_1').prop('disabled', false);
-    else if( !vals.sacrifice.unlocked && vals.followers < 1000000) $('#entry_sacrifice_btn_1').prop('disabled', true);
+    if (vals.followers >= 1000000 && !vals.sacrifice.unlocked) $('#entry_sacrifice_btn_1').prop('disabled', false);
+    else if (!vals.sacrifice.unlocked && vals.followers < 1000000) $('#entry_sacrifice_btn_1').prop('disabled', true);
     //unlocked screen - check for funds
     else if( vals.sacrifice.unlocked) {
       for( var id in vals.sacrifice ) {
@@ -1134,10 +1124,10 @@ function fix_pantheon(vals) {
           $('#boss_num').text(': ' + vals.god_status[vals.god_status.current].boss_label + ' Boss ' + id);
         }
         $('#battle_1').attr('src', 'data/battle_' + id + '.png');
-        $('#battle_1_hp').text(truncate_bigint(mul * vals.pantheon.bosses[k].current_hp));
-        $('#max_hp').text(truncate_bigint(mul * vals.pantheon.bosses[k].max_hp));
-        $('#boss_hp_bar').css('width', 100 * ((mul*vals.pantheon.bosses[k].current_hp)/(mul*vals.pantheon.bosses[k].max_hp)) + '%');
-        $('#regen').text(truncate_bigint(mul*vals.pantheon.bosses[k].regen));
+        $('#battle_1_hp').text(truncate_bigint(vals.pantheon.bosses[k].current_hp));
+        $('#max_hp').text(truncate_bigint(vals.pantheon.bosses[k].max_hp));
+        $('#boss_hp_bar').css('width', 100 * ((vals.pantheon.bosses[k].current_hp)/(vals.pantheon.bosses[k].max_hp)) + '%');
+        $('#regen').text(truncate_bigint(vals.pantheon.bosses[k].regen));
         $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
         break;
       }
@@ -1397,9 +1387,9 @@ function fix_upgrades(vals) {
       let hasDisplayed = false;
       for (let i in vals.upgrades[k]) {
         if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost / 2) {
-            $("#upgrade_mul_" + purchase_num + "_1").text('1337%');
+            $("#upg_text_" + purchase_num).text("Cannot Purchase");
             $('#upgrade_cost_' + purchase_num + '_1').text('[ NaN ');
-            $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle this power.");
+            $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle the immense power of this rune.");
             $('#upgrade_lbl_' + purchase_num + '_1').text("Unavailable");
             hasDisplayed = true;
           break;
@@ -1538,16 +1528,47 @@ function doLeap(vals) {
 function saveForLeap() {
 	let save = staticLeapValuesToJson();
 	save['s'] = leapStatsToJson();
+  save['pantheon'] = adjustedBossToJson();
 	leapToJson(save);
 
 	return save;
 }
 
+function adjustedBossToJson() {
+  let pantheon = [];
+  let index = 0;
+  for (let k in vals.pantheon.bosses) { 
+    if (++index < vals.god_status[vals.god_status.current] - 4) break;
+    const items = vals.pantheon.bosses[k];
+    let temp_a = [];
+    let mul = vals.god_status[String(parseInt(vals.god_status.current) -1)].mul;
+    temp_a.push('max_hp' + ":" + (mul * items.max_hp).toString(16));
+    temp_a.push('current_hp' + ":" + (mul * items.current_hp).toString(16));
+    temp_a.push('regen' + ":" + (mul * items.regen).toString(16));
+    temp_a.push('defeated' + ":" + (items.defeated).toString().toLowerCase());
+    temp_a.push('reward' + ":" + ((1 + Math.sqrt(mul)) * items.reward).toString(16));    
+    pantheon.push(temp_a);
+  }
+
+  for (let i in vals.pantheon.upgrades) {
+    if (i != vals.god_status.current) continue;
+    const items = vals.pantheon.upgrades[i];
+    let temp_b = [];
+    for (let j in items) {
+      temp_b.push(j + ":" + items[j].amount.toString(16));
+    }
+    pantheon.push(temp_b);
+  }
+
+  return pantheon; 
+}
+
+
 function staticLeapValuesToJson() {
     const tierMul = generateLeapOffset(vals.god_status.current);
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
-    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.2 * 25);
+    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 15);
     const nextLeapCost = (vals.god_status[vals.god_status.current].mul * vals.god_status.current);
 
     let save = {
@@ -2840,6 +2861,5 @@ $(document).ready(() => {
     } catch (NoSuchCanvasException) {
     console.log("No canvas present.");
   }
+
 });
-
-

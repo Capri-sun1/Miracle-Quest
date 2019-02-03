@@ -122,7 +122,8 @@ async function traverseObject(obj, backup, level) {
   for (let key in backup) {
     if (backup.hasOwnProperty(key)) {
       if (obj[key] === undefined || obj[key] === null || obj[key] !== obj[key]) {
-        obj[key] = backup[key];
+        console.log(obj + ' ' + obj[key] + ' ' + key);
+        //obj[key] = backup[key];
         console.log("No save data found for: " + key + "\nAttempting to remedy..");
       }
       await traverse(obj[key], backup[key], level + "    ");
@@ -441,7 +442,7 @@ const valsToJSON = () => {
   upgradesAndAchievementsToJson(save);
   statsToJson(save);
   pantheonToJson(save);
-  
+
   return save;
 }
 
@@ -483,7 +484,7 @@ function purchasesToJson(save) {
       if (i === 'numSelected') continue;
       temp_a.push([i] + ":" + items[i].amount.toString(16)); 
       temp_a.push([i] + ":" + items[i].unlocked);         
-      temp_a.push([i] + ":" + items[i].base_cost);
+      temp_a.push([i] + ":" + items[i].base_cost.toString(16));
       temp_a.push([i] + ":" + items[i].base_output);
     }
     save[k] = temp_a.join('|');
@@ -516,10 +517,13 @@ function upgradesAndAchievementsToJson(save) {
     for (let i in items_generic) {
       for (let j in items_generic[i]) {
         if (items_generic[i][j].unlocked) temp_t.push(items_generic[i][j].label);
+        if (k === 'upgrades' && j !== 'type') {
+          temp_t.push(i + ':' + j + ":" + items_generic[i][j].cost);
+          temp_t.push(i + ':' + j + ":" + items_generic[i][j].mul);          
+        }
       }
     }
-    temp_arr.push(temp_t); 
-    save[k] = temp_arr.join('|');
+    save[k] = temp_t.join('|');
   }  	
 }
 
@@ -609,10 +613,6 @@ function get_valsFromJSON(save) {
             "miracle":"cl",
             "ascend":"asc"
         }; 
-        var tiered = {
-          "upgrades":"up",
-          "challenges":"ch"
-        }
         for (let k in unlocks) {
           if (save[k]) {
             let t_items = save[k].split('|');
@@ -625,7 +625,7 @@ function get_valsFromJSON(save) {
                 if (x === firstItem[0]) {
                   vals[k][x].amount = parseInt(firstItem[1], 16);
                   vals[k][x].unlocked = secondItem[1];
-                  vals[k][x].base_cost = parseFloat(thirdItem[1]);
+                  vals[k][x].base_cost = parseInt(thirdItem[1], 16);
                   vals[k][x].base_output = parseFloat(fourthItem[1]);                                    
                   vals[k][x].cost = set_item_cost(vals[k][x]);
                   determineSellPrice(k, x);
@@ -649,25 +649,40 @@ function get_valsFromJSON(save) {
           }
         }
       }
+        var tiered = {
+          "upgrades":"up",
+          "challenges":"ch"
+        }
 
         //load challenges and upgrades
         for (let k in tiered) {
-          if( save[k]) {
+          if (save[k]) {
             let t_items = save[k].split('|');
             t_items += '';
-            const item = t_items.split(',');
-            for (let i = 0; i < item.length; i++) {
+            let item = t_items.split(",");
+
+
+            item.forEach((element) => {
               for (let x in vals[k]) {
                 for (let y in vals[k][x]) {
-                  if (vals[k][x][y].label === item[i]) {
+                  if (vals[k][x][y].label === element) {
                     vals[k][x][y].unlocked = true;    
                   }
                 }
               }
+            }); 
+
+            if (k === "upgrades") {
+              for (let i = 0; i < item.length-2; i+=2) {
+                let cst = item[i].split(':');
+                let ml = item[i+1].split(':');
+                if (cst.length !== 3 || ml.length !== 3 || cst[0] === "3") continue;
+                vals.upgrades[cst[0]][cst[1]].cost = parseFloat(cst[2], 16);
+                vals.upgrades[ml[0]][ml[1]].mul = parseFloat(ml[2], 16);
+              }
             }
           }
         }
-
         if (save['pantheon']) {
             const items = save['pantheon'];
             for (let i=0; i < items.length; i++) {
@@ -1365,16 +1380,13 @@ function fix_upgrades(vals) {
           //set up new div for same challenge unlock
           if (vals.upgrades[k][i].unlocked != true) {
             let cost = 1;
-            if (vals.god_status.current > 1) {
-              cost = vals.god_status[vals.god_status.current].mul * 0.6;
-            }
             let percentage = vals.upgrades[k][i].mul * 100;
             let usedValue = percentage - 100;
             if (purchase_num === '2') {
-              usedValue = 100 - percentage;
+              usedValue = (100 - percentage) * -1;
             }
             let nextUpgrade = i;
-            $("#upgrade_mul_" + purchase_num + "_1").text(usedValue + '%');
+            $("#upgrade_mul_" + purchase_num + "_1").text(Math.floor(usedValue) + '%');
             $('#upgrade_cost_' + purchase_num + '_1').text('[ ' + truncate_bigint(cost * vals.upgrades[k][nextUpgrade].cost) + ' ');
             $('#upgrade_text_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].description);
             $('#upgrade_lbl_' + purchase_num + '_1').text(vals.upgrades[k][nextUpgrade].label);
@@ -1499,6 +1511,7 @@ function saveForLeap() {
   save['pantheon'] = adjustedBossToJson();
 	leapToJson(save);
   adjustedPurchasesToJson(save);
+  upgradesAndChallengesForLeap(save);
 	return save;
 }
 
@@ -1506,7 +1519,7 @@ function staticLeapValuesToJson() {
     const tierMul = generateLeapOffset(vals.god_status.current);
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
-    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 10);
+    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 15);
     const nextLeapCost = (vals.god_status[vals.god_status.current].mul * vals.god_status.current);
 
     let save = {
@@ -1611,13 +1624,35 @@ function adjustedPurchasesToJson(save) {
       if (i === 'numSelected') continue;
       temp_a.push([i] + ":" + 0); 
       temp_a.push([i] + ":" + false);        
-      temp_a.push([i] + ":" + mul * items[i].base_cost);
+      temp_a.push([i] + ":" + (mul * items[i].base_cost).toString(16));
       temp_a.push([i] + ":" + mul * items[i].base_output);
     }
     save[k] = temp_a.join('|');
   }
 }
 
+function upgradesAndChallengesForLeap(save) {
+  let tiered = {
+    "upgrades":"up",
+    "challenges":"ch"
+  }
+  let mul = adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.6);
+  for (let k in tiered) { 
+    var items_generic = vals[k];
+    var temp_t = [];
+    var temp_arr = [];
+    for (let i in items_generic) {
+      for (let j in items_generic[i]) {
+        if (k === "achievements" && items_generic[i][j].unlocked) temp_t.push(items_generic[i][j].label);
+        else if (k === 'upgrades' && j !== 'type') {
+          temp_t.push(i + ':' + j + ":" + mul * items_generic[i][j].cost);
+          temp_t.push(i + ':' + j + ":" + (1 + (mul / 6)) * items_generic[i][j].mul);          
+        }
+      }
+    }
+    save[k] = temp_t.join('|');
+  }   
+}
 
 $(document).on("click", ".reset", function() {
   saveSound.play();

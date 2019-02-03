@@ -506,7 +506,7 @@ var data = {
               "description":"To infinity and beyond",
               "unlocked":false,
               "cost":50000,
-              "mul":" infinity"
+              "mul":" 1"
             }
           },
           "4" : {
@@ -1746,7 +1746,7 @@ var vals = {
               "description":"To infinity and beyond",
               "unlocked":false,
               "cost":50000,
-              "mul":" infinity"
+              "mul":" 1"
             }
           },
           "4" : {

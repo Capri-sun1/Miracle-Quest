@@ -13,54 +13,56 @@ var upgrade_box_size = 0;
 
 (function($) {
 
-  $(window).resize(function() {
-    setupContainers();
-    if($(window).width() < 700) {
-      $.toaster( { settings: {
-       toaster : {
-        css : {
-          'width' : '40%',
+$(window).resize(function() {
+  setupContainers();
+  if($(window).width() < 700) {
+    $.toaster({ 
+      settings: {
+        toaster : {
+          css : {
+            'width' : '40%',
+          }
         }
-     }
-    }
+      }
     });
     fix_names(vals);
-  }});
+  }
+});
 
 $(document).ready(() => {
-    loadData();
-    showBackground().then(() => {
-      fix_tab_buttons(vals);
-      fix_names(vals);
-      fix_corruption_bar(vals.corruption);
-      fix_corruption_text(vals.corruption);
-      lastTime = resolveLastTime();
-      handleTimeSinceLastVisit();
+  loadData();
+  showBackground().then(() => {
+    fix_tab_buttons(vals);
+    fix_names(vals);
+    fix_corruption_bar(vals.corruption);
+    fix_corruption_text(vals.corruption);
+    lastTime = resolveLastTime();
+    handleTimeSinceLastVisit();
 
-      setupAudio();
-      setupContainers();
-      $.toaster(
-        {
-          settings:{
-            toast:{
-              css:{
-               'background-color':'#212121',
-               'color':'#fff'
-              }
-            },
-            toaster:{
-              css:{
-                'width':'30%',
-              }
-            },
-            timeout:'2500'
-          }
-        } 
-      );
-      $('#1').click();    
-      $('#stats-tab-btn').click();
-      start_game();
-    });
+    setupAudio();
+    setupContainers();
+    $.toaster(
+      {
+        settings:{
+          toast:{
+            css:{
+              'background-color':'#212121',
+              'color':'#fff'
+            }
+          },
+          toaster:{
+            css:{
+              'width':'30%',
+            }
+          },
+          timeout:'2500'
+        }
+      } 
+    );
+    $('#1').click();    
+    $('#stats-tab-btn').click();
+    start_game();
+  });
 });
 
 async function showBackground() {
@@ -165,9 +167,8 @@ function handleTimeSinceLastVisit() {
 }
 
 function handleSecondsIdle(diffInSeconds) {
-  var cost = adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.8);
-  var corrected_prod = adjustProduction(cost);
-  var total_loss = adjustLoss(cost);
+  var corrected_prod = adjustProduction();
+  var total_loss = adjustLoss();
   //offline production much slower - hardcoded to only add to one value for now.
   if(isNaN(diffInSeconds) === false) {
     const values = [Math.round((diffInSeconds * corrected_prod)/2), Math.round((diffInSeconds * total_loss)/2)];
@@ -294,258 +295,248 @@ function resolveItemCost(index, base) {
     return [base, multiplier];
   }
 
-  const status_multiplier = adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.6);
-  const newCost = amount_multiplier * (status_multiplier * base);
-
+  const newCost = amount_multiplier * base;
   return [Math.round(newCost * 0.9), multiplier];
 }
 
-  function game_engine(iterations, cycles) {
-    var mul = vals.god_status[vals.god_status.current].mul;
-    var cost = adjustForGodStatus(mul, 0.8);
-    var corrected_prod = adjustProduction(cost);
-    var total_loss = adjustLoss(cost);
-    
-    handleNegativeValues();
-    handleUiUpdate([corrected_prod, total_loss, cost]);
-
-    setTimeout(function() {
-      checkAchievements(vals);
-      setButtonAvailability(vals);  
-
-      handlePantheon(mul);
-      handleStats();
-      cycles = handleSaveData(cycles, false);
-      handleGameLoop(iterations, cycles);
-      handleGameLogic(corrected_prod, cost);
-      if (bgm.volume < 0.45) {
-        bgm.volume += 0.01;
-      }
-    }, vals.tick);
-  }
-
-  function adjustForGodStatus(mul, multiplier) {
-    return mul > 1 ? mul * multiplier : 1;
-  }
-
-  function adjustProduction(costMultiplier) {
-    let initialCost =  ((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))) - ((1+(vals.corruption/100))*vals.loss);
-
-    return initialCost * costMultiplier;
-  }
-
-  function adjustLoss(costMultiplier) {
-    let initialCost = (vals.loss * (1+(vals.corruption/100)));
-
-    return initialCost * costMultiplier;
-  }
-
-  function handleNegativeValues() {
-    vals.followers = handleNegative(vals.followers);
-    vals.prod = handleNegative(vals.prod);
-    vals.loss = handleNegative(vals.loss);
-  }
-
-  function handleNegative(value) {
-    if(value <= 0) return 0;
-    return value;
-  }
-
-  function handleUiUpdate(values) {
-    const corrected_prod = values[0];
-    const total_loss = values[1];
-    const cost = values[2];
-
-    $('#click_amount').text('[ ' + truncate_bigint(vals.click) + ' ]');
-    $('#counter').text(truncate_bigint(Math.floor(vals.followers)));
-    
-    if( $('#last_saved').text() != "" )  {
-      $('#last_saved').text(Math.round(last_saved) + ' seconds ago.');
-    }
-
-    $('#power').text(truncate_bigint(vals.energy));
-    //production of followers is (production*achievement_multipler) divided by the corruption factor.
-    $('#production_net').text(truncate_bigint(corrected_prod));
-    $('#production_gross').text(truncate_bigint(((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100)))));
-    
-    let netLoss = 0;
-    if( corrected_prod >= 0.0 || vals.followers >= total_loss )  {
-      netLoss = total_loss;
-    } else {
-      netLoss = cost * (vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100));
-    }
-    $('#prod_energy').text(truncate_bigint(netLoss));
-  }
-
-  function handlePantheon(mul) {
-    let adjustedMultiplier = mul * 0.6;
-    if(vals.current_tab === "Pantheon" && vals.pantheon.unlocked === true) {
-      for(const k in vals.pantheon.bosses ) {
-        if(vals.pantheon.bosses[k].current ) {
-          handleCurrentBoss(adjustedMultiplier, k);
-          break;
-        }
-      }
-    } else if(vals.pantheon.unlocked === false && vals.upgrades['1']['upgrade6'].unlocked) {
-      vals.pantheon.unlocked = true; 
-      fix_names(vals); 
-    }
-  }
-
-  function handleCurrentBoss(mul, boss) {
-    let currentBoss = vals.pantheon.bosses[boss];
-    const bossHpPlusRegen = (mul * currentBoss.current_hp) + (mul * currentBoss.regen);
-    const bossHpMax = mul * currentBoss.max_hp;
-    if (bossHpPlusRegen <= bossHpMax) {
-      currentBoss.current_hp += (mul * currentBoss.regen);
-    } else {
-      currentBoss.current_hp = currentBoss.max_hp;
-    }
-    if (vals.pantheon.dps > 0) {
-      currentBoss.current_hp -= vals.pantheon.dps;
-      attack('#battle' + (vals.pantheon.stage+1), vals.pantheon.dps);
-    }
-  }
+function game_engine(iterations, cycles) {
+  const corrected_prod = adjustProduction();
+  const total_loss = adjustLoss();
   
-  function handleStats() {
-    if (vals.current_tab==="Stats") fix_stats(vals);
-    vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000)/1000;
-    last_saved = (vals.tick + last_saved * 1000)/1000;
-  }
+  handleNegativeValues();
+  handleUiUpdate([corrected_prod, total_loss]);
 
-  function handleSaveData(cycles, override) {
-    if ((cycles * (vals.tick * 30) >= 30000) || override) {
-      $('#save_title').html("Last saved ");
-      $('#last_saved').text("0 seconds ago.");
-      localStorage.sv1 = btoa(JSON.stringify(valsToJSON()));
-      last_saved = 0;
-      cycles = 0;
+  setTimeout(() => {
+    checkAchievements(vals);
+    setButtonAvailability(vals);  
+
+    handlePantheon();
+    handleStats();
+    cycles = handleSaveData(cycles, false);
+    handleGameLoop(iterations, cycles);
+    handleGameLogic(corrected_prod);
+    if (bgm.volume < 0.45) {
+      bgm.volume += 0.01;
     }
-    return cycles;
+  }, vals.tick);
+}
+
+function adjustForGodStatus(mul, multiplier) {
+  return mul > 1 ? mul * multiplier : 1;
+}
+
+function adjustProduction() {
+  return ((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))) - ((1+(vals.corruption/100))*vals.loss);
+}
+
+function adjustLoss() {
+  return (vals.loss * (1+(vals.corruption/100)));
+}
+
+function handleNegativeValues() {
+  vals.followers = handleNegative(vals.followers);
+  vals.prod = handleNegative(vals.prod);
+  vals.loss = handleNegative(vals.loss);
+}
+
+function handleNegative(value) {
+  return value <= 0 ? 0 : value;
+}
+
+function handleUiUpdate(values) {
+  const corrected_prod = values[0];
+  const total_loss = values[1];
+
+  $('#click_amount').text('[ ' + truncate_bigint(vals.click) + ' ]');
+  $('#counter').text(truncate_bigint(Math.floor(vals.followers)));
+    
+  if( $('#last_saved').text() != "" )  {
+    $('#last_saved').text(Math.round(last_saved) + ' seconds ago.');
   }
 
-  function handleGameLoop(iterations, cycles) {
-    if (iterations >= 30) {
-      game_engine(0, ++cycles);
-    } else {
-      game_engine(++iterations, cycles);
-    }
+  $('#power').text(truncate_bigint(vals.energy));
+  $('#production_net').text(truncate_bigint(corrected_prod));
+  $('#production_gross').text(truncate_bigint(((vals.achievement_multiplier * vals.prod) / (1 + (vals.corruption / 100)))));
+    
+  let netLoss = 0;
+  if( corrected_prod >= 0.0 || vals.followers >= total_loss )  {
+    netLoss = total_loss;
+  } else {
+    netLoss = (vals.achievement_multiplier * vals.prod) / (1 + (vals.corruption / 100));
   }
+  $('#prod_energy').text(truncate_bigint(netLoss));
+}
 
-  function handleGameLogic(corrected_prod, cost) {
-      if( vals.followers >= vals.loss || corrected_prod > 0)  {
-        vals.followers += corrected_prod;
-        vals.stats.total_followers += corrected_prod;
-        vals.energy += ( ( 1+(vals.corruption/100) ) * vals.loss);
-        vals.stats.total_energy += ( ( 1+(vals.corruption/100) ) * vals.loss);
-      } else {
-        vals.energy += (cost * (vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
-        vals.stats.total_energy += (cost *(vals.achievement_multiplier*vals.prod))/(1+(vals.corruption/100));
+function handlePantheon() {
+  let adjustedMultiplier = vals.god_status[vals.god_status.current].mul * 0.6;
+  if (vals.current_tab === "Pantheon" && vals.pantheon.unlocked === true) {
+    for (let k in vals.pantheon.bosses) {
+      if (vals.pantheon.bosses[k].current) {
+        handleCurrentBoss(adjustedMultiplier, k);
+        break;
       }
+    }
+  } else if (vals.pantheon.unlocked === false && vals.upgrades['1']['upgrade6'].unlocked) {
+    vals.pantheon.unlocked = true; 
+    fix_names(vals); 
   }
+}
 
-var valsToJSON = function() {
-    var save = staticValuesToJson();
-    purchasesToJson(save);
-    leapToJson(save);
-    upgradesAndAchievementsToJson(save);
-    statsToJson(save);
-    pantheonToJson(save);
-    return save;
+function handleCurrentBoss(mul, boss) {
+  let currentBoss = vals.pantheon.bosses[boss];
+  const bossHpPlusRegen = (mul * currentBoss.current_hp) + (mul * currentBoss.regen);
+  const bossHpMax = mul * currentBoss.max_hp;
+  if (bossHpPlusRegen <= bossHpMax) {
+    currentBoss.current_hp += (mul * currentBoss.regen);
+  } else {
+    currentBoss.current_hp = currentBoss.max_hp;
+  }
+  if (vals.pantheon.dps > 0) {
+    currentBoss.current_hp -= vals.pantheon.dps;
+    attack('#battle' + (vals.pantheon.stage + 1), vals.pantheon.dps);
+  }
+}
+  
+function handleStats() {
+  if (vals.current_tab === "Stats") fix_stats(vals);
+  vals.stats.time_played = (vals.tick + vals.stats.time_played * 1000) / 1000;
+  last_saved = (vals.tick + last_saved * 1000) / 1000;
+}
+
+function handleSaveData(cycles, override) {
+  if ((cycles * (vals.tick * 30) >= 30000) || override) {
+    $('#save_title').html("Last saved ");
+    $('#last_saved').text("0 seconds ago.");
+    localStorage.sv1 = btoa(JSON.stringify(valsToJSON()));
+    last_saved = 0;
+    cycles = 0;
+  }
+  return cycles;
+}
+
+function handleGameLoop(iterations, cycles) {
+  if (iterations >= 30) {
+    game_engine(0, ++cycles);
+  } else {
+    game_engine(++iterations, cycles);
+  }
+}
+
+function handleGameLogic(corrected_prod) {
+  if( vals.followers >= vals.loss || corrected_prod > 0) {
+    vals.followers += corrected_prod;
+    vals.stats.total_followers += corrected_prod;
+    vals.energy += ((1+ (vals.corruption / 100)) * vals.loss);
+    vals.stats.total_energy += ((1 + (vals.corruption / 100)) * vals.loss);
+  } else {
+    vals.energy += (vals.achievement_multiplier*vals.prod) / (1 + (vals.corruption / 100));
+    vals.stats.total_energy += (vals.achievement_multiplier * vals.prod) / (1 + (vals.corruption / 100));
+  }
+}
+
+const valsToJSON = () => {
+  var save = staticValuesToJson();
+  purchasesToJson(save);
+  leapToJson(save);
+  upgradesAndAchievementsToJson(save);
+  statsToJson(save);
+  pantheonToJson(save);
+  
+  return save;
 }
 
 function staticValuesToJson() {
   let save = {
-  		'e':Math.round(vals.energy).toString(16),
-      'p':vals.prod,
-      'cl':vals.click,
-      'f':(Math.round(vals.followers)).toString(16),
-      'l':vals.loss,
-      'c':vals.corruption.toString(16),
-      'ac':vals.achievement_multiplier,
-      't':(Math.round(vals.tick)).toString(16),
-      'fl':vals.flame,
-      'dam':vals.pantheon.damage.toString(16),
-      "tier":vals.god_status.current.toString(16),
-      "sac":vals.sacrifice.unlocked,
-      'dps':vals.pantheon.dps,
-      "stage":vals.pantheon.stage.toString(16),
-      "asc":vals.leap.unlocked,
-      "time":new Date(),
-      "sc":vals.events.superclick.mul,
-      "sm":vals.events.superclick.max_clicks,
-      "lc":Math.round(vals.upgrades["3"]["upgrade1"].cost).toString(16),
-      "cst":vals.leap["1"].tier.cost.toString(16)
+  	'e':Math.round(vals.energy).toString(16),
+    'p':vals.prod,
+    'cl':vals.click,
+    'f':(Math.round(vals.followers)).toString(16),
+    'l':vals.loss,
+    'c':vals.corruption.toString(16),
+    'ac':vals.achievement_multiplier,
+    't':(Math.round(vals.tick)).toString(16),
+    'fl':vals.flame,
+    'dam':vals.pantheon.damage.toString(16),
+    "tier":vals.god_status.current.toString(16),
+    "sac":vals.sacrifice.unlocked,
+    'dps':vals.pantheon.dps,
+    "stage":vals.pantheon.stage.toString(16),
+    "asc":vals.leap.unlocked,
+    "time":new Date(),
+    "sc":vals.events.superclick.mul,
+    "sm":vals.events.superclick.max_clicks,
+    "lc":Math.round(vals.upgrades["3"]["upgrade1"].cost).toString(16),
+    "cst":vals.leap["1"].tier.cost.toString(16)
   };
  	return save;
 }
 
-  function purchasesToJson(save) {
-  	 var unlocks = {
-        "miracle":"cl",
-         "ascend":"asc"
-     };
-
-    for(var k in unlocks) { 
-        var items = vals[k];
-        var temp_a = [];
-        for(var i in items) { 
-            if(items[i].unlocked) {
-               temp_a.push([i] + ":" +items[i].amount.toString(16));
-            }
-        }
-     save[k] = temp_a.join('|');
+function purchasesToJson(save) {
+  var unlocks = {
+    "miracle":"cl",
+    "ascend":"asc"
+  };
+  for (let k in unlocks) { 
+    const items = vals[k];
+    const temp_a = [];
+    for (let i in items) { 
+      if (i === 'numSelected') continue;
+      temp_a.push([i] + ":" + items[i].amount.toString(16)); 
+      temp_a.push([i] + ":" + items[i].unlocked);         
+      temp_a.push([i] + ":" + items[i].base_cost);
+      temp_a.push([i] + ":" + items[i].base_output);
     }
+    save[k] = temp_a.join('|');
   }
+}
 
-  function leapToJson(save) {
-  	for(var k in vals.leap) { 
-        var items = vals.leap[k];
-        var temp_a = [];
-        for(var i in items) { 
-            if(items[i].amount > 0) {
-                temp_a.push([i] + ":" +items[i].amount.toString(16));
-            }
-        }
-        if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+function leapToJson(save) {
+  for (let k in vals.leap) { 
+    let items = vals.leap[k];
+    let temp_a = [];
+    for (let i in items) { 
+      if (items[i].amount > 0) {
+        temp_a.push([i] + ":" + items[i].amount.toString(16));
+      }
     }
+    if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+  }
+}
+
+function upgradesAndAchievementsToJson(save) {
+  let tiered = {
+    "upgrades":"up",
+    "challenges":"ch"
   }
 
-  function upgradesAndAchievementsToJson(save) {
-        var tiered = {
-          "upgrades":"up",
-          "challenges":"ch"
-        }
+  for (let k in tiered) { 
+    var items_generic = vals[k];
+    var temp_t = [];
+    var temp_arr = [];
+    for (let i in items_generic) {
+      for (let j in items_generic[i]) {
+        if (items_generic[i][j].unlocked) temp_t.push(items_generic[i][j].label);
+      }
+    }
+    temp_arr.push(temp_t); 
+    save[k] = temp_arr.join('|');
+  }  	
+}
 
-        for(var k in tiered) { 
-            var items_generic = vals[k];
-            var temp_t = [];
-            var temp_arr = [];
-            for( var i in items_generic ) {
-              for( var j in items_generic[i] ) {
-                if(items_generic[i][j].unlocked) 
-                    temp_t.push(items_generic[i][j].label);
-                }
-              }
-            temp_arr.push(temp_t); 
-            save[k] = temp_arr.join('|');
-        }  	
-  }
-
-  function statsToJson(save) {
-        var temp_s = {
-          't':vals.stats.time_played.toString(16),
-          't_e':Math.round(vals.stats.total_energy).toString(16),
-          't_f':Math.round(vals.stats.total_followers).toString(16),
-          'm_p':vals.stats.max_prod,
-          'm_l':vals.stats.max_loss,
-          'm_c':vals.stats.miracle_clicks.toString(16),
-          'a_c':vals.stats.ascension_clicks.toString(16),
-          'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
-          'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
-        };
-        save['s'] = temp_s;  	
-  }
+function statsToJson(save) {
+  let temp_s = {
+    't':vals.stats.time_played.toString(16),
+    't_e':Math.round(vals.stats.total_energy).toString(16),
+    't_f':Math.round(vals.stats.total_followers).toString(16),
+    'm_p':vals.stats.max_prod,
+    'm_l':vals.stats.max_loss,
+    'm_c':vals.stats.miracle_clicks.toString(16),
+    'a_c':vals.stats.ascension_clicks.toString(16),
+    'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
+    'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
+  };
+  save['s'] = temp_s;  	
+}
 
 function pantheonToJson(save) {
   let pantheon = [];
@@ -572,7 +563,6 @@ function pantheonToJson(save) {
 
   save['pantheon'] = pantheon; 
 }
-
 
 /**
 * Really bad code starts here, please refactor me.
@@ -607,7 +597,7 @@ function get_valsFromJSON(save) {
         vals.upgrades["3"]["upgrade1"].cost = parseInt(save.lc, 16);
         if (save.tier) vals.god_status.current = parseInt(save.tier,16);
         if (vals.upgrades["3"]["upgrade1"].cost <= 100000 && vals.god_status.current > 1) 
-          vals.upgrades["3"]["upgrade1"].cost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 15);
+          vals.upgrades["3"]["upgrade1"].cost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 10);
         lastTime = save.time;
 
         for (let k in vals.pantheon.bosses) {
@@ -624,17 +614,21 @@ function get_valsFromJSON(save) {
           "challenges":"ch"
         }
         for (let k in unlocks) {
-          if( save[k]) {
-            var t_items = save[k].split('|');
-            for( var i=0; i<t_items.length; i++ ) {
-              var item_num = t_items[i].split(':');
-              for( var x in vals[k] ) {
-                if(x === item_num[0]) {
-                  vals[k][x].amount = parseInt(item_num[1],16);
-                  if(vals[k][x].amount >= 1) vals[k][x].cost = set_item_cost(vals[k][x]);
-                  if(x.substr(x.length-1) < Object.keys(vals[k]).length) {
-                    vals[k][x.substr(0,x.length-1) + String(parseInt(x.substr(x.length-1)))].unlocked = true;    
-                  }
+          if (save[k]) {
+            let t_items = save[k].split('|');
+            for (let i = 0; i < t_items.length - 3; i+=4) {
+              const firstItem = t_items[i].split(':');
+              const secondItem = t_items[i+1].split(':');
+              const thirdItem = t_items[i+2].split(':');
+              const fourthItem = t_items[i+3].split(':');         
+              for (let x in vals[k]) {
+                if (x === firstItem[0]) {
+                  vals[k][x].amount = parseInt(firstItem[1], 16);
+                  vals[k][x].unlocked = secondItem[1];
+                  vals[k][x].base_cost = parseFloat(thirdItem[1]);
+                  vals[k][x].base_output = parseFloat(fourthItem[1]);                                    
+                  vals[k][x].cost = set_item_cost(vals[k][x]);
+                  determineSellPrice(k, x);
                 }
               }
             }
@@ -657,24 +651,23 @@ function get_valsFromJSON(save) {
       }
 
         //load challenges and upgrades
-        for(var k in tiered) {
-            if( save[k]) {
-              var t_items = save[k].split('|');
-              t_items += '';
-              var item = t_items.split(',');
-
-                for( var i=0; i< item.length; i++ ) {
-                  
-                  for( var x in vals[k] ) {
-                    for( var y in vals[k][x] ) {
-                      if( vals[k][x][y].label === item[i] ) {
-                        vals[k][x][y].unlocked = true;    
-                      }
-                    }
+        for (let k in tiered) {
+          if( save[k]) {
+            let t_items = save[k].split('|');
+            t_items += '';
+            const item = t_items.split(',');
+            for (let i = 0; i < item.length; i++) {
+              for (let x in vals[k]) {
+                for (let y in vals[k][x]) {
+                  if (vals[k][x][y].label === item[i]) {
+                    vals[k][x][y].unlocked = true;    
                   }
                 }
+              }
             }
+          }
         }
+
         if (save['pantheon']) {
             const items = save['pantheon'];
             for (let i=0; i < items.length; i++) {
@@ -719,25 +712,25 @@ function applyBossUpgrades(bossUpgrade, tier, amount) {
   }
 }
 
-  function set_achievement_multiplier(vals) {
-    var multiplier = 1.00;
-    for (const challengeType in vals.challenges ) {
-      for (const challengeNumber in vals.challenges[challengeType]) {
-        let challenge = vals.challenges[challengeType][challengeNumber];
+function set_achievement_multiplier(vals) {
+  var multiplier = 1.00;
+  for (const challengeType in vals.challenges ) {
+    for (const challengeNumber in vals.challenges[challengeType]) {
+      let challenge = vals.challenges[challengeType][challengeNumber];
 
-        if (challenge.unlocked) {
-          multiplier += 0.02;
-        }
+      if (challenge.unlocked) {
+        multiplier += 0.02;
       }
     }
-
-    vals.achievement_multiplier = multiplier;
-    $('#prod_mul').text(Math.round(vals.achievement_multiplier * 100)/100 + 'x');
-    fix_tab_buttons(vals);
   }
 
-  //TODO:- fix this disgusting mess => extract into objects & use polymorphism.
-  function checkAchievements(vals) {
+  vals.achievement_multiplier = multiplier;
+  $('#prod_mul').text(Math.round(vals.achievement_multiplier * 100)/100 + 'x');
+  fix_tab_buttons(vals);
+}
+
+//TODO:- fix this disgusting mess => extract into objects & use polymorphism.
+function checkAchievements(vals) {
     for (let k in vals.challenges) {
       switch (vals.challenges[k].required_type) {
 
@@ -828,8 +821,8 @@ function applyBossUpgrades(bossUpgrade, tier, amount) {
         break;
       }
     }
-    set_achievement_multiplier(vals);
-  }
+  set_achievement_multiplier(vals);
+}
 
 function setButtonAvailability(vals) {
   let cost = 1;
@@ -975,18 +968,18 @@ function fix_tab_buttons(vals) {
 
         if (i === "type") continue;
         try {
-          if (vals.upgrades[k][i].unlocked) unlock_aug++;
+          if (vals.upgrades[k][i].unlocked === true) unlock_aug++;
         } catch (NoSuchUpgradeException) {
           console.log("Could not find upgrade for " + vals.upgrades[k] + " \n" + NoSuchUpgradeException);
         }
       }
     }
     for (let k in vals.miracle) {
-      if (vals.miracle[k].unlocked) unlock_conv++;
-      total_conv ++;
+      if (vals.miracle[k].unlocked === true) unlock_conv++;
+      total_conv++;
     }
     for (let k in vals.ascend) {
-      if (vals.ascend[k].unlocked) unlock_ascend++;
+      if (vals.ascend[k].unlocked === true) unlock_ascend++;
       total_ascend ++;
     }
   $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/26");
@@ -1215,6 +1208,7 @@ function fix_conv_asc(vals) {
               if (currentTab != 'Conversion') $("#new_purchase").find('#ascend_out__2').attr('id', "ascend_out_" + purchase_num + '_' + purchase_num);
               $('#new_purchase').attr('id', title + '_' + purchase_num);
            }
+
         $('#' + title + '_' + purchase_num).css("display", "block");
         $('#' + title + "_header_" + purchase_num).contents().filter(function() { return this.nodeType == 3; }).first().replaceWith(vals[keyWord][k].label);
         $('#' + title + '_lbl_' + purchase_num).text(vals[keyWord][k].amount);
@@ -1504,17 +1498,15 @@ function saveForLeap() {
 	save['s'] = leapStatsToJson();
   save['pantheon'] = adjustedBossToJson();
 	leapToJson(save);
-  adjustedPurchasesToJson();
+  adjustedPurchasesToJson(save);
 	return save;
 }
-
-
 
 function staticLeapValuesToJson() {
     const tierMul = generateLeapOffset(vals.god_status.current);
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
-    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 15);
+    const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 10);
     const nextLeapCost = (vals.god_status[vals.god_status.current].mul * vals.god_status.current);
 
     let save = {
@@ -1541,19 +1533,19 @@ function staticLeapValuesToJson() {
 }
 
 function leapStatsToJson() {
-      const temp_s = {
-        't':vals.stats.time_played.toString(16),
-        't_e':0,
-        't_f':0,
-        'm_p':vals.stats.max_prod,
-        'm_l':vals.stats.max_loss,
-        'm_c':vals.stats.miracle_clicks.toString(16),
-        'a_c':vals.stats.ascension_clicks.toString(16),
-        'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
-        'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
-      };
+  const temp_s = {
+    't':vals.stats.time_played.toString(16),
+    't_e':0,
+    't_f':0,
+    'm_p':vals.stats.max_prod,
+    'm_l':vals.stats.max_loss,
+    'm_c':vals.stats.miracle_clicks.toString(16),
+    'a_c':vals.stats.ascension_clicks.toString(16),
+    'mc_e':Math.round(vals.stats.miracle_click_energy).toString(16),
+    'ac_e':Math.round(vals.stats.ascension_click_energy).toString(16)
+  };
 
-      return temp_s;
+  return temp_s;
 }
 
 function adjustedBossToJson() {
@@ -1563,10 +1555,10 @@ function adjustedBossToJson() {
     if (++index < vals.god_status[vals.god_status.current] - 4) break;
     const items = vals.pantheon.bosses[k];
     let temp_a = [];
-    let mul = vals.god_status[String(parseInt(vals.god_status.current) -1)].mul;
-    temp_a.push('max_hp' + ":" + (mul * 0.6 * items.max_hp).toString(16));
-    temp_a.push('current_hp' + ":" + (mul * 0.6 * items.current_hp).toString(16));
-    temp_a.push('regen' + ":" + (mul * 0.6 * items.regen).toString(16));
+    let mul = adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.6);
+    temp_a.push('max_hp' + ":" + (mul * items.max_hp).toString(16));
+    temp_a.push('current_hp' + ":" + (mul * items.current_hp).toString(16));
+    temp_a.push('regen' + ":" + (mul * items.regen).toString(16));
     temp_a.push('defeated' + ":" + (items.defeated).toString().toLowerCase());
     temp_a.push('reward' + ":" + ((1 + Math.sqrt(mul)) * items.reward).toString(16));    
     pantheon.push(temp_a);
@@ -1606,28 +1598,49 @@ function generateTotalValueFor(type, startValue) {
 	return totalValue;
 }
 
+function adjustedPurchasesToJson(save) {
+  let mul = adjustForGodStatus(vals.god_status.current, 0.6);  
+  const unlocks = {
+    "miracle":"cl",
+    "ascend":"asc"
+  };
+  for (let k in unlocks) { 
+    const items = vals[k];
+    const temp_a = [];
+    for (let i in items) { 
+      if (i === 'numSelected') continue;
+      temp_a.push([i] + ":" + 0); 
+      temp_a.push([i] + ":" + false);        
+      temp_a.push([i] + ":" + mul * items[i].base_cost);
+      temp_a.push([i] + ":" + mul * items[i].base_output);
+    }
+    save[k] = temp_a.join('|');
+  }
+}
+
+
 $(document).on("click", ".reset", function() {
   saveSound.play();
-  if( confirm("Are you sure you want to Quantum leap?") ) {
+  if (confirm("Are you sure you want to Quantum leap?")) {
     doLeap(vals);
     location.reload();
   }
 });
 
 $(document).on("click", ".purchase", function() {
-    var btn = $(this).attr('id');
-    let event = resolveClass(btn);
-    handleSound(btn);
-    try {
-    	event.action();
-    } catch(EventActionEcception) {
-      console.log(EventActionEcception);
-    	console.log('Error occured while processing event triggered by:- ' + btn);
-    }
+  var btn = $(this).attr('id');
+  let event = resolveClass(btn);
+  handleSound(btn);
+  try {
+    event.action();
+  } catch(EventActionEcception) {
+    console.log(EventActionEcception);
+    console.log('Error occured while processing event triggered by:- ' + btn);
+  }
 
-  	fix_tab_buttons(vals);
-  	fix_names(vals);
-  });
+  fix_tab_buttons(vals);
+  fix_names(vals);
+});
 
 function handleSound(id) {
   if(id.includes('save')) {

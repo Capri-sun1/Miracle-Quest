@@ -1,5 +1,5 @@
 
-var vals = {
+var data = {
   "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,"flame":0,
   "events": {
     "superclick": {
@@ -59,7 +59,7 @@ var vals = {
       "max_tier": 9
     },
     "7":{
-      "label": "Phantasm",
+      "label": "Djinn",
       "mul": 12,
       "boss_label": "Enchanted",
       "max_tier": 10
@@ -844,8 +844,108 @@ var vals = {
                   "mul":0.6,
                   "max_amount":5
                 }
+              },
+            "6":{
+                "click1":{
+                  "label":"Damage x3.25/click",
+                  "amount":0,
+                  "base_cost":3.25,
+                  "cost":3.25,
+                  "mul":3.25,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.075x energy prod",
+                  "amount":0,
+                  "base_cost":3.75,
+                  "cost":3.75,
+                  "mul":0.075,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.025x mystic Power/Tick",
+                  "amount":0,
+                  "base_cost":3.75,
+                  "cost":3.75,
+                  "mul":0.025,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.075x Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":3.75,
+                  "cost":3.75,
+                  "mul":0.075,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;35%",
+                  "amount":0,
+                  "base_cost":5.25,
+                  "cost":5.25,
+                  "mul":0.65,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;45%",
+                  "amount":0,
+                  "base_cost":2.25,
+                  "cost":2.25,
+                  "mul":0.55,
+                  "max_amount":5
+                }
+              },
+              
+              "7":{
+                "click1":{
+                  "label":"Damage x3.5/click",
+                  "amount":0,
+                  "base_cost":3.5,
+                  "cost":3.5,
+                  "mul":3.5,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.1x energy prod",
+                  "amount":0,
+                  "base_cost":4,
+                  "cost":4,
+                  "mul":0.1,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.05x mystic Power/Tick",
+                  "amount":0,
+                  "base_cost":4,
+                  "cost":4,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.1x Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":4,
+                  "cost":4,
+                  "mul":0.1,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;40%",
+                  "amount":0,
+                  "base_cost":5.5,
+                  "cost":5.5,
+                  "mul":0.6,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;50%",
+                  "amount":0,
+                  "base_cost":3,
+                  "cost":3,
+                  "mul":0.5,
+                  "max_amount":5
+                }
               }
-
             },
             "bosses" : {
               "boss1":{
@@ -1199,7 +1299,7 @@ var vals = {
       "max_tier": 9
     },
     "7":{
-      "label": "Phantasm",
+      "label": "Djinn",
       "mul": 12,
       "boss_label": "Enchanted",
       "max_tier": 10
@@ -1984,8 +2084,108 @@ var vals = {
                   "mul":0.6,
                   "max_amount":5
                 }
-              }
+              },
+             "6":{
+                "click1":{
+                  "label":"Damage x3.25/click",
+                  "amount":0,
+                  "base_cost":3.25,
+                  "cost":3.25,
+                  "mul":3.25,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.075x energy prod",
+                  "amount":0,
+                  "base_cost":3.75,
+                  "cost":3.75,
+                  "mul":0.075,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.025x mystic Power/Tick",
+                  "amount":0,
+                  "base_cost":3.75,
+                  "cost":3.75,
+                  "mul":0.025,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.075x Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":3.75,
+                  "cost":3.75,
+                  "mul":0.075,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;35%",
+                  "amount":0,
+                  "base_cost":5.25,
+                  "cost":5.25,
+                  "mul":0.65,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;45%",
+                  "amount":0,
+                  "base_cost":2.25,
+                  "cost":2.25,
+                  "mul":0.55,
+                  "max_amount":5
+                }
+              },
 
+              "7":{
+                "click1":{
+                  "label":"Damage x3.5/click",
+                  "amount":0,
+                  "base_cost":3.5,
+                  "cost":3.5,
+                  "mul":3.5,
+                  "max_amount":8
+                },
+                "prod1":{
+                  "label":"Damage +0.1x energy prod",
+                  "amount":0,
+                  "base_cost":4,
+                  "cost":4,
+                  "mul":0.1,
+                  "max_amount":8
+                },
+                "click2":{
+                  "label":"Deal +0.05x mystic Power/Tick",
+                  "amount":0,
+                  "base_cost":4,
+                  "cost":4,
+                  "mul":0.05,
+                  "max_amount":8
+                },
+                "prod2":{
+                  "label":"Deal +0.1x Energy Prod/Tick",
+                  "amount":0,
+                  "base_cost":4,
+                  "cost":4,
+                  "mul":0.1,
+                  "max_amount":8
+                },
+                "max_hp":{
+                  "label":"Boss Max Hp &darr;40%",
+                  "amount":0,
+                  "base_cost":5.5,
+                  "cost":5.5,
+                  "mul":0.6,
+                  "max_amount":6
+                },
+                "regen":{
+                  "label":"Boss Regen &darr;50%",
+                  "amount":0,
+                  "base_cost":3,
+                  "cost":3,
+                  "mul":0.5,
+                  "max_amount":5
+                }
+              }
             },
             "bosses" : {
               "boss1":{

@@ -2128,7 +2128,7 @@ $(document).on("click", "#prev_boss", function(event) {
 
 $(document).on("click", "#next_boss", function(event) {
   tabSound.play();
-  if (vals.pantheon.stage <= 2) {
+  if (vals.pantheon.stage <= 4) {
     vals.pantheon.stage++;
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = false;
     vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = true;

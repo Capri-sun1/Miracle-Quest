@@ -168,7 +168,7 @@ function handleSecondsIdle(diffInSeconds) {
   var cost = adjustForGodStatus(vals.god_status[vals.god_status.current].mul);
   var corrected_prod = adjustProduction(cost);
   var total_loss = adjustLoss(cost);
-  //offline production much slower - hardcoded for now.
+  //offline production much slower - hardcoded to only add to one value for now.
   if(isNaN(diffInSeconds) === false) {
     const values = [Math.round((diffInSeconds * corrected_prod)/2), Math.round((diffInSeconds * total_loss)/2)];
     const choice = Math.floor(Math.random() * (2));
@@ -230,8 +230,6 @@ function handleVisibilityChange() {
   try {
     if (document.hidden){
         bgm.pause();
-    } else {
-        setupAudio();
     }
   } catch (NoSuchAudioException) {
     console.log("Unable to change state of audio.");
@@ -1128,7 +1126,7 @@ function fix_pantheon(vals) {
         $('#max_hp').text(truncate_bigint(vals.pantheon.bosses[k].max_hp));
         $('#boss_hp_bar').css('width', 100 * ((vals.pantheon.bosses[k].current_hp)/(vals.pantheon.bosses[k].max_hp)) + '%');
         $('#regen').text(truncate_bigint(vals.pantheon.bosses[k].regen));
-        $('#boss_name').text(vals.pantheon.bosses[k].name + ':');
+        $('#boss_name').text(vals.pantheon.bosses[k].name);
         break;
       }
     }
@@ -2121,7 +2119,7 @@ function resolveTabName(id) {
 
 $(document).on("click", "#prev_boss", function(event) {
   tabSound.play();
-  if( vals.pantheon.stage > 0 ) {
+  if (vals.pantheon.stage > 0) {
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = true;
     vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = false;
     vals.pantheon.stage--;
@@ -2130,7 +2128,7 @@ $(document).on("click", "#prev_boss", function(event) {
 
 $(document).on("click", "#next_boss", function(event) {
   tabSound.play();
-  if( vals.pantheon.stage <= 2 ) {
+  if (vals.pantheon.stage <= 2) {
     vals.pantheon.stage++;
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = false;
     vals.pantheon.bosses['boss' + String(parseInt(vals.pantheon.stage) +1)].current = true;
@@ -2406,7 +2404,7 @@ $(document).on("click", ".battle", function() {
   const hit = 'battle_' + (vals.pantheon.stage+1) + '_hit';
   const id = $(this).attr('id');
 
-  $(this).attr('src', 'data/' + hit + ".png");
+  if ((vals.pantheon.stage+1) > 1 && (vals.pantheon.stage+1) < 6) $(this).attr('src', 'data/' + hit + ".png");
   processSuperClick();
   attack(id, vals.pantheon.damage);
 });
@@ -2682,7 +2680,7 @@ function truncate_minutes(num) {
 function truncate_seconds(num) {
     var message = " seconds";
     if (num == 1) message = message.substr(0,message.length-1);
-    return num + message + '.';
+    return num + message;
 }
 
 function truncate_bigint(num) { 

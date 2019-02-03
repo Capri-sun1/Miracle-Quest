@@ -916,7 +916,6 @@ nav ul li {
   font-size:1.25em;
   text-align:right;
   width:100%;
-  margin: 2.5% 0;
 }
 #boss_shop_wrap {
   text-align: center;
@@ -1042,9 +1041,8 @@ nav ul li {
     border-radius: 2px;
 }
 #battle_1 {
-  width: 40% !important;
-  height: 40% !important;
-  margin-bottom: 5%;
+  width: 50%;
+  height: 50%;
   margin-left: 5%;
 }
 
@@ -2057,7 +2055,10 @@ a {
     height: 20vw;
    }
     #battle_1 {
-      width: 20% !important;
+      width: 45%;
+    }
+    #pantheon_head {
+      margin-right:12.5%;
     }
 }
 @media screen and (min-width: 1300px) { 
@@ -2078,7 +2079,7 @@ a {
     #tab_divs, #tab_btns { 
         width: 70%;
         margin-left: 2%;
-        font-size: 1.5em;
+      font-size: 1em;
     }
 
     #time_played {
@@ -2165,6 +2166,10 @@ a {
       height: 100%;
       padding: 1%;
    }
+
+   #battle_1 {
+    width: 37.5%;
+   }
 }
 @media screen and (min-width: 1600px) { 
     .tabs .button--secondary .button__inner { 
@@ -2198,6 +2203,9 @@ a {
       width: 60%;
       height: 45%;
    }
+    #battle_1 {
+    width: 35%;
+   }
 }
 @media screen and (min-width: 1900px) { 
     #left_wrap { 
@@ -2207,7 +2215,7 @@ a {
         width: 80%;
     }
     #battle_1 {
-      width: 25% !important;
+      width: 32.5%;
     }
     #miracle_img {
       width: 12.5vw;

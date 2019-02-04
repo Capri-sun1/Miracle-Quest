@@ -122,8 +122,7 @@ async function traverseObject(obj, backup, level) {
   for (let key in backup) {
     if (backup.hasOwnProperty(key)) {
       if (obj[key] === undefined || obj[key] === null || obj[key] !== obj[key]) {
-        console.log(obj + ' ' + obj[key] + ' ' + key);
-        //obj[key] = backup[key];
+        obj[key] = backup[key];
         console.log("No save data found for: " + key + "\nAttempting to remedy..");
       }
       await traverse(obj[key], backup[key], level + "    ");
@@ -1467,7 +1466,7 @@ function fix_challenges(vals) {
           $('#challenges_' + challenge_num + '_' + i).css('color', '#fff');
           $('#challenges_' + challenge_num + '_' + i).css('display', 'inline-block');
           if (challenge_num < 3 || vals.challenges[k][i].unlocked) {
-            $('#challenges_' + challenge_num + '_' + i).css('width', '48%');
+            $('#challenges_' + challenge_num + '_' + i).css('width', '90%');
           } else if (vals.challenges[k][i].unlocked !== true) {
             $('#challenges_' + challenge_num + '_' + i).css('width', '100%');
           }

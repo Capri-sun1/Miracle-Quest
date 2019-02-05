@@ -1263,13 +1263,13 @@ var vals = {
   "god_status": {
     "current": 1,
     "1": {
-      "label": "Monk",
+      "label": "Cultist",
       "mul": 1,
       "boss_label": "",
       "max_tier":3
     },
     "2":{
-      "label": "Alchemist",
+      "label": "Monk",
       "mul": 2,
       "boss_label": "",
       "max_tier": 5

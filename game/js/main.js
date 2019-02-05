@@ -1248,6 +1248,13 @@ $(document).on("click", ".trigger", () => {
 $(document).on("click", ".close-button", () => {
   var modal = document.querySelector(".modal");
   modal.classList.toggle("show-modal");
+  $('#instructions_1').slideToggle();
+  $('.next-button').toggle();
+});
+
+$(document).on("click", ".next-button", () => {
+  $('#instructions_1').animate({width: 'toggle'});
+  $('.next-button').toggle();
 });
 
 $(document).on("click", ".amount", function() {

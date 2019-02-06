@@ -902,7 +902,7 @@ div.scroll_tabs button:hover {
 .miracle_click, .transcend_click { 
     display: none;
     z-index: 1500;
-    position: fixed;
+    position: absolute;
     font-size: 1.3em;
     font-weight: bold;
     text-shadow: 0px 1px 1px #333;
@@ -1950,6 +1950,16 @@ a {
   display: inline-block;
 }
 
+.perk {
+  width: 25%;
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
+}
+
+.perk_point {
+  width: 5%;
+}
+
 @-webkit-keyframes animate-positive {
     0% { width: 0%;}
 }
@@ -2394,7 +2404,6 @@ a {
    }
 
     #super {
-       transform: rotate(-180deg);
        vertical-align: middle;
        width: 80%;
       height: 4vh;
@@ -2443,7 +2452,10 @@ a {
     .scroll_tabs button {
       width: 22%;
     }
-  
+
+    #super {
+       transform: rotate(0deg);
+    }
     #left_wrap { 
       width: 25%;
       margin-top: 1%;

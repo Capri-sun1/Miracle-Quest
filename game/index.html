@@ -79,6 +79,10 @@
 		<button class="button square_btn" id="ascend-tab-btn">
 			<span class="button__inner" id="ascend-tab-text" style="background: transparent !important;"></span></button>
 		<button class="button square_btn" id="upgrade-tab-btn">
+						<span class="button__inner" style="background: transparent !important;">Upgrades</span></button>	
+		<button class="button square_btn" id="class-tab-btn">
+			<span class="button__inner" style="background: transparent !important;">Class</span></button>	
+
 			<span class="button__inner" id="augment-tab-text" style="background: transparent !important;"></span></button>
 		<button class="button square_btn" id="sacrifice-tab-btn">		
 		<span class="button__inner" style="background: transparent !important;">Sacrifice</span></button>
@@ -342,6 +346,111 @@
   </div>
 </div>
 	</div>
+</div>
+
+
+	<div id="Class" class="tabcontent">
+
+		<div style="margin-bottom:2.5%; margin-left: 1%" class="tab_div" id="main_upgrades_header">
+		<h3> Class  <strong class="glyphicon glyphicon-screenshot"></strong></h3>
+	</div>
+		<div class="overlay" id="bought_upgrades" style="border-radius: 5px">	
+		<div class="wrap" id="achievements_wrap">
+		</div>
+		</div>
+
+		<div id="uncompleted" class="uncompleted">
+
+	<div class="table-background" id="upgrade_table">
+    <div class="table-container">
+     <div class="panel pricing-table" id="upgrades_table" style="margin: 0px; overflow-y: hidden">
+      <div class="pricing-plan">
+        <img class="perk" src="data/power_1.png" style="border: 6px solid #F78090">        	
+        <div id="perk_1">
+		<div id ="perk_1_1" class="tab_div">
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="upgrade_lbl_1_1" style="color: #880E4F">Savant</span></li>
+          <li class="pricing-features-item"><span id="perk_desc_2_1">Click Power</span></li>
+        </ul>
+        <span class="pricing-price">[ 1 <span id="perk_cost_1_1"></span>    	<img class="perk_point" src="data/perk_point.png"> ]</span><br>
+        <div class="wrap"><a class="btn-11" href="#"><button id="upgrade_btn_1_1" class="purchase" disabled="disabled" 
+        style="background:transparent; color:#016FF9"></button></a></div>
+      </div>    
+  	 </div>
+	</div>
+
+      
+      <div class="pricing-plan">
+        <img class="perk" src="data/passive_1.png" style="border: 6px solid #F78090">        	
+        <div id="perk_2">
+		<div id ="perk_2_1" class="tab_div">
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="perk_lbl_2_1" style="color: #880E4F">Oracle</span></li>
+          <li class="pricing-features-item"><span id="perk_desc_2_1">Idle production</span></li>
+        </ul>
+        <span class="pricing-price">[ 5 <span id="perk_cost_2_1"></span><img class="perk_point" src="data/perk_point.png"> ]</span><br>
+        <div class="wrap"><a class="btn-11" href="#"><button id="perk_btn_2_1" class="purchase" disabled="disabled" 
+        style="background:transparent; color:#016FF9"></button></a></div>
+      </div>    
+  	 </div>
+	</div>
+
+      <div class="pricing-plan">
+        <img class="perk" src="data/focus_1.png" style="border: 6px solid #F78090">        	
+        <div id="perk_3">
+		<div id ="perk_3_1" class="tab_div">
+        <ul class="pricing-features">
+          <li class="pricing-features-item"><span id="perk_lbl_3_1" style="color: #880E4F">Diabolist</span></li>
+          <li class="pricing-features-item"><span id="perk_desc_2_1">Boss Damage</span></li>
+        </ul>
+        <span class="pricing-price">[ 10 <span id="perk_cost_3_1"></span>
+    	<img class="perk_point" src="data/perk_point.png"> ]</span><br>
+        <div class="wrap"><a class="btn-11" href="#"><button id="perk_btn_3_1" class="purchase" disabled="disabled" 
+        style="background:transparent; color:#016FF9"></button></a></div>
+      </div>    
+  	 </div>
+	</div>
+
+    </div>
+  </div>
+</div>
+	</div>
+
+			<div class="modal">
+		    <div class="modal-content">
+		        <span class="close-button"><strong class="glyphicon glyphicon-remove-sign" style="vertical-align: middle"></strong></span>		    	
+		    	<div class="slider">
+				  <input type="radio" name="slider" title="slide1" checked="checked" class="slider__nav"/>
+				  <input type="radio" name="slider" title="slide2" class="slider__nav"/>
+				  <div class="slider__inner">
+				    <div class="slider__contents">
+				      <h2 class="slider__caption">Classes</h2>
+				      <p class="slider__txt">
+					       <p style="font-weight: bold; text-align:left; font-size: 1.2em;"> 
+					        <span><br> Through studying ancient texts</span><br>
+					         <span> you have gained supernatural powers.</span><br>
+					         <span> Choose the path of good or evil on </span><br>
+					         <span> your path to attaining true divinity.</span>
+					       </p>
+				  		</p>
+				    </div>
+				    <div class="slider__contents">
+				      <h2 class="slider__caption">Instructions</h2>
+				      <p class="slider__txt">
+					    <p style="font-weight: bold; text-align:left; font-size: 1.2em;"> 
+					        <span><br> Perform miracles to gain followers</span><br>
+					         <span> Convert followers to gain energy</span><br>
+					         <span> Use energy to improve production</span><br>
+					         <span> Unlock features as power increases</span>
+					       </p>
+				       </p>
+				    </div>
+
+				  </div>
+				</div>
+                </div>
+		    </div>
+
 </div>
 	<div id="Pantheon" class="tabcontent">
 		<div id="pantheon_div_1" class="tab_div" style="text-align:center">

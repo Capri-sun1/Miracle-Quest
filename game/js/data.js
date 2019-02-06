@@ -1753,7 +1753,7 @@ var vals = {
             "type":"superclick_mul",
             "upgrade1":{
               "label":"Morning Coffee",
-              "description":"You feel adrenaline surging through you as you click.",
+              "description":"Adrenaline begins to surge through your veins.",
               "unlocked":false,
               "cost":20000,
               "mul":1.5

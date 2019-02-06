@@ -997,7 +997,7 @@ function fix_tab_buttons(vals) {
       total_ascend ++;
     }
   $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/26");
-  $('#augment-tab-text').text("Upgrade " + unlock_aug + "/28");
+  // $('#augment-tab-text').text("Upgrade " + unlock_aug + "/28");
   $('#convert-tab-text').text("Create " + unlock_conv + "/" + total_conv);
   $('#ascend-tab-text').text("Convert " + unlock_ascend + "/" + total_ascend);
   if (!vals.leap.unlocked) $('#leap-tab-btn').css('display', 'none');
@@ -1378,7 +1378,7 @@ function fix_upgrades(vals) {
         if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost / 2) {
             $("#upg_text_" + purchase_num).text("Cannot Purchase");
             $('#upgrade_cost_' + purchase_num + '_1').text('[ NaN ');
-            $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle the immense power of this rune.");
+            $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle the this immense power.");
             $('#upgrade_lbl_' + purchase_num + '_1').text("Unavailable");
             hasDisplayed = true;
           break;
@@ -2359,10 +2359,10 @@ $(document).on('contextmenu', '.miracle', function(event) {
 
 $(document).on("click", '.miracle', function(event) { 
   var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
-
   try {
     handleMiracleClick(used_id, event);
   } catch(cannotClickException) {
+    console.log(cannotClickException);
     handleError();
   }
 });
@@ -2370,7 +2370,7 @@ $(document).on("click", '.miracle', function(event) {
 function handleMiracleClick(used_id, event) {
   var miracle = used_id === 'button';
   var click = resolveClick(miracle, event);
-  if(click.canClick()) {
+  if (click.canClick()) {
     new Audio('data/clicksound.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
@@ -2420,9 +2420,16 @@ generateOffset(id) {
     if(id === '#miracle2_div') {
       yOffset *= 0.75;
     }
-    var xOffset = 5 * $(id).offset().left;
+    var xOffset = 4 * $(id).offset().left;
+    xOffset += generateRandomOffset();
     this.target.offset({left: xOffset, top: yOffset});
   }
+}
+
+function generateRandomOffset() {
+    const randomNumber = Math.random();
+    let direction = randomNumber > 0.5 ? 1 : -1;
+    return direction * (randomNumber * 12.5);
 }
 
 $(document).on('contextmenu', '.battle', function(event) {
@@ -2530,7 +2537,7 @@ class MiracleClick extends Click {
   }
 
   animate() {
-      this.target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': this.target.offset.left+ 'px'}, 750,
+      this.target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left':  this.target.offset.left + generateRandomOffset() + 'px'}, 750,
        function() { 
         $(this).remove();
       });
@@ -2544,10 +2551,10 @@ class TranscendClick extends Click {
   }
 
   animate() {
-    this.target.animate({'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '-=10'}, 750, 
+    this.target.animate({'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '+=' + generateRandomOffset() + 'px'}, 750, 
       function() { 
         $(this).remove();
-      });
+    });
   }
 }
 
@@ -2560,15 +2567,15 @@ function handleError() {
 function gen_boss_offset(id, target) {
     var width = $(window).width();
     if (width <= 700) 
-      target.offset( {'top': $(id).offset().top* 1.05, 'left': $(window).width()/ 2});
+      target.offset( {'top': $(id).offset().top * 1.05, 'left': $(window).width() / 2});
     else if (width <= 750) 
-      target.offset( {'top': $(id).offset().top*1.15, 'left': $(window).width()});
+      target.offset( {'top': $(id).offset().top *1.15, 'left': $(window).width()});
     else if (width <= 1100) 
-      target.offset( {left: 2 *  $(id).offset().left, 'top': $(id).offset().top*1.1});
+      target.offset( {left: 2 *  $(id).offset().left, 'top': $(id).offset().top * 1.1});
     else if (width <= 1300) 
-      target.offset( {left: 2 * $(id).offset().left, 'top': $(id).offset().top*1.2});
+      target.offset( {left: 2 * $(id).offset().left, 'top': $(id).offset().top * 1.2});
     else if (width <= 1600) 
-      target.offset( {left: 2.05 * $(id).offset().left, 'top': $(id).offset().top*1.2});
+      target.offset( {left: 2.05 * $(id).offset().left, 'top': $(id).offset().top * 1.2});
     else if (width <= 1900)  
       target.offset({left: 2.2 * $(id).offset().left, top: $(id).offset().top * 1.5});
     else if (width > 1900) {

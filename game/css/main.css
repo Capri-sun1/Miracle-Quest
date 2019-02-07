@@ -902,7 +902,7 @@ div.scroll_tabs button:hover {
 .miracle_click, .transcend_click { 
     display: none;
     z-index: 1500;
-    position: absolute;
+    position: fixed;
     font-size: 1.3em;
     font-weight: bold;
     text-shadow: 0px 1px 1px #333;
@@ -1960,6 +1960,11 @@ a {
   width: 5%;
 }
 
+#perk_table {
+
+}
+
+
 @-webkit-keyframes animate-positive {
     0% { width: 0%;}
 }
@@ -2443,6 +2448,10 @@ a {
 @media screen and (min-width: 1300px) { 
     h3 {
       font-size: 1.5em;
+    }
+
+    #perk_table div {
+      height: 70vh;
     }
 
     .scroll_tabs button .button__inner { 

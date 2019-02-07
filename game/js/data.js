@@ -9,6 +9,26 @@ var data = {
       "max_clicks":100
     }
   },
+  "perks": {
+    "currency": {
+      "amount": 0
+    },
+    "power": {
+      "type":"click",
+      "mul":1,
+      "level":0
+    },
+    "passive": {
+      "type":"prod",
+      "mul":1,
+      "level":0
+    },
+    "focus": {
+      "type":"boss",
+      "mul":1,
+      "level":0      
+    }
+  },
   "stats" :{
      "time_played":0, 
      "total_energy":0, 
@@ -1247,6 +1267,26 @@ var vals = {
       "active":false,
       "mul": 2,
       "max_clicks":100
+    }
+  },
+  "perks": {
+    "currency": {
+      "amount": 0
+    },
+    "power": {
+      "type":"click",
+      "mul":1,
+      "level":0      
+    },
+    "passive": {
+      "type":"prod",
+      "mul":1,
+      "level":0      
+    },
+    "focus": {
+      "type":"boss",
+      "mul":1,
+      "level":0      
     }
   },
   "stats" :{

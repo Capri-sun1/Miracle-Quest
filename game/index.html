@@ -10,6 +10,7 @@
 <script type = 'text/javascript' src="js/jquery.toaster.js"></script>
 <script type = "text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
 <script type = "text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TimelineLite.min.js"></script>
+<script type = 'text/javascript' src="js/perks.js"></script>
 <script type = 'text/javascript' src="js/data.js"></script>
 <script type = 'text/javascript' src="js/main.js"></script>
 <link href="css/main.css" rel="stylesheet" type="text/css">
@@ -80,8 +81,8 @@
 			<span class="button__inner" id="ascend-tab-text" style="background: transparent !important;"></span></button>
 		<button class="button square_btn" id="upgrade-tab-btn">
 						<span class="button__inner" style="background: transparent !important;">Upgrades</span></button>	
-		<button class="button square_btn" id="class-tab-btn">
-			<span class="button__inner" style="background: transparent !important;">Class</span></button>	
+		<button class="button square_btn" id="perk-tab-btn">
+			<span class="button__inner" style="background: transparent !important;">Perk</span></button>	
 
 			<span class="button__inner" id="augment-tab-text" style="background: transparent !important;"></span></button>
 		<button class="button square_btn" id="sacrifice-tab-btn">		
@@ -348,8 +349,7 @@
 	</div>
 </div>
 
-
-	<div id="Class" class="tabcontent">
+	<div id="Perk" class="tabcontent">
 
 		<div style="margin-bottom:2.5%; margin-left: 1%" class="tab_div" id="main_upgrades_header">
 		<h3> Perks  <strong class="glyphicon glyphicon-screenshot"></strong></h3>
@@ -365,13 +365,13 @@
     <div class="table-container">
      <div class="panel pricing-table" id="perks_table" style="margin: 0px; overflow-y: hidden">
       <div class="pricing-plan">
-        <img class="perk" src="data/power_1.png" style="border: 6px solid #F78090">        	
+        <a class="perk_btn" id="perk_btn_1" href="#"><img class="perk" src="data/power_1.png" style="border: 6px solid #F78090"></a>       	
         <div id="perk_1">
 		<div id ="perk_1_1" class="tab_div">
         <ul class="pricing-features">
-          <li class="pricing-features-item"><span id="upgrade_lbl_1_1" style="color: #880E4F">Savant</span></li>
-          <li class="pricing-features-item"><span id="perk_desc_2_1">Click Power</span></li>
-          <li class="pricing-features-item"><span id="perk_desc_2_1">Currently + </span>
+          <li class="pricing-features-item"><span id="perk" style="color: #880E4F">Savant</span></li>
+          <li class="pricing-features-item"><span id="perk_desc_1_1">Click Power</span></li>
+          <li class="pricing-features-item"><span id="perk_desc_1_1">Currently + </span>
           									<strong id="perk_1_mul">0%</strong><br>
 											Next <strong id="perk_1_next_mul">25%</strong>
           									</li>
@@ -385,14 +385,14 @@
 
       
       <div class="pricing-plan">
-        <img class="perk" src="data/passive_1.png" style="border: 6px solid #F78090">        	
+        <a class="perk_btn" id="perk_btn_2" href="#"><img class="perk" src="data/passive_1.png" style="border: 6px solid #F78090"></a>   	
         <div id="perk_2">
 		<div id ="perk_2_1" class="tab_div">
         <ul class="pricing-features">
           <li class="pricing-features-item"><span id="perk_lbl_2_1" style="color: #880E4F">Oracle</span></li>
           <li class="pricing-features-item"><span id="perk_desc_2_1">Idle production</span></li>
           <li class="pricing-features-item"><span id="perk_desc_2_1">Currently + </span>
-          									<strong id="perk_1_mul">0%</strong><br>
+          									<strong id="perk_2_mul">0%</strong><br>
 											Next <strong id="perk_1_next_mul">40%</strong>
           									</li>        
         </ul>
@@ -404,15 +404,15 @@
 	</div>
 
       <div class="pricing-plan">
-        <img class="perk" src="data/focus_1.png" style="border: 6px solid #F78090">        	
+        <a class="perk_btn" id="perk_btn_3" href="#"><img class="perk" src="data/focus_1.png" style="border: 6px solid #F78090"></a>       	
         <div id="perk_3">
 		<div id ="perk_3_1" class="tab_div">
         <ul class="pricing-features">
           <li class="pricing-features-item"><span id="perk_lbl_3_1" style="color: #880E4F">Diabolist</span></li>
-          <li class="pricing-features-item"><span id="perk_desc_2_1">Boss Damage</span></li>
-          <li class="pricing-features-item"><span id="perk_desc_2_1">Currently +  </span>
-          									<strong id="perk_1_mul">0%</strong><br>
-											Next <strong id="perk_1_next_mul">100%</strong>
+          <li class="pricing-features-item"><span id="perk_desc_3_1">Boss Damage</span></li>
+          <li class="pricing-features-item"><span id="perk_desc_3_1">Currently +  </span>
+          									<strong id="perk_3_mul">0%</strong><br>
+											Next <strong id="perk_3_next_mul">100%</strong>
           									</li>         
         </ul>
         <span class="pricing-price">[ 1 <span id="perk_cost_3_1"></span>
@@ -427,41 +427,6 @@
   </div>
 </div>
 	</div>
-
-			<div class="modal">
-		    <div class="modal-content">
-		        <span class="close-button"><strong class="glyphicon glyphicon-remove-sign" style="vertical-align: middle"></strong></span>		    	
-		    	<div class="slider">
-				  <input type="radio" name="slider" title="slide1" checked="checked" class="slider__nav"/>
-				  <input type="radio" name="slider" title="slide2" class="slider__nav"/>
-				  <div class="slider__inner">
-				    <div class="slider__contents">
-				      <h2 class="slider__caption">Classes</h2>
-				      <p class="slider__txt">
-					       <p style="font-weight: bold; text-align:left; font-size: 1.2em;"> 
-					        <span><br> Through studying ancient texts</span><br>
-					         <span> you have gained supernatural powers.</span><br>
-					         <span> Choose the path of good or evil on </span><br>
-					         <span> your path to attaining true divinity.</span>
-					       </p>
-				  		</p>
-				    </div>
-				    <div class="slider__contents">
-				      <h2 class="slider__caption">Instructions</h2>
-				      <p class="slider__txt">
-					    <p style="font-weight: bold; text-align:left; font-size: 1.2em;"> 
-					        <span><br> Perform miracles to gain followers</span><br>
-					         <span> Convert followers to gain energy</span><br>
-					         <span> Use energy to improve production</span><br>
-					         <span> Unlock features as power increases</span>
-					       </p>
-				       </p>
-				    </div>
-
-				  </div>
-				</div>
-                </div>
-		    </div>
 
 </div>
 	<div id="Pantheon" class="tabcontent">
@@ -708,10 +673,9 @@
 
         </div>
     </div>
-</div>
-
-	   </div>
-	</div>
+   </div>
+  </div>
+ </div>
 </div>
 	<div id="Challenges" class="tabcontent">	
 		<div id="challenges_main_header_div" class="tab_div" style="text-align:center">

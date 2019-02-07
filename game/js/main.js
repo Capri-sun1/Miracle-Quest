@@ -1242,6 +1242,7 @@ function fix_conv_asc(vals) {
 
 $(document).on("click", ".trigger", () => {
   var modal = document.querySelector(".modal");
+  console.log(modal);
   modal.classList.toggle("show-modal");
 });
 
@@ -1503,6 +1504,9 @@ function doLeap(vals) {
   let chosen = vals.leap[upgradeTier][upgradeSelected];
   if (upgradeSelected === 'tier') {
     vals.god_status.current++;
+    if (vals.god_status.current % 2 === 0) {
+      vals.perks.currency.amount += (vals.god_status.current / 2);
+    }
   } else {
     chosen.amount++;
   } 

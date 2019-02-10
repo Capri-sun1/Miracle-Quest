@@ -1518,7 +1518,7 @@ function doLeap(vals) {
   if (upgradeSelected === 'tier') {
     vals.god_status.current++;
     if (vals.god_status.current >= 3) {
-      vals.perks.currency.amount += Math.floor(vals.god_status.current / 2);
+      vals.perks.currency.amount += Math.floor(vals.god_status.current/2);
     }
   } else {
     chosen.amount++;
@@ -1530,11 +1530,14 @@ function doLeap(vals) {
 
 function saveForLeap() {
 	let save = staticLeapValuesToJson();
+  
 	save['s'] = leapStatsToJson();
   save['pantheon'] = adjustedBossToJson();
 	leapToJson(save);
   adjustedPurchasesToJson(save);
   upgradesAndChallengesForLeap(save);
+  savePerks(save);
+
 	return save;
 }
 

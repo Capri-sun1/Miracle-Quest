@@ -327,11 +327,14 @@ function adjustForGodStatus(mul, multiplier) {
 }
 
 function adjustProduction() {
-  return ((vals.achievement_multiplier*vals.prod)/(1+(vals.corruption/100))) - ((1+(vals.corruption/100))*vals.loss);
+  let passiveMul = vals.perks["passive"].mul; 
+  let achieveMul = vals.achievement_multiplier;
+  let corruptMul = 1 + (vals.corruption/100);
+  return ((passiveMul * achieveMul * vals.prod) / (corruptMul)) - (corruptMul * vals.loss);
 }
 
 function adjustLoss() {
-  return (vals.loss * (1+(vals.corruption/100)));
+  return vals.loss * (1+(vals.corruption/100)) * vals.perks["passive"].mul;
 }
 
 function handleNegativeValues() {
@@ -501,7 +504,7 @@ function leapToJson(save) {
         temp_a.push([i] + ":" + items[i].amount.toString(16));
       }
     }
-    if( k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
+    if (k != 'selected' && k != 'unlocked') save['leap' + k] = temp_a.join('|');
   }
 }
 

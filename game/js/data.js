@@ -297,7 +297,7 @@ var data = {
             },
             "ascend5":{
                 "label":"Cathedral of Ascendance",
-                "description":"An entire Cathedral built to connect with you.",
+                "description":"An ancient Cathedral built to connect with you.",
                 "amount":0,
                 "output":150,
                 "base_output":150,
@@ -321,7 +321,7 @@ var data = {
             },
             "ascend7":{
                 "label":"Complex of enlightenment",
-                "description":"A sprawling complex to convert followers.",
+                "description":"A sprawling subterranean complex to convert followers.",
                 "amount":0,
                 "output":7500,
                 "base_output":7500,
@@ -1584,7 +1584,7 @@ var vals = {
             },
             "ascend7":{
                 "label":"Complex of enlightenment",
-                "description":"A sprawling complex to convert followers.",
+                "description":"A sprawling subterranean complex to convert followers.",
                 "amount":0,
                 "output":7500,
                 "base_output":7500,
@@ -1664,7 +1664,7 @@ var vals = {
             },
              "upgrade5":{
               "label":"Studying Holy texts",
-              "description":"Interpreting these ancient writings increases your mystic Power by even more.",
+              "description":"Interpreting these ancient writings increases your Mystic Power by even more.",
               "unlocked":false,
               "cost":80000,
               "mul":3.2
@@ -1867,7 +1867,7 @@ var vals = {
             },
             "sacrifice3" : {
               "type":"Benevolent",
-              "description":"Surrender some of your mystic essence to increase your sanctity.",
+              "description":"Surrender some of your mystic energy to increase your sanctity.",
               "corruption_inc":-5,
               "base_cost":2500000,
               "cost":2500000,
@@ -1898,7 +1898,7 @@ var vals = {
                   "max_amount":8
                 },
                 "click2":{
-                  "label":"Deal +0.025x mystic Power/Tick",
+                  "label":"Deal +0.025x Mystic Power/Tick",
                   "amount":0,
                   "base_cost":2,
                   "cost":2,
@@ -2380,7 +2380,7 @@ var vals = {
               "visible":true,  
               "unlocked":false,
               "label":"Fast-tracking",
-              "description":"Gained 10 mystic Energy from conversion.",
+              "description":"Gained 10 Mystic Energy from conversion.",
               "val_req":10
               },
                "2" : {
@@ -2412,7 +2412,7 @@ var vals = {
               "visible":false,  
               "unlocked":false,
               "label":"Ascend this.",
-              "description":"You've gained 10000 mystic Energy through Conversions.",
+              "description":"You've gained 10000 Mystic Energy through Conversions.",
               "val_req":10000
               },
               "4" : {

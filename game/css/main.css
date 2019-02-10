@@ -136,7 +136,7 @@ body, html {
 .slider__txt {
   color: #999;
   margin-bottom: 3rem;
-  max-width: 300px;
+  margin-left: 2%;
 }
 
 @-webkit-keyframes check {
@@ -431,7 +431,6 @@ body, html {
 
 .panel {
   background-color: #fff;
-  border-radius: 10px;
   padding: 15px 25px;
   position: relative;
   width: 100%;
@@ -2017,7 +2016,7 @@ a {
       width: 100%;
     }
 }
-@media screen and (min-height: 750px) and (min-width: 1100px) { 
+@media screen and (min-height: 600px) and (min-width: 1100px) { 
     #left_floatable {
         position: fixed; 
         top: 5px;
@@ -2045,7 +2044,7 @@ a {
     }
    .modal-content {
     width: 90%;
-    height: 40%;
+    height: 70%;
     overflow-y: scroll;
     padding: 0 0 3% 0;
    }
@@ -2055,11 +2054,14 @@ a {
    }
 
    .slider__contents {
-    padding: 0em;
+    padding: 1em;
    }
 
    .slider__caption {
-    margin: 0;
+      font-weight: 400;
+      margin: 1rem 1rem 0.5rem 0.5rem;
+      margin-top: 17.5%;
+      margin-bottom: 0%;
    }
 
    .panel {
@@ -2116,6 +2118,10 @@ a {
      width: 45%;
    }
 
+   #stats_header_div {
+    margin-bottom: 2.5%;
+   }
+
     .container {
       width: 50%;
       float:right;
@@ -2142,6 +2148,7 @@ a {
       width: 200%;
       padding: 0;
       margin: 0;
+      border: 0px;
     }
 
    .pricing-plan {
@@ -2154,22 +2161,22 @@ a {
       margin: 0;
    }
       #stats_header_div {
-    margin-bottom: 1%;
+    margin-bottom: 3%;
    }
 
 }
-@media screen and (min-width: 750px) { 
+@media screen and (min-width: 600px) { 
     #tab_divs, #tab_btns {
       width: 100%;
     }
 
-    body {
-      background: transparent;
-    }
     #left_floatable {
       margin-top: 0.25%;
-      margin-left: 1%;
       margin-right: 2%;
+    }
+
+    #above_div {
+      font-size: 1.25em;
     }
 
     #super {
@@ -2177,10 +2184,10 @@ a {
        height: 7.5vh;
        width: 20vw;
        margin: 12.5% 0 0 0!important;
-      display: inline-block;
-      vertical-align: middle;
-
+       display: inline-block;
+       vertical-align: middle;
     }
+
     #time_played {
       font-size: 0.8em !important;
     }
@@ -2193,8 +2200,8 @@ a {
       font-size: 0.7em;
     }
 
-    .share-button .icon-wrapper{
-      width: 75%;
+    .share-button .icon-wrapper {
+      width: 73%;
     }
 
     .slider-wrapper {
@@ -2208,7 +2215,9 @@ a {
 
    #stats_header_div {
     height: 10vh;
+    margin-bottom: 4%;
    }
+
    .pricing-plan {
     width: 50%;
    }
@@ -2219,38 +2228,44 @@ a {
   }
 
   .modal-content {
-    width: 50%;
-    height: 42%;
+    width: 80%;
+    height: 67.5%;
     overflow-y: hidden;
   }
 
-  #stats_header_div {
-    margin-bottom: 1%;
-  }
+  .slider__contents {
+    padding: 2em;
+    margin-bottom: 5%;
+   }
+
+   .slider__caption {
+      font-weight: 400;
+      margin: 1rem 1rem 0.5rem 0.5rem;
+      margin-top: 10%;
+      margin-bottom: 0%;
+   }
 
   .table-background {
-    height:45vh;
+    height: 100%;
     margin-right: 2%;
     margin-left: 2%;
   }
 
    .table-container {
-     height:45vh;
-     font-size: 0.75em;
+     font-size: 0.7em;
+     overflow: scroll;
    }   
    
    #upgrade_table {
     width: 100%;
-    height: 45vh;
+    height: 100%;
+    overflow-y: hidden;
    }
 
-   #upgrades_table {
-     height: 45vh;
-   }
 
    .pricing-header {
-    font-size: 2.5em;
-    margin-bottom: 5%;
+    font-size: 2em;
+    margin-bottom: 3.5%;
    }
 
    .pricing-features {
@@ -2258,28 +2273,35 @@ a {
    }
 
    .pricing-price {
-    margin-top: 0.5%;
+    margin-top: 1%;
    }
 
    .pricing-features li {
-    padding: 25px 0;
+    padding: 12.5px 0;
     font-size: 1.25em;
    }   
 
    .btn-11 {
     font-size: 1.5em;
    }
+
    #miracle_wrap {
       display: inline-block;
    }
+
    #miracle_div, #miracle2_div {
     width: 30%;
     display: inline-block;
     vertical-align: top;
+    font-size: 1.1em;
    }
 
    #miracle_div {
     margin-right: 5%;
+   }
+
+   .pricing-features {
+    margin-bottom: 5%;
    }
 }
 
@@ -2374,11 +2396,23 @@ a {
     overflow-y: hidden;
    }
 
-     .modal-content {
-    width: 50%;
-    height: 42%;
+  .modal-content {
+    width: 70%;
+    height: 62.5%;
     overflow-y: hidden;
   }
+
+  .slider__contents {
+    padding: 3em;
+    margin-bottom: 7.5%;
+   }
+
+   .slider__caption {
+      font-weight: 500;
+      margin: 1rem 1rem 0.5rem 0.5rem;
+      margin-top: 5%;
+      margin-bottom: 0%;
+   }
 
    #miracle_img {
     width: 18vw;
@@ -2533,12 +2567,6 @@ a {
     width: 33.3%;
    }
 
-   .modal-content {
-    font-size: 1.5em;
-      width: 65%;
-      height: 60%;
-   }
-
    #settings_header_1 {
     font-size: 2em;
    }
@@ -2589,7 +2617,7 @@ a {
 
   #miracle, #ascend {
     height: 16vh;
-    font-size: 1.2em;
+    font-size: 1.15em;
    }
 
    #miracle .tab_div {
@@ -2637,14 +2665,17 @@ a {
    .pricing-plan {
     width: 25%;
    }
+
    .modal-content {
       width: 60%;
-      height: 48%;
+      height: 55%;
       margin: 1%;
    }
+
    .close-button {
     margin-right: 1%;
    }
+
     #battle_1 {
     width: 35%;
    }

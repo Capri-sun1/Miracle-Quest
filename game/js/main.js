@@ -353,17 +353,12 @@ function handleUiUpdate(values) {
 
   $('#click_amount').text('[ ' + truncate_bigint(vals.click) + ' ]');
   $('#counter').text(truncate_bigint(Math.floor(vals.followers)));
-    
-  if( $('#last_saved').text() != "" )  {
-    $('#last_saved').text(Math.round(last_saved) + ' seconds ago.');
-  }
-
   $('#power').text(truncate_bigint(vals.energy));
   $('#production_net').text(truncate_bigint(corrected_prod));
   $('#production_gross').text(truncate_bigint(((vals.achievement_multiplier * vals.prod) / (1 + (vals.corruption / 100)))));
     
   let netLoss = 0;
-  if( corrected_prod >= 0.0 || vals.followers >= total_loss )  {
+  if (corrected_prod >= 0.0 || vals.followers >= total_loss)  {
     netLoss = total_loss;
   } else {
     netLoss = (vals.achievement_multiplier * vals.prod) / (1 + (vals.corruption / 100));
@@ -1362,7 +1357,7 @@ const itemBarClick = $(() => {
     let openIcons = () => {
         buttonWrapper.addClass("active");
         button.addClass("hidden");
-        buttonWrapper.animate({width: ((buttonWrapper.width()/$(".slider-wrapper").width()) * 100)  + 20 + "%"}, 500);
+        buttonWrapper.animate({width: ((buttonWrapper.width()/$(".slider-wrapper").width()) * 100) + "%"}, 500);
         icons.animate({left: "0"}, 500);
     }
     
@@ -1370,7 +1365,7 @@ const itemBarClick = $(() => {
         buttonWrapper.removeClass("active");
         button.removeClass("hidden");
         icons.animate({left: "-127.5%"}, 0);
-        buttonWrapper.animate({width: ((buttonWrapper.width()/$(".slider-wrapper").width()) * 100) - 20 + "%"}, 400);
+        buttonWrapper.animate({width: ((buttonWrapper.width()/$(".slider-wrapper").width()) * 100) + "%"}, 400);
     }
     init();
 });
@@ -1584,7 +1579,7 @@ function adjustedBossToJson() {
     if (++index < vals.god_status[vals.god_status.current] - 4) break;
     const items = vals.pantheon.bosses[k];
     let temp_a = [];
-    let mul = adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.6);
+    let mul = adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.5);
     temp_a.push('max_hp' + ":" + (mul * items.max_hp).toString(16));
     temp_a.push('current_hp' + ":" + (mul * items.current_hp).toString(16));
     temp_a.push('regen' + ":" + (mul * items.regen).toString(16));
@@ -1628,7 +1623,7 @@ function generateTotalValueFor(type, startValue) {
 }
 
 function adjustedPurchasesToJson(save) {
-  let mul = adjustForGodStatus(vals.god_status.current, 0.6);  
+  let mul = adjustForGodStatus(vals.god_status.current, 0.55);  
   const unlocks = {
     "miracle":"cl",
     "ascend":"asc"
@@ -1641,7 +1636,7 @@ function adjustedPurchasesToJson(save) {
       temp_a.push([i] + ":" + 0); 
       temp_a.push([i] + ":" + false);        
       temp_a.push([i] + ":" + (mul * items[i].base_cost).toString(16));
-      temp_a.push([i] + ":" + mul * items[i].base_output);
+      temp_a.push([i] + ":" + mul * 1.2 * items[i].base_output);
     }
     save[k] = temp_a.join('|');
   }
@@ -1662,7 +1657,7 @@ function upgradesAndChallengesForLeap(save) {
         if (k === "achievements" && items_generic[i][j].unlocked) temp_t.push(items_generic[i][j].label);
         else if (k === 'upgrades' && j !== 'type') {
           temp_t.push(i + ':' + j + ":" + mul * items_generic[i][j].cost);
-          temp_t.push(i + ':' + j + ":" + (1 + (mul / 6)) * items_generic[i][j].mul);          
+          temp_t.push(i + ':' + j + ":" + (1 + (mul / 8)) * items_generic[i][j].mul);          
         }
       }
     }
@@ -2490,7 +2485,7 @@ class BossClick extends Click {
 
 function setAttackTarget(damage) {
   let target = $('.miracle_click:first').clone();
-  target.html( '-' + truncate_bigint(damage));
+  target.html('-' + truncate_bigint(damage));
 
   return target;
 }

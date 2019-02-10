@@ -36,6 +36,7 @@ $(document).ready(() => {
     fix_names(vals);
     fix_corruption_bar(vals.corruption);
     fix_corruption_text(vals.corruption);
+    fixPerks();
     lastTime = resolveLastTime();
     handleTimeSinceLastVisit();
 
@@ -441,6 +442,7 @@ const valsToJSON = () => {
   upgradesAndAchievementsToJson(save);
   statsToJson(save);
   pantheonToJson(save);
+  savePerks(save);
 
   return save;
 }
@@ -714,6 +716,8 @@ function get_valsFromJSON(save) {
         vals.stats.miracle_click_energy = parseInt(save.s.mc_e,16);
         vals.stats.ascension_click_energy = parseInt(save.s.ac_e, 16);
       }
+
+      loadPerks(save);
   }
 
 function applyBossUpgrades(bossUpgrade, tier, amount) {
@@ -1242,7 +1246,6 @@ function fix_conv_asc(vals) {
 
 $(document).on("click", ".trigger", () => {
   var modal = document.querySelector(".modal");
-  console.log(modal);
   modal.classList.toggle("show-modal");
 });
 

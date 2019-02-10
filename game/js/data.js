@@ -16,17 +16,20 @@ var data = {
     "power": {
       "type":"click",
       "mul":1,
-      "level":0
+      "level":0,
+      "base_cost":1      
     },
     "passive": {
       "type":"prod",
       "mul":1,
-      "level":0
+      "level":0,
+      "base_cost":1               
     },
     "focus": {
       "type":"boss",
       "mul":1,
-      "level":0      
+      "level":0,
+      "base_cost":1                
     }
   },
   "stats" :{
@@ -1276,17 +1279,20 @@ var vals = {
     "power": {
       "type":"click",
       "mul":1,
-      "level":0      
+      "level":0,
+      "base_cost":1      
     },
     "passive": {
       "type":"prod",
       "mul":1,
-      "level":0      
+      "level":0,
+      "base_cost":1               
     },
     "focus": {
       "type":"boss",
       "mul":1,
-      "level":0      
+      "level":0,
+      "base_cost":1                
     }
   },
   "stats" :{

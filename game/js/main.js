@@ -990,7 +990,7 @@ function fix_tab_buttons(vals) {
         }
       }
     }
-    for (let k in vals.miracle) {
+    for (let k in vals.miracle) {                                                                                
       if (vals.miracle[k].unlocked === true) unlock_conv++;
       total_conv++;
     }
@@ -999,11 +999,23 @@ function fix_tab_buttons(vals) {
       total_ascend ++;
     }
   $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/26");
-  // $('#augment-tab-text').text("Upgrade " + unlock_aug + "/28");
   $('#convert-tab-text').text("Create " + unlock_conv + "/" + total_conv);
   $('#ascend-tab-text').text("Convert " + unlock_ascend + "/" + total_ascend);
   if (!vals.leap.unlocked) $('#leap-tab-btn').css('display', 'none');
   else $('#leap-tab-btn').css('display', 'inline-block');
+  let hiddenTabs = ["pantheon", "perk", "sacrifice"];
+  hiddenTabs.forEach((element) => {
+    let display = determineTabAvailability(element) === true ? 'inline-block' : 'none';
+    $('#' + element + '-tab-btn').css('display', display);
+  });
+}
+
+function determineTabAvailability(tab) {
+  let level = vals.god_status.current;
+  if (tab === "pantheon" && level >= 2) return true;
+  else if (tab === "perk" && level >= 3) return true
+  else if (tab === "sacrifice" && level >= 4) return true;
+  else return false;
 }
 
 function fix_stats(vals) {
@@ -1505,8 +1517,8 @@ function doLeap(vals) {
   let chosen = vals.leap[upgradeTier][upgradeSelected];
   if (upgradeSelected === 'tier') {
     vals.god_status.current++;
-    if (vals.god_status.current % 2 === 0) {
-      vals.perks.currency.amount += (vals.god_status.current / 2);
+    if (vals.god_status.current >= 3) {
+      vals.perks.currency.amount += Math.floor(vals.god_status.current / 2);
     }
   } else {
     chosen.amount++;
@@ -2406,6 +2418,17 @@ class Click {
     this.target.show();
   }
 
+generateOffset(id) {
+    let yOffset = this.resolveVerticalOffset();
+    let xOffset = $(id).offset().right;
+    if(id === '#miracle2_div') {
+      yOffset *= 0.75;
+      xOffset *= 0.8;
+    }
+    xOffset += generateRandomOffset();
+    this.target.offset({left: xOffset, top: yOffset});
+  }
+
   resolveVerticalOffset() {
     var width = $(window).width();
 
@@ -2418,17 +2441,7 @@ class Click {
     } else if (width <= 1300) {
         return this.event.pageY + 25;
     }
-  }
-
-generateOffset(id) {
-    var yOffset = this.resolveVerticalOffset();
-    if(id === '#miracle2_div') {
-      yOffset *= 0.75;
-    }
-    var xOffset = 4 * $(id).offset().left;
-    xOffset += generateRandomOffset();
-    this.target.offset({left: xOffset, top: yOffset});
-  }
+  }  
 }
 
 function generateRandomOffset() {
@@ -2542,11 +2555,18 @@ class MiracleClick extends Click {
   }
 
   animate() {
-      this.target.animate({ 'top': '+=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left':  this.target.offset.left + generateRandomOffset() + 'px'}, 750,
-       function() { 
-        $(this).remove();
-      });
-    }
+    let width = $(window).width();
+    let xOffset = '+=' + generateRandomOffset();
+    let yOffset = $('#miracle_div').height()/2;
+    if (width < 1100 && width > 600) {
+      yOffset = 2 * generateRandomOffset();
+      xOffset = width / 3;
+    }   
+    this.target.animate({ 'top': '+=' + yOffset, 'opacity':0.1, 'left': xOffset}, 750,
+     function() { 
+      $(this).remove();
+    });
+  }
 }
 
 class TranscendClick extends Click {
@@ -2556,7 +2576,14 @@ class TranscendClick extends Click {
   }
 
   animate() {
-    this.target.animate({'top': '-=' + $('#miracle_div').height()/2, 'opacity':0.1, 'left': '+=' + generateRandomOffset() + 'px'}, 750, 
+    let width = $(window).width();
+    let xOffset = '+=' + generateRandomOffset();
+    let yOffset = $('#miracle_div').height()/2;
+    if (width < 1100 && width > 600) {
+      yOffset = 0;
+      xOffset = width / 3;
+    }
+    this.target.animate({'top': '-=' + yOffset, 'opacity':0.1, 'left': + xOffset + 'px'}, 750, 
       function() { 
         $(this).remove();
     });
@@ -2571,20 +2598,18 @@ function handleError() {
 
 function gen_boss_offset(id, target) {
     var width = $(window).width();
-    if (width <= 700) 
-      target.offset( {'top': $(id).offset().top * 1.05, 'left': $(window).width() / 2});
-    else if (width <= 750) 
-      target.offset( {'top': $(id).offset().top *1.15, 'left': $(window).width()});
+    if (width <= 750) 
+      target.offset({'left': $(window).width()/2, 'top': $(id).offset().top * 1.05});
     else if (width <= 1100) 
-      target.offset( {left: 2 *  $(id).offset().left, 'top': $(id).offset().top * 1.1});
+      target.offset( {'left': $(window).width()/2, 'top': $(id).offset().top * 1.1});
     else if (width <= 1300) 
-      target.offset( {left: 2 * $(id).offset().left, 'top': $(id).offset().top * 1.2});
+      target.offset( {'left': $(window).width()/1.8, 'top': $(id).offset().top * 1.2});
     else if (width <= 1600) 
-      target.offset( {left: 2.05 * $(id).offset().left, 'top': $(id).offset().top * 1.2});
+      target.offset( {'left': $(window).width()/1.7, 'top': $(id).offset().top * 1.2});
     else if (width <= 1900)  
-      target.offset({left: 2.2 * $(id).offset().left, top: $(id).offset().top * 1.5});
+      target.offset({'left': $(window).width()/1.6, 'top': $(id).offset().top * 1.5});
     else if (width > 1900) {
-      target.offset({left: 2.4 * $(id).offset().left, top: $(id).offset().top * 1.5});
+      target.offset({'left': $(window).width()/1.5, 'top': $(id).offset().top * 1.5});
     }
 }
 

@@ -35,6 +35,8 @@ class Perk {
 			$('#' + this.name + '_next_mul').text("MAXIMUM");
 			$('#' + this.name + '_cost').text("NaN");						
 		}
+
+		$('#currency_amount').text(vals.perks.currency.amount);
 	}
 }
 

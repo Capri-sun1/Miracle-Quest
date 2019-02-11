@@ -91,14 +91,13 @@ var data = {
   "leap" : {
     "unlocked":false,
     "selected":0,
-    //each of these are tiers
     "1": {
       "click":{
         "label":"Improved Power",
         "description":"Your clicks are more powerful.",
         "cost": 0,
         "amount":0,
-        "mul": 2,
+        "mul": 1.5,
         "max": 1,
         "req": 0
       },
@@ -108,7 +107,7 @@ var data = {
         "cost": 0,
         "amount":0,
         "mul": 4,
-        "max": 5,
+        "max": 1,
         "req": 0
       },
       "tier":{
@@ -1361,7 +1360,7 @@ var vals = {
         "description":"Your clicks are more powerful.",
         "cost": 0,
         "amount":0,
-        "mul": 2,
+        "mul": 1.5,
         "max": 1,
         "req": 0
       },
@@ -1371,7 +1370,7 @@ var vals = {
         "cost": 0,
         "amount":0,
         "mul": 4,
-        "max": 5,
+        "max": 1,
         "req": 0
       },
       "tier":{

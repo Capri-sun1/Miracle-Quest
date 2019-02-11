@@ -582,7 +582,7 @@ function loadData() {
 function get_valsFromJSON(save) {
         vals.energy = parseInt(save.e,16);
         vals.prod = save.p;
-        vals.click = parseInt(save.cl);
+        vals.click = parseFloat(save.cl);
         vals.followers = parseInt(save.f, 16);
         vals.loss = save.l;
         vals.corruption = parseInt(save.c, 16);
@@ -1530,7 +1530,7 @@ function doLeap(vals) {
 
 function saveForLeap() {
 	let save = staticLeapValuesToJson();
-  
+
 	save['s'] = leapStatsToJson();
   save['pantheon'] = adjustedBossToJson();
 	leapToJson(save);
@@ -1619,7 +1619,7 @@ function adjustedBossToJson() {
 function generateLeapOffset(tier) {
   let totalMultiplier = 1;
   for (let i = parseInt(tier); i > 1; i--) {
-    totalMultiplier *= vals.god_status[i.toString()].mul;
+    totalMultiplier *= vals.god_status[i.toString()].mul * 0.85;
   }
 
   return totalMultiplier;
@@ -1672,12 +1672,20 @@ function upgradesAndChallengesForLeap(save) {
         if (k === "achievements" && items_generic[i][j].unlocked) temp_t.push(items_generic[i][j].label);
         else if (k === 'upgrades' && j !== 'type') {
           temp_t.push(i + ':' + j + ":" + mul * items_generic[i][j].cost);
-          temp_t.push(i + ':' + j + ":" + (1 + (mul / 8)) * items_generic[i][j].mul);          
+          temp_t.push(i + ':' + j + ":" + determineMultiplier(items_generic[i].type) * items_generic[i][j].mul);          
         }
       }
     }
     save[k] = temp_t.join('|');
   }   
+}
+
+function determineMultiplier(type) {
+  if (type === "Tick speed") {
+    return 0.98;
+  } else {
+    return 1.02;
+  }
 }
 
 $(document).on("click", ".reset", function() {

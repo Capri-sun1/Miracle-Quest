@@ -12,6 +12,8 @@
 <script type = "text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TimelineLite.min.js"></script>
 <script type = 'text/javascript' src="js/perks.js"></script>
 <script type = 'text/javascript' src="js/data.js"></script>
+<script type = 'text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/sketch.js/1.0.0/sketch.min.js'></script>
+<script type = 'text/javascript' src='js/runner.js'></script>
 <script type = 'text/javascript' src="js/main.js"></script>
 <link href="css/main.css" rel="stylesheet" type="text/css">
 <link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
@@ -71,6 +73,8 @@
     </div> 
 </div> 
 	<div id = "tab_btns" class = "scroll_tabs">
+			<button class="button square_btn" id="runner-tab-btn">
+					<span class="button__inner" style="background: transparent !important;">Runner</span></button>
 		<button class="button square_btn" id="leap-tab-btn" style="display:none">
 			<span class="button__inner">Ascend</span></button>
 	    <button class="button square_btn" id="convert-tab-btn">
@@ -90,9 +94,20 @@
 		<button class="button square_btn" id="stats-tab-btn">
 			<span class="button__inner" style="background: transparent !important;">Statistics</span></button>
 	</div>
+	
 
 	<div id="tab_divs" class='tabs'>
-
+		
+	<div id="Runner" class="tabcontent" style="background-color: white">
+			<div id="runner_container">
+  	
+			</div> 
+			
+				<div class="controls" style="text-align: center; width: 100%; margin-top: 2%">
+					<p>Jump: <b>CLICK, TAP, UP, or W</b></p>
+				<p></p>
+				</div>
+		</div>
 	<div id="Leap" class="tabcontent">
 
 		<div id="leap_unlocked" class="tab_div">

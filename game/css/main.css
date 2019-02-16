@@ -1963,6 +1963,9 @@ a {
 
 }
 
+#Runner {
+  margin-top: 1%
+}
 
 @-webkit-keyframes animate-positive {
     0% { width: 0%;}

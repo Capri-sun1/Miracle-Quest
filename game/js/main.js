@@ -312,6 +312,7 @@ function game_engine(iterations, cycles) {
     setButtonAvailability(vals);  
 
     handlePantheon();
+    handleScroller();
     handleStats();
     cycles = handleSaveData(cycles, false);
     handleGameLoop(iterations, cycles);
@@ -378,6 +379,17 @@ function handlePantheon() {
   } else if (vals.pantheon.unlocked === false && vals.upgrades['1']['upgrade6'].unlocked) {
     vals.pantheon.unlocked = true; 
     fix_names(vals); 
+  }
+}
+
+var hasStarted = false;
+
+function handleScroller() {
+  if (vals.current_tab === "Runner" && hasStarted !== true) {
+    startRunner();
+    hasStarted = true;
+  } else if (vals.current_tab !== "Runner" && hasStarted === true) {
+    hasStarted = false;
   }
 }
 
@@ -2908,7 +2920,7 @@ $(document).ready(() => {
 
     ctx.font = "bold "+ (windowWidth/10) +"px sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Miracle Clicker", windowWidth/2, windowHeight/2);
+    ctx.fillText("Miracle Quest", windowWidth/2, windowHeight/2);
 
     let data  = ctx.getImageData(0, 0, windowWidth, windowHeight).data;
     ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -972,9 +972,9 @@ var data = {
             },
             "bosses" : {
               "boss1":{
-                "max_hp": 1000000,
-                "current_hp":1000000,
-                "regen":200,
+                "max_hp": 500000,
+                "current_hp":500000,
+                "regen":50,
                 "reward":1000000,
                 "current":true,
                 "name":"Mutated Wolf",
@@ -2236,9 +2236,9 @@ var vals = {
             },
             "bosses" : {
               "boss1":{
-                "max_hp": 1000000,
-                "current_hp":1000000,
-                "regen":200,
+                "max_hp": 500000,
+                "current_hp":500000,
+                "regen":50,
                 "reward":1000000,
                 "current":true,
                 "name":"Mutated Wolf",

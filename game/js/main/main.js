@@ -331,12 +331,12 @@ function adjustProduction() {
   let passiveMul = vals.perks["passive"].mul; 
   let achieveMul = vals.achievement_multiplier;
   let corruptMul = 1 + (vals.corruption/100);
-  let runMul = vals.god_status.current >= 4 ? (vals.god_status.current - 3) * vals.stats.runner_multiplier : 1.0;
+  let runMul = vals.god_status.current >= 2 ? (vals.god_status.current - 1) * vals.stats.runner_multiplier : 1.0;
   return ((passiveMul * achieveMul * vals.prod * runMul) / (corruptMul)) - (corruptMul * runMul * vals.loss);
 }
 
 function adjustLoss() {
-  let runMul = vals.god_status.current >= 4 ? (vals.god_status.current - 3) * vals.stats.runner_multiplier : 1.0;
+  let runMul = vals.god_status.current >= 2 ? (vals.god_status.current - 1) * vals.stats.runner_multiplier : 1.0;
   return vals.loss * (1+(vals.corruption/100)) * vals.perks["passive"].mul * runMul;
 }
 
@@ -378,7 +378,7 @@ function handlePantheon() {
         break;
       }
     }
-  } else if (vals.pantheon.unlocked === false && vals.upgrades['1']['upgrade6'].unlocked) {
+  } else if (vals.pantheon.unlocked === false && vals.upgrades['1']['upgrade5'].unlocked) {
     vals.pantheon.unlocked = true; 
     fix_names(vals); 
   }
@@ -630,11 +630,11 @@ function get_valsFromJSON(save) {
           if (boss.current && parseInt(k.substr(k.length-1)) != (parseInt(vals.pantheon.stage) +1)) boss.current = false;
           else if (parseInt(k.substr(k.length-1)) === (parseInt(vals.pantheon.stage) +1)) boss.current = true;
         }
-        var unlocks = {
+        var purchases = {
             "miracle":"cl",
             "ascend":"asc"
         }; 
-        for (let k in unlocks) {
+        for (let k in purchases) {
           if (save[k]) {
             let t_items = save[k].split('|');
             for (let i = 0; i < t_items.length - 3; i+=4) {
@@ -681,22 +681,26 @@ function get_valsFromJSON(save) {
             let t_items = save[k].split('|');
             t_items += '';
             let item = t_items.split(",");
-
+            let textSaves = [];
 
             item.forEach((element) => {
               for (let x in vals[k]) {
                 for (let y in vals[k][x]) {
                   if (vals[k][x][y].label === element) {
                     vals[k][x][y].unlocked = true;    
+                    textSaves.push(element);
                   }
                 }
               }
             }); 
 
+            let upgs = item.filter((elem) => {
+              return !textSaves.includes(elem);
+            });
             if (k === "upgrades") {
-              for (let i = 0; i < item.length-2; i+=2) {
-                let cst = item[i].split(':');
-                let ml = item[i+1].split(':');
+              for (let i = 0; i < upgs.length-2; i+=2) {
+                let cst = upgs[i].split(':');
+                let ml = upgs[i+1].split(':');
                 if (cst.length !== 3 || ml.length !== 3 || cst[0] === "3") continue;
                 vals.upgrades[cst[0]][cst[1]].cost = parseFloat(cst[2], 16);
                 vals.upgrades[ml[0]][ml[1]].mul = parseFloat(ml[2], 16);
@@ -779,8 +783,8 @@ function checkAchievements(vals) {
             if( vals.challenges[k][i].type === "total") {if( vals.stats.miracle_click_energy >= vals.challenges[k][i].val_req ) has_unlocked = true; }
             else {if( vals.stats.miracle_clicks >= vals.challenges[k][i].click_req) has_unlocked = true; }
             //we don't want achievment messages to show unless the user actually unlocks them => not on startup every time.
-            if( has_unlocked ){
-              if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved > 2) )
+            if (has_unlocked) {
+              if (!vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved > 2))
                 $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
               vals.challenges[k][i].unlocked = true;
             }
@@ -875,7 +879,7 @@ function setButtonAvailability(vals) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
             continue;
         } else if (vals.upgrades[k][i].unlocked != true) {
-          if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < (vals.upgrades["3"]["upgrade1"].cost/2)) {
+          if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < (vals.upgrades["3"]["upgrade1"].cost/3)) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
             $('#upgrade_btn_' + purchase_num + "_1").parent().css("display", "block");
           } else {
@@ -1035,8 +1039,8 @@ function fix_tab_buttons(vals) {
 function determineTabAvailability(tab) {
   let level = vals.god_status.current;
   if (tab === "pantheon" && level >= 2) return true;
+  else if (tab === "runner" && level >= 2) return true;
   else if (tab === "perk" && level >= 3) return true
-  else if (tab === "runner" && level >= 4) return true;
   else if (tab === "sacrifice" && level >= 5) return true;
   else return false;
 }
@@ -1405,6 +1409,8 @@ const itemBarClick = $(() => {
     init();
 });
 
+//TODO - determine why this function causes UI flickering..
+
 //fix all the upgrades
 function fix_upgrades(vals) {
   if (vals.current_tab === 'Upgrades') {
@@ -1412,7 +1418,7 @@ function fix_upgrades(vals) {
       var purchase_num = k.substr(k.length-1);
       let hasDisplayed = false;
       for (let i in vals.upgrades[k]) {
-        if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost / 2) {
+        if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost/3) {
             $("#upg_text_" + purchase_num).text("Cannot Purchase");
             $('#upgrade_cost_' + purchase_num + '_1').text('[ NaN ');
             $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle the this immense power.");
@@ -1569,7 +1575,7 @@ function staticLeapValuesToJson() {
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
     const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 15);
-    const nextLeapCost = (vals.god_status[vals.god_status.current].mul * vals.god_status.current);
+    const nextLeapCost = vals.god_status.current > 2 ? (vals.god_status[vals.god_status.current].mul * vals.god_status.current-1) : 1;
 
     let save = {
         'e':0,
@@ -1689,7 +1695,6 @@ function upgradesAndChallengesForLeap(save) {
   for (let k in tiered) { 
     var items_generic = vals[k];
     var temp_t = [];
-    var temp_arr = [];
     for (let i in items_generic) {
       for (let j in items_generic[i]) {
         if (k === "achievements" && items_generic[i][j].unlocked) temp_t.push(items_generic[i][j].label);

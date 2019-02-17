@@ -1,0 +1,21 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "Incremental game.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Miracle-Quest"
+  },
+  "moduleDirectories": ["js"],
+  "author": "Andrew Barkley",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.14.0",
+    "eslint-config-google": "^0.12.0",
+    "jest": "^24.1.0"
+  }
+}

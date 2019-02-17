@@ -331,11 +331,13 @@ function adjustProduction() {
   let passiveMul = vals.perks["passive"].mul; 
   let achieveMul = vals.achievement_multiplier;
   let corruptMul = 1 + (vals.corruption/100);
-  return ((passiveMul * achieveMul * vals.prod) / (corruptMul)) - (corruptMul * vals.loss);
+  let runMul = vals.god_status.current >= 4 ? (vals.god_status.current - 3) * vals.stats.runner_multiplier : 1.0;
+  return ((passiveMul * achieveMul * vals.prod * runMul) / (corruptMul)) - (corruptMul * runMul * vals.loss);
 }
 
 function adjustLoss() {
-  return vals.loss * (1+(vals.corruption/100)) * vals.perks["passive"].mul;
+  let runMul = vals.god_status.current >= 4 ? (vals.god_status.current - 3) * vals.stats.runner_multiplier : 1.0;
+  return vals.loss * (1+(vals.corruption/100)) * vals.perks["passive"].mul * runMul;
 }
 
 function handleNegativeValues() {
@@ -386,12 +388,20 @@ var hasStarted = false;
 
 function handleScroller() {
   if (vals.current_tab === "Runner" && hasStarted !== true) {
-    startRunner();
     hasStarted = true;
   } else if (vals.current_tab !== "Runner" && hasStarted === true) {
     hasStarted = false;
+  } else if (hasStarted === true) {
+    vals.stats.runner_multiplier = parseFloat($("#runner_multiplier").text());
   }
 }
+
+$(document).on("click", "#start_runner_btn", () => {
+  $("#runner_container").css("display", "block");
+  $("#runner_before").css("display", "none");
+  startRunner();
+  hasStarted = true;
+});
 
 function handleCurrentBoss(mul, boss) {
   let currentBoss = vals.pantheon.bosses[boss];
@@ -757,7 +767,7 @@ function set_achievement_multiplier(vals) {
   fix_tab_buttons(vals);
 }
 
-//TODO:- fix this disgusting mess => extract into objects & use polymorphism.
+//TODO:- refactor this => extract into own class, determine appropriate pattern.
 function checkAchievements(vals) {
     for (let k in vals.challenges) {
       switch (vals.challenges[k].required_type) {
@@ -1015,7 +1025,7 @@ function fix_tab_buttons(vals) {
   $('#ascend-tab-text').text("Convert " + unlock_ascend + "/" + total_ascend);
   if (!vals.leap.unlocked) $('#leap-tab-btn').css('display', 'none');
   else $('#leap-tab-btn').css('display', 'inline-block');
-  let hiddenTabs = ["pantheon", "perk", "sacrifice"];
+  let hiddenTabs = ["pantheon", "perk", "runner", "sacrifice"];
   hiddenTabs.forEach((element) => {
     let display = determineTabAvailability(element) === true ? 'inline-block' : 'none';
     $('#' + element + '-tab-btn').css('display', display);
@@ -1026,7 +1036,8 @@ function determineTabAvailability(tab) {
   let level = vals.god_status.current;
   if (tab === "pantheon" && level >= 2) return true;
   else if (tab === "perk" && level >= 3) return true
-  else if (tab === "sacrifice" && level >= 4) return true;
+  else if (tab === "runner" && level >= 4) return true;
+  else if (tab === "sacrifice" && level >= 5) return true;
   else return false;
 }
 
@@ -1710,6 +1721,7 @@ $(document).on("click", ".reset", function() {
 
 $(document).on("click", ".purchase", function() {
   var btn = $(this).attr('id');
+  if (btn === "start_runner_btn") return;
   let event = resolveClass(btn);
   handleSound(btn);
   try {

@@ -41,7 +41,8 @@ var data = {
      "miracle_clicks":0,
      "ascension_clicks":0,
      "miracle_click_energy":0,
-     "ascension_click_energy":0
+     "ascension_click_energy":0,
+     "runner_multiplier":1.0
   },
   "god_status": {
     "current": 1,
@@ -1303,7 +1304,8 @@ var vals = {
      "miracle_clicks":0,
      "ascension_clicks":0,
      "miracle_click_energy":0,
-     "ascension_click_energy":0
+     "ascension_click_energy":0,
+     "runner_multiplier":1.0
   },
   "god_status": {
     "current": 1,

@@ -13,7 +13,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
 
     function startRunner() {
         canvas = document.getElementById('runner_container');
-        ctx = canvas.getContext("2d", { alpha: false });
+        ctx = canvas.getContext("2d");
         ctx.canvas.width  = $("#Runner").width();
         ctx.canvas.height = ctx.canvas.width / 1.7;
         engine = new GameEngine();
@@ -38,8 +38,8 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
         constructor() {
             if (!GameEngine.instance) {
                 this.jumpCount = 0;
-                this.acceleration = 1;
-                this.accelerationTweening = 1;
+                this.acceleration = ctx.canvas.width / 400;
+                this.accelerationTweening = ctx.canvas.width / 400;
                 this.player = new Player({x: ctx.canvas.width / 5, y: ctx.canvas.height / 10, width: ctx.canvas.width / 25, height: ctx.canvas.width / 25});
                 this.platformManager = new PlatformManager();
                 this.particles = [];
@@ -48,7 +48,10 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
                 this.collidedPlatform = null;
                 this.scoreColor = '#fff';
                 this.jumpCountRecord = 0;
+                this.maxSpikes = 0;
                 GameEngine.instance = this;
+            } else {
+                this.restart();
             }
         }
 
@@ -63,28 +66,32 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
 
             switch (this.jumpCount){
                 case 10:
-                    this.accelerationTweening = 2;
+                    this.acceleration = ctx.canvas.width / 350;
+                    this.accelerationTweening = ctx.canvas.width / 350;
                     this.platformManager.maxDistanceBetween = ctx.canvas.width / 2.6;
                     this.scoreColor = '#076C00';
+                    this.maxSpikes = 1;
                 break;
                 case 25:
-                    this.accelerationTweening = 3;
+                    this.acceleration = ctx.canvas.width / 300;
+                    this.accelerationTweening = ctx.canvas.width / 300;
                     this.platformManager.maxDistanceBetween = ctx.canvas.width / 2.4;
                     this.scoreColor = '#0300A9';
+                    this.maxSpikes = 2;
                 break;
                 case 40:
-                    this.accelerationTweening = 4;
+                    this.acceleration = ctx.canvas.width / 200;
+                    this.accelerationTweening = ctx.canvas.width / 200;
                     this.platformManager.maxDistanceBetween = ctx.canvas.width / 2;
                     this.scoreColor = '#9F8F00';
+                    this.maxSpikes = 3;
                 break;
             }
 
             this.acceleration += (this.accelerationTweening - this.acceleration) * 0.01;
-            let avoidedCollision = true;
             for (let platform of this.platformManager.platforms) {
                 if (this.player.intersects(platform)) {
                     this.collidedPlatform = platform;
-                    avoidedCollision = false;
                     this.player.canJump = true;
                     if (this.player.y < platform.y) {
                         this.player.y = platform.y;
@@ -117,8 +124,6 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
                 }
             }
 
-            this.player.rotating = avoidedCollision;
-
             for (i = 0; i < this.platformManager.platforms.length; i++) {
                 this.platformManager.update();
             }
@@ -150,17 +155,16 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
 
             ctx.font = '1em Arial';
             ctx.fillStyle = '#fff';
-            ctx.fillText('RECORD: '+ this.jumpCountRecord, ctx.canvas.width - (150 + (this.acceleration * 4)), 33 - (this.acceleration * 4));
+            ctx.fillText('BEST: ' + this.jumpCountRecord, ((this.acceleration * 4)), 33 - (this.acceleration * 4));
             ctx.fillStyle = this.scoreColor;
             ctx.font = (12 + (this.acceleration * 3))+'pt Arial';
-            ctx.fillText('JUMPS: '+ this.jumpCount, ctx.canvas.width - (150 + (this.acceleration * 4)), 50);
-            
+            ctx.fillText('SCORE: '+ this.jumpCount, ((this.acceleration * 4)), 50);
         }
 
         restart() {
             this.jumpCount = 0;
-            this.acceleration = 1;
-            this.accelerationTweening = 1;
+            this.acceleration = 1 + ctx.canvas.width / 800;
+            this.accelerationTweening = ctx.canvas.width / 800;
             this.player.restart();
             this.platformManager.updateOnDeath();
             this.particles = [];
@@ -168,6 +172,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
             this.particlesMax = 15;
             this.collidedPlatform = null;
             this.scoreColor = '#fff';
+            this.maxSpikes = 0;
         }
 
         resize() {
@@ -232,14 +237,12 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
                 this.color = "#fff";
                 this.canJump = false;
                 this.jumpNum = 0;
-                this.rotating = false;
-                this.angle = 0;
                 Player.instance = this;
             }
         }
     
         update() {
-            this.velocityY += 1;
+            this.velocityY += 0.5 + ctx.canvas.width / 2000;
             this.setPosition(this.x + this.velocityX, this.y + this.velocityY);
             //beyond screen bounds 
             if (this.y > ctx.canvas.height * 1.2 || this.x + this.width < 0) {
@@ -258,12 +261,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
             this.x = 150;
             this.y = 50;
             this.velocityX = 0;
-            this.velocityY = 0;
-            engine.jumpCount = 0;
-            engine.acceleration = 0;
-            engine.accelerationTweening = 0;
-            engine.scoreColor = '#181818';
-            engine.platformManager.maxDistanceBetween = 350;           
+            this.velocityY = 0;        
         }
     }
 
@@ -287,8 +285,8 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
             try {
                 if (engine.jumpCount > 1) {
                     for (let i = 0; i < number; i++) {
-                        const spike = new Spike({x: this.x + random(this.width/10, this.width/1.25), y: this.y - ctx.canvas.width / 30, 
-                            width: ctx.canvas.width / 30, height: ctx.canvas.width / 30});
+                        const spike = new Spike({x: this.x + random(this.width/10, this.width/1.25), y: this.y - (25 + ctx.canvas.width / 50), 
+                            width: 25 + ctx.canvas.width / 50, height: 25 + ctx.canvas.width / 50});
                         this.spikes.push(spike);
                     }
                 }
@@ -308,16 +306,18 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
         }
 
         draw() {
-            ctx.beginPath();
-            ctx.fillStyle = "#880E4F";
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 1;
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x + this.width / 2, this.y + this.height);
-            ctx.lineTo(this.x - this.width / 2, this.y + this.height);
-            ctx.lineTo(this.x, this.y);
-            ctx.stroke();
-            ctx.fill();
+            if (engine.maxSpikes >= 1) {
+                ctx.beginPath();
+                ctx.fillStyle = "#880E4F";
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 1;
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.width / 2, this.y + this.height);
+                ctx.lineTo(this.x - this.width / 2, this.y + this.height);
+                ctx.lineTo(this.x, this.y);
+                ctx.stroke();
+                ctx.fill();
+            }
         }
 
         update() {
@@ -328,10 +328,10 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
     class PlatformManager {
         
         constructor() {
-                this.maxDistanceBetween = ctx.canvas.width / 3;
+                this.maxDistanceBetween = 100 + ctx.canvas.width / 4;
                 this.colors = ["#4169E1"];
 
-                this.first = new Platform({x: ctx.canvas.width / 5, y: ctx.canvas.height / 1.25, width: ctx.canvas.width / 2, 
+                this.first = new Platform({x: ctx.canvas.width / 8, y: ctx.canvas.height / 1.25, width: ctx.canvas.width / 1.25, 
                     height: ctx.canvas.height / 5});
                 this.second = new Platform({x: (this.first.x + this.first.width) + random(this.maxDistanceBetween/2.5, this.maxDistanceBetween), 
                     y: ctx.canvas.height / 1.25, width: ctx.canvas.width / 2, height: ctx.canvas.height / 5});
@@ -360,7 +360,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
                 this.first.x = (this.third.x + this.third.width) + random(this.maxDistanceBetween * 0.5, this.maxDistanceBetween);
                 this.first.y = random(this.third.y - 32, ctx.canvas.height - 80);
                 this.first.height = this.first.y + ctx.canvas.height + 10;
-                this.first.createSpikes(2);
+                this.first.createSpikes(random(0, engine.maxSpikes));
             }
         
             this.second.x -= 3 + engine.acceleration;
@@ -374,7 +374,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
                     spike.y = this.second.y * 0.945;
                 }
                 this.second.height = this.second.y + ctx.canvas.height + 10;
-                this.second.createSpikes(1);
+                this.second.createSpikes(random(0, engine.maxSpikes));
             }
         
             this.third.x -= 3 + engine.acceleration;
@@ -388,15 +388,15 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
                     spike.y = this.third.y * 0.945;
                 }
                 this.third.height = this.third.y + ctx.canvas.height + 10;
-                this.third.createSpikes(3);
+                this.third.createSpikes(random(0, engine.maxSpikes));
             }
 
         }
 
-        //TODO - refactor this so a full restart is triggered rather than simulated
         updateOnDeath() {
+            for (let platform of this.platforms) platform.spikes = [];
             this.platforms = [];
-            this.first = new Platform({x: ctx.canvas.width / 5, y: ctx.canvas.height / 1.25, width: ctx.canvas.width / 2, 
+            this.first = new Platform({x: ctx.canvas.width / 8, y: ctx.canvas.height / 1.25, width: ctx.canvas.width / 1.25, 
                 height: ctx.canvas.height / 5});
             this.second = new Platform({x: (this.first.x + this.first.width) + random(this.maxDistanceBetween/2.5, this.maxDistanceBetween), 
                 y: ctx.canvas.height / 1.25, width: ctx.canvas.width / 2.5, height: ctx.canvas.height / 5});
@@ -416,10 +416,15 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
         }    
     }
 
-    function updateRecord() {
+    function updateScore() {
         engine.jumpCount++;
         if (engine.jumpCount > engine.jumpCountRecord){
-                engine.jumpCountRecord = engine.jumpCount;
+            engine.jumpCountRecord = engine.jumpCount;
+            let multiplerText = Math.floor((engine.jumpCountRecord + 100) / 100) + '.';
+            if (engine.jumpCountRecord < 10) {
+                multiplerText += "0";
+            }
+            $("#runner_multiplier").text(multiplerText + engine.jumpCountRecord);
         }
     }
     class Particle {
@@ -446,16 +451,26 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
     }
 
     $(document).on("click", "#runner_container", () => {
+        let vel = engine.player.velocityY;
         if (engine.player.canJump) {
             processJump();
-        }
+            if (vel == engine.player.velocityY && engine.player.jumpNum < 2) {
+                engine.player.velocityY = engine.player.jumpSize;
+            }
+            engine.player.jumpNum++;
+        }   
     });
 
     $(document).on("keypress", function(event) {
         if (event.which == "32") {
+            let vel = engine.player.velocityY;
             if (engine.player.canJump) {
                 processJump();
-            }
+                if (vel == engine.player.velocityY && engine.player.jumpNum < 2) {
+                    engine.player.velocityY = engine.player.jumpSize;
+                }
+                engine.player.jumpNum++;
+            }   
         }
     });
 
@@ -463,10 +478,9 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
 
         if (engine.player.velocityY < -8) engine.player.velocityY += -0.25;
         engine.player.velocityY = engine.player.jumpSize;
-        engine.player.jumpNum++;
-        if (engine.player.jumpNum < 2) updateRecord();
+        if (engine.player.jumpNum < 2) updateScore();
         else {
-            engine.player.canJump = false;
             engine.player.jumpNum = 0;
+            engine.player.canJump = false;
         }
     }

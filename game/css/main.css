@@ -1206,7 +1206,6 @@ button:disabled, button.disabled {
   border-radius:15px;
   text-align: center;
   height: 60vh;
-  overflow-y: scroll;
 }
 
 #completed_challenges {
@@ -2117,6 +2116,15 @@ a {
     padding-right: 1%;
    }
 
+   #stats_background {
+     overflow-x: scroll;
+     overflow-y: hidden;
+   }
+
+   #stats_background div {
+     overflow: initial;
+   }
+
    #stats_header_1 {
      width: 45%;
    }
@@ -2250,19 +2258,21 @@ a {
 
   .table-background {
     height: 100%;
-    margin-right: 2%;
-    margin-left: 2%;
+  }
+
+  #stats_background {
+    height:60%;
   }
 
    .table-container {
      font-size: 0.7em;
-     overflow: scroll;
+     overflow: initial;
    }   
    
    #upgrade_table {
     width: 100%;
     height: 100%;
-    overflow-y: scroll;
+    overflow: scroll;
    }
 
    #perk_table {
@@ -2310,8 +2320,34 @@ a {
    }
 }
 
-/*@media screen and (min-width: 900px) { 
-    #left_wrap { 
+@media screen and (min-width: 900px) { 
+    
+  #upgrade_table div {
+    height: 100%;
+    font-size: 1em;
+  }
+
+  #upgrades_table {
+    height: 100%;
+  }
+
+  .pricing-plan div div {
+    border :none;
+  }
+}
+
+  @media screen and (min-width: 900px) and (min-height: 700px) { 
+    
+   #upgrade_table {
+     overflow-x: scroll;
+     overflow-y: hidden;
+   }
+
+   html, body {
+     overflow-x: hidden;
+   }
+  }
+  /*#left_wrap { 
       float: left;
       min-width: 250px;
       width: 35%;
@@ -2441,7 +2477,7 @@ a {
     font-size: 1.3em;
   }
   .table-background {
-    height: 0.8em;
+    font-size: 0.8em;
   }
      .pricing-price {
     margin-top: 2.5%;
@@ -2483,6 +2519,39 @@ a {
      width: 15vw;
      height: 15vw;
     }
+   
+    .scroll_tabs {
+      overflow: hidden;
+      white-space: normal;
+    }
+    
+    #upgrade_table {
+      overflow-y: hidden;
+      height: 40vh;
+    }
+    
+    .table-container {
+      overflow: hidden;
+    }
+
+    #perk_table {
+      overflow-y: hidden;
+      overflow-x: scroll;
+    }
+    #perk_table div {
+      height: 70vh;
+    }
+    .uncompleted {
+      overflow: hidden;
+    }
+
+    #incomplete {
+      overflow-y: scroll;
+    }
+
+    #super {
+      transform: rotate(0deg);
+   }
 }
 @media screen and (min-width: 1300px) { 
     h3 {
@@ -2501,9 +2570,6 @@ a {
       width: 22%;
     }
 
-    #super {
-       transform: rotate(0deg);
-    }
     #left_wrap { 
       width: 25%;
       margin-top: 1%;

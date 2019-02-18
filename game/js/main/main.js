@@ -488,7 +488,8 @@ function staticValuesToJson() {
     "sc":vals.events.superclick.mul,
     "sm":vals.events.superclick.max_clicks,
     "lc":Math.round(vals.upgrades["3"]["upgrade1"].cost).toString(16),
-    "cst":vals.leap["1"].tier.cost.toString(16)
+    "cst":vals.leap["1"].tier.cost.toString(16),
+    "stc":vals.start_click
   };
  	return save;
 }
@@ -503,10 +504,14 @@ function purchasesToJson(save) {
     const temp_a = [];
     for (let i in items) { 
       if (i === 'numSelected') continue;
-      temp_a.push([i] + ":" + items[i].amount.toString(16)); 
-      temp_a.push([i] + ":" + items[i].unlocked);         
-      temp_a.push([i] + ":" + items[i].base_cost.toString(16));
-      temp_a.push([i] + ":" + items[i].base_output);
+      try {
+        temp_a.push([i] + ":" + items[i].amount.toString(16)); 
+        temp_a.push([i] + ":" + items[i].unlocked);         
+        temp_a.push([i] + ":" + items[i].base_cost.toString(16));
+        temp_a.push([i] + ":" + items[i].base_output);
+      } catch (NoSuchItemException) {
+        console.log("Could not save item: " + item + "\n" + NoSuchItemException);
+      }
     }
     save[k] = temp_a.join('|');
   }
@@ -568,8 +573,9 @@ function pantheonToJson(save) {
   for (let k in vals.pantheon.bosses) { 
     const items = vals.pantheon.bosses[k];
     let temp_a = [];
-    temp_a.push('max_hp' + ":" +items.max_hp.toString(16));
-    temp_a.push('current_hp' + ":" +items.current_hp.toString(16));
+    temp_a.push('max_hp' + ":" + items.max_hp.toString(16));
+    temp_a.push('current_hp' + ":" + items.current_hp.toString(16));
+    temp_a.push('base_hp' + ":" + items.base_hp.toString(16));
     temp_a.push('regen' + ":" +items.regen.toString(16));
     temp_a.push('defeated' + ":" + items.defeated.toString().toLowerCase());
     temp_a.push('reward' + ":" + items.reward.toString(16));    
@@ -617,6 +623,7 @@ function get_valsFromJSON(save) {
         vals.pantheon.stage = parseInt(save.stage, 16);
         vals.leap.unlocked = save.asc;
         vals.events.superclick.mul = parseInt(save.sc);
+        vals.start_click = parseFloat(save.stc);
         vals.events.superclick.max_clicks = parseInt(save.sm);
         vals.leap["1"].tier.cost = parseInt(save.cst, 16);
         vals.upgrades["3"]["upgrade1"].cost = parseInt(save.lc, 16);
@@ -720,9 +727,10 @@ function get_valsFromJSON(save) {
                   let currentBoss = 'boss' + (i+1);
                   vals.pantheon.bosses[currentBoss].max_hp = parseInt(items[i][0].split(':')[1], 16);
                   vals.pantheon.bosses[currentBoss].current_hp = parseInt(items[i][1].split(':')[1], 16);
-                  vals.pantheon.bosses[currentBoss].regen = parseInt(items[i][2].split(':')[1], 16);
-                  vals.pantheon.bosses[currentBoss].defeated = (items[i][3].split(':')[1].toString().toLowerCase() == 'true');
-                  vals.pantheon.bosses[currentBoss].reward = parseInt(items[i][4].split(':')[1], 16);
+                  vals.pantheon.bosses[currentBoss].base_hp = parseInt(items[i][2].split(':')[1], 16);
+                  vals.pantheon.bosses[currentBoss].regen = parseInt(items[i][3].split(':')[1], 16);
+                  vals.pantheon.bosses[currentBoss].defeated = (items[i][4].split(':')[1].toString().toLowerCase() == 'true');
+                  vals.pantheon.bosses[currentBoss].reward = parseInt(items[i][5].split(':')[1], 16);
                 }
               }
             }
@@ -848,11 +856,10 @@ function checkAchievements(vals) {
           for (let i in vals.challenges[k]) {
           if( vals.challenges[k][i] != vals.challenges[k].required_type) {
           if( vals.pantheon.stage == vals.challenges[k][i].req_stage && vals.pantheon.unlocked ) {
-            if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1) )
-             {
+            if( !vals.challenges[k][i].unlocked && ($('#save_title').text() != "Nothing saved yet." || last_saved >= 1)) {
               $.toaster( {message: vals.challenges[k][i].label, title:"Achievement Unlocked" } );
               if( i === '1') {
-                vals.pantheon.damage *= vals.click; 
+                vals.pantheon.damage *= (vals.click / parseFloat(vals.start_click)); 
               }
             }
             vals.challenges[k][i].unlocked = true;
@@ -964,14 +971,17 @@ function setButtonAvailability(vals) {
           $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', true); 
           $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Currently unavailable.");
           continue;
-        }
+        } 
         if (vals.flame >= vals.leap[tier][leapUpgrade].cost 
           && vals.leap[tier][leapUpgrade].amount < (vals.leap[tier][leapUpgrade].max + (parseInt(vals.god_status.current)-1))) {
           $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', false);  
           if (leapUpgrade !== 'tier') {
             $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', leapUpgrade.charAt(0).toUpperCase() + leapUpgrade.slice(1) + " potency increase");
           } else {
-            $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Ascend your divinity.");
+              if (vals.god_status.current >= 7) {
+                $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', true); 
+                $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Max divinity attained.");
+              } else $('#' + leapUpgrade + '_btn_' + tier).attr('data-balloon', "Ascend your divinity.");
           }
         } else {
           $('#' + leapUpgrade + '_btn_' + tier).prop('disabled', true); 
@@ -994,10 +1004,14 @@ function setPurchaseAvailability(mul) {
   for (const entry of myMap.entries()) {
     if (vals.current_tab !== entry[0]) continue;
     Object.values(entry[1][1]).forEach((element, idx) => {
+      let btnId = idx;
+      if (idx >= 10) {
+        btnId = String.fromCharCode(97 + (idx - 10));
+      }
       let canBuy = vals.energy >= element.cost ? false : true;
-      $('#' + entry[1][0] + '_btn_' + idx).prop('disabled', canBuy);
+      $('#' + entry[1][0] + '_btn_' + btnId).prop('disabled', canBuy);
       let canSell = element.amount > 0 ? false : true;
-      $('#' + entry[1][0] + '_sell_btn_' + idx).prop('disabled', canSell);    
+      $('#' + entry[1][0] + '_sell_btn_' + btnId).prop('disabled', canSell);    
     });
   }
 }
@@ -1230,7 +1244,7 @@ function fix_conv_asc(vals) {
 
   for (let k in vals[keyWord]) {
       var purchase_num = k.substr(k.length-1);
-      if (purchase_num > vals.god_status[vals.god_status.current].max_tier) break;
+      if (purchase_num > vals.god_status[vals.god_status.current].max_tier || vals[keyWord][k].cost >= (vals.upgrades["3"]["upgrade1"].cost/3)) break;
       if ((currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && (vals.prod >= vals[keyWord][k].unlock_rps))) {
         vals[keyWord][k].unlocked = true;
         //dynamically create divs as needed, saves creating all in the html file.
@@ -1573,7 +1587,7 @@ function saveForLeap() {
 function staticLeapValuesToJson() {
     const tierMul = generateLeapOffset(vals.god_status.current);
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
-    const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul; + totalClickMul;
+    const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul * totalClickMul;
     const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 15);
     const nextLeapCost = vals.god_status.current > 2 ? (vals.god_status[vals.god_status.current].mul * vals.god_status.current-1) : 1;
 
@@ -1594,7 +1608,8 @@ function staticLeapValuesToJson() {
         "sc":2,
         "sm":100,
         'lc':newLeapUpgradeCost.toString(16),
-        "cst":nextLeapCost.toString(16)
+        "cst":nextLeapCost.toString(16),
+        "stc":totalClickMul
     };  
 
     return save;  
@@ -1623,12 +1638,13 @@ function adjustedBossToJson() {
     if (++index < vals.god_status[vals.god_status.current] - 4) break;
     const items = vals.pantheon.bosses[k];
     let temp_a = [];
-    let mul = adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.5);
-    temp_a.push('max_hp' + ":" + (mul * items.max_hp).toString(16));
-    temp_a.push('current_hp' + ":" + (mul * items.current_hp).toString(16));
-    temp_a.push('regen' + ":" + (mul * items.regen).toString(16));
+    let mul = vals.god_status.current <= 2 ? 1 : 1 + adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.2);
+    temp_a.push('max_hp' + ":" + (mul * items.base_hp).toString(16));
+    temp_a.push('current_hp' + ":" + (mul * items.base_hp).toString(16));
+    temp_a.push('base_hp' + ":" + (mul * items.base_hp).toString(16));
+    temp_a.push('regen' + ":" + (mul * (items.base_hp / 2500)).toString(16));
     temp_a.push('defeated' + ":" + (items.defeated).toString().toLowerCase());
-    temp_a.push('reward' + ":" + ((1 + Math.sqrt(mul)) * items.reward).toString(16));    
+    temp_a.push('reward' + ":" + (mul * items.reward).toString(16));    
     pantheon.push(temp_a);
   }
 

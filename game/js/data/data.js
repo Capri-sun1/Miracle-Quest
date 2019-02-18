@@ -1,6 +1,7 @@
 
+
 var data = {
-  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,"flame":0,
+  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,"flame":0, "start_click":1,
   "events": {
     "superclick": {
       "click_num":0,
@@ -77,13 +78,13 @@ var data = {
       "max_tier": 8
     },
     "6":{
-      "label": "Astral form",
+      "label": "Deity",
       "mul": 10,
       "boss_label": "Terrible",
       "max_tier": 9
     },
     "7":{
-      "label": "Djinn",
+      "label": "Celestial",
       "mul": 12,
       "boss_label": "Enchanted",
       "max_tier": 10
@@ -243,7 +244,31 @@ var data = {
                 "sell_cost":3000000000, 
                 "unlock_rps":200000.0,
                 "unlocked":false,
-            }
+            },
+            "purchaseb":{
+              "label":"Worlds of Alteration",
+              "description":"Planets where all are brought to your faith.",
+              "amount":0,
+              "output":5000000000,
+              "base_output":5000000000,
+              "base_cost":80000000000,
+              "cost":80000000000,
+              "sell_cost":40000000000,
+              "unlock_rps":500000000.0,
+              "unlocked":false,
+          },
+          "purchasec":{
+            "label":"Fire and Brimstone",
+            "description":"Suffering and pain bring the last mortals under your heel.",
+            "amount":0,
+            "output":80000000000,
+            "base_output":80000000000,
+            "base_cost":1000000000000,
+            "cost":1000000000000,
+            "sell_cost":500000000000,
+            "unlock_rps":1000000000.0,
+            "unlocked":false,
+        }
          },  
          "ascend":{
            "numSelected":1,
@@ -366,7 +391,31 @@ var data = {
                 "sell_cost":4000000000,
                 "unlock_rps":225000.0,
                 "unlocked":false,
-            }
+            },
+            "ascendb":{
+              "label":"Chaotic Eradicator",
+              "description":"Use chaos energy to siphon power from huge amounts of unwilling victims.",
+              "amount":0,
+              "output":6500000000,
+              "base_output":6500000000,
+              "base_cost":100000000000,
+              "cost":100000000000,
+              "sell_cost":50000000000,
+              "unlock_rps":500000000.0,
+              "unlocked":false,
+          },
+          "ascendc":{
+            "label":"Universal Corruptor",
+            "description":"Corrupt and harvest the entire of existance.",
+            "amount":0,
+            "output":100000000000,
+            "base_output":100000000000,
+            "base_cost":1000000000000,
+            "cost":1000000000000,
+            "sell_cost":500000000000,
+            "unlock_rps":1000000000.0,
+            "unlocked":false,
+        }
   },
     "upgrades": {
         "1" : {
@@ -454,6 +503,20 @@ var data = {
               "unlocked":false,
               "cost":120000000000,
               "mul":10
+            },
+            "upgrade13":{
+              "label":"The infinity algorithm",
+              "description":"You're going to need to read the commit history.",
+              "unlocked":false,
+              "cost":10000000000000,
+              "mul":15
+            },
+            "upgrade14":{
+              "label":"What have you done?",
+              "description":"An entire universe.. harvested.",
+              "unlocked":false,
+              "cost":5000000000000000,
+              "mul":20
             }
           },
           "2": {
@@ -498,29 +561,43 @@ var data = {
               "description":"Your newest toy new from the box.",
               "unlocked":false,
               "cost":20000000,
-              "mul":0.88
+              "mul":0.9
             },
             "upgrade7":{
                "label":"The Mandela Effect",
               "description":"Reverse time and change what you wish - but only something small.",
               "unlocked":false,
               "cost":21000000,
-              "mul":0.87
+              "mul":0.9
             },
             "upgrade8":{
                "label":"Keys to the car",
               "description":"Stolen keys to a working time machine.",
               "unlocked":false,
               "cost":1000000000,
-              "mul":0.87
+              "mul":0.9
             },
             "upgrade9":{
                "label":"Demon's paw",
               "description":"A monkey's paw - but far more potent.",
               "unlocked":false,
               "cost":50000000000,
-              "mul":0.85
-            }
+              "mul":0.9
+            },
+            "upgrade10":{
+              "label":"Quantum Accumulator",
+             "description":"Charge yourself with quantum energy and skip between time states.",
+             "unlocked":false,
+             "cost":100000000000,
+             "mul":0.9
+           },
+           "upgrade11":{
+            "label":"Antimatter alarm clock",
+           "description":"You can't snooze your alarm if it explodes first.",
+           "unlocked":false,
+           "cost":5000000000000,
+           "mul":0.9
+         }
           },
           "3" : {
             "type": "Quantum Leap",
@@ -561,13 +638,20 @@ var data = {
               "unlocked":false,
               "cost":55000000000,
               "mul":2.5
+            },
+            "upgrade5":{
+              "label":"Dread Casters",
+              "description":"The universe trembles as you approach.",
+              "unlocked":false,
+              "cost":1000000000000,
+              "mul":3
             }
           },
             "5" : {
               "type":"superclick_length",
               "upgrade1": {
-                "label":"Star visor",
-                "description":"Glasses that change your perception of the World.",
+                "label":"Space telescope",
+                "description":"See the world through a new lens, opening new doors.",
                 "unlocked":false,
                 "cost":625000,
                 "mul":1.5
@@ -579,10 +663,17 @@ var data = {
                 "unlocked":false,
                 "cost":1150000000,
                 "mul":2
+              },
+
+              "upgrade3": {
+                "label":"Electromagnetic lasso",
+                "description":"Distort time wherever you swing it.",
+                "unlocked":false,
+                "cost":2500000000000,
+                "mul":2.5
               }
             }
         },
-            //think about creating 'god-battle' mode!
           "sacrifice": {
             "unlocked":false,
 
@@ -972,8 +1063,9 @@ var data = {
             },
             "bosses" : {
               "boss1":{
-                "max_hp": 500000,
-                "current_hp":500000,
+                "max_hp": 250000,
+                "current_hp":250000,
+                "base_hp":250000,
                 "regen":50,
                 "reward":1000000,
                 "current":true,
@@ -982,52 +1074,57 @@ var data = {
                 "defeated":false
               },
               "boss2":{
-                "max_hp": 125000000,
-                "current_hp":125000000,
-                "regen":10000,
-                "reward":50000000,
+                "max_hp": 25000000,
+                "current_hp":25000000,
+                "base_hp":25000000,
+                "regen":1000,
+                "reward":25000000,
                 "current":false,
                 "name":"Temporal aberration",
-                "reward":2.5,
+                "reward":2,
                 "defeated": false
               },
               "boss3":{
                 "max_hp": 1750000000,
                 "current_hp":1750000000,
+                "base_hp":1750000000,
                 "regen":1000000,
                 "reward":275000000,
                 "current":false,
                 "name":"Banshee",
-                "reward": 5,
+                "reward": 4,
                 "defeated":false
               },
               "boss4":{
                 "max_hp": 35000000000,
                 "current_hp":35000000000,
+                "base_hp":35000000000,
                 "regen":75000000,
                 "reward":275000000,
                 "current":false,
-                "name":"Drake",
+                "name":"Terror Drake",
                 "reward": 15,
                 "defeated":false
               },
               "boss5":{
                 "max_hp": 500000000000,
                 "current_hp":500000000000,
+                "base_hp":500000000000,
                 "regen":200000000,
                 "reward":275000000,
                 "current":false,
-                "name":"Demonic form",
+                "name":"Chaos Demon",
                 "reward": 30,
                 "defeated":false
               },
               "boss6":{
                 "max_hp": 2500000000000,
                 "current_hp":2500000000000,
+                "base_hp":2500000000000,
                 "regen":1000000000,
                 "reward":1000000000,
                 "current":false,
-                "name":"Elemental Dragon",
+                "name":"Cosmic Void Dragon",
                 "reward": 50,
                 "defeated":false
               }
@@ -1101,6 +1198,22 @@ var data = {
               "description":"Gained 1M followers from miracles.",
               "val_req":1000000
               },
+              "5" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Water into wine",
+              "description":"100000 glasses filled by your miracles!",
+              "click_req":100000
+              },
+              "5_5" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"An easy Tuesday for Mr Gates",
+              "description":"Gained 1B followers from miracles.",
+              "val_req":1000000000
+              }
             },
              "challenge2":{
               "required_type":'click_a',
@@ -1167,8 +1280,23 @@ var data = {
               "label":"Unlimited power",
               "description":"You've Converted 1M followers.",
               "val_req":1000000
-              }
-
+              },
+              "5" : {
+                "type":"quantity",
+                "visible":false,  
+                "unlocked":false,
+                "label":"Clicking like Fred Astaire.",
+                "description":"You've performed 100000 Conversions personally.",
+                "click_req":100000
+                },
+              "5_5" : {
+              "type":"total",
+                "visible":false,  
+                "unlocked":false,
+                "label":"What the hell is a giggawatt?",
+                "description":"You've Converted 1.21B followers.",
+                "val_req":1000000
+                }
             },
              "challenge3":{
               "required_type":'conv',
@@ -1256,6 +1384,13 @@ var data = {
                 "label":"Enemy defeated",
                 "description": "You conquered your first foe, but there are many others awaiting you.",
                 "req_stage":1
+              },
+              "3": {
+                "visible":true,
+                "unlocked":false,
+                "label":"Seasoned veteran",
+                "description": "Many foes lay wasted at your feet.",
+                "req_stage":4
               }
             }
            }
@@ -1263,7 +1398,7 @@ var data = {
 };
 
 var vals = {
-  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,"flame":0,
+  "energy":0,"prod":0, "click":1, "followers":0, "loss":0, "corruption":0, "achievement_multiplier":1.00, "current_tab":"Conversion","tick":500,"flame":0, "start_click":1,
   "events": {
     "superclick": {
       "click_num":0,
@@ -1340,13 +1475,13 @@ var vals = {
       "max_tier": 8
     },
     "6":{
-      "label": "Astral form",
+      "label": "Deity",
       "mul": 10,
       "boss_label": "Terrible",
       "max_tier": 9
     },
     "7":{
-      "label": "Djinn",
+      "label": "Celestial",
       "mul": 12,
       "boss_label": "Enchanted",
       "max_tier": 10
@@ -1507,7 +1642,31 @@ var vals = {
                 "sell_cost":3000000000, 
                 "unlock_rps":200000.0,
                 "unlocked":false,
-            }
+            },
+            "purchaseb":{
+              "label":"Worlds of Alteration",
+              "description":"Planets where all are brought to your faith.",
+              "amount":0,
+              "output":5000000000,
+              "base_output":5000000000,
+              "base_cost":80000000000,
+              "cost":80000000000,
+              "sell_cost":40000000000,
+              "unlock_rps":500000000.0,
+              "unlocked":false,
+          },
+          "purchasec":{
+            "label":"Fire and Brimstone",
+            "description":"Suffering and pain bring the last mortals under your heel.",
+            "amount":0,
+            "output":80000000000,
+            "base_output":80000000000,
+            "base_cost":1000000000000,
+            "cost":1000000000000,
+            "sell_cost":500000000000,
+            "unlock_rps":1000000000.0,
+            "unlocked":false,
+        }
          },  
          "ascend":{
            "numSelected":1,
@@ -1561,7 +1720,7 @@ var vals = {
             },
             "ascend5":{
                 "label":"Cathedral of Ascendance",
-                "description":"An entire Cathedral built to connect with you.",
+                "description":"An ancient Cathedral built to connect with you.",
                 "amount":0,
                 "output":150,
                 "base_output":150,
@@ -1630,7 +1789,31 @@ var vals = {
                 "sell_cost":4000000000,
                 "unlock_rps":225000.0,
                 "unlocked":false,
-            }
+            },
+            "ascendb":{
+              "label":"Chaotic Eradicator",
+              "description":"Use chaos energy to siphon power from huge amounts of unwilling victims.",
+              "amount":0,
+              "output":6500000000,
+              "base_output":6500000000,
+              "base_cost":100000000000,
+              "cost":100000000000,
+              "sell_cost":50000000000,
+              "unlock_rps":500000000.0,
+              "unlocked":false,
+          },
+          "ascendc":{
+            "label":"Universal Corruptor",
+            "description":"Corrupt and harvest the entire of existance.",
+            "amount":0,
+            "output":100000000000,
+            "base_output":100000000000,
+            "base_cost":1000000000000,
+            "cost":1000000000000,
+            "sell_cost":500000000000,
+            "unlock_rps":1000000000.0,
+            "unlocked":false,
+        }
   },
     "upgrades": {
         "1" : {
@@ -1718,6 +1901,20 @@ var vals = {
               "unlocked":false,
               "cost":120000000000,
               "mul":10
+            },
+            "upgrade13":{
+              "label":"The infinity algorithm",
+              "description":"You're going to need to read the commit history.",
+              "unlocked":false,
+              "cost":10000000000000,
+              "mul":15
+            },
+            "upgrade14":{
+              "label":"What have you done?",
+              "description":"An entire universe.. harvested.",
+              "unlocked":false,
+              "cost":5000000000000000,
+              "mul":20
             }
           },
           "2": {
@@ -1784,7 +1981,21 @@ var vals = {
               "unlocked":false,
               "cost":50000000000,
               "mul":0.85
-            }
+            },
+            "upgrade10":{
+              "label":"Quantum Accumulator",
+             "description":"Charge yourself with quantum energy and skip between time states.",
+             "unlocked":false,
+             "cost":100000000000,
+             "mul":0.9
+           },
+           "upgrade11":{
+            "label":"Antimatter alarm clock",
+           "description":"You can't snooze your alarm if it explodes first.",
+           "unlocked":false,
+           "cost":5000000000000,
+           "mul":0.9
+         }
           },
           "3" : {
             "type": "Quantum Leap",
@@ -1825,13 +2036,20 @@ var vals = {
               "unlocked":false,
               "cost":55000000000,
               "mul":2.5
+            },
+            "upgrade5":{
+              "label":"Dread Casters",
+              "description":"The universe trembles as you approach.",
+              "unlocked":false,
+              "cost":1000000000000,
+              "mul":3
             }
           },
             "5" : {
               "type":"superclick_length",
               "upgrade1": {
-                "label":"Star visor",
-                "description":"Glasses that change your perception of the World.",
+                "label":"Space telescope",
+                "description":"See the world through a new lens, opening new doors.",
                 "unlocked":false,
                 "cost":625000,
                 "mul":1.5
@@ -1843,10 +2061,17 @@ var vals = {
                 "unlocked":false,
                 "cost":1150000000,
                 "mul":2
+              },
+
+              "upgrade3": {
+                "label":"Electromagnetic lasso",
+                "description":"Distort time wherever you swing it.",
+                "unlocked":false,
+                "cost":2500000000000,
+                "mul":2.5
               }
             }
         },
-            //think about creating 'god-battle' mode!
           "sacrifice": {
             "unlocked":false,
 
@@ -2236,8 +2461,9 @@ var vals = {
             },
             "bosses" : {
               "boss1":{
-                "max_hp": 500000,
-                "current_hp":500000,
+                "max_hp": 250000,
+                "current_hp":250000,
+                "base_hp":250000,
                 "regen":50,
                 "reward":1000000,
                 "current":true,
@@ -2246,52 +2472,57 @@ var vals = {
                 "defeated":false
               },
               "boss2":{
-                "max_hp": 125000000,
-                "current_hp":125000000,
-                "regen":10000,
-                "reward":50000000,
+                "max_hp": 25000000,
+                "current_hp":25000000,
+                "base_hp":25000000,
+                "regen":1000,
+                "reward":25000000,
                 "current":false,
                 "name":"Temporal aberration",
-                "reward":2.5,
+                "reward":2,
                 "defeated": false
               },
               "boss3":{
                 "max_hp": 1750000000,
                 "current_hp":1750000000,
+                "base_hp":1750000000,
                 "regen":1000000,
                 "reward":275000000,
                 "current":false,
                 "name":"Banshee",
-                "reward": 5,
+                "reward": 4,
                 "defeated":false
               },
               "boss4":{
                 "max_hp": 35000000000,
                 "current_hp":35000000000,
+                "base_hp":35000000000,
                 "regen":75000000,
                 "reward":275000000,
                 "current":false,
-                "name":"Drake",
+                "name":"Terror Drake",
                 "reward": 15,
                 "defeated":false
               },
               "boss5":{
                 "max_hp": 500000000000,
                 "current_hp":500000000000,
+                "base_hp":500000000000,
                 "regen":200000000,
                 "reward":275000000,
                 "current":false,
-                "name":"Demonic form",
+                "name":"Chaos Demon",
                 "reward": 30,
                 "defeated":false
               },
               "boss6":{
                 "max_hp": 2500000000000,
                 "current_hp":2500000000000,
+                "base_hp":2500000000000,
                 "regen":1000000000,
                 "reward":1000000000,
                 "current":false,
-                "name":"Elemental Dragon",
+                "name":"Cosmic Void Dragon",
                 "reward": 50,
                 "defeated":false
               }
@@ -2365,6 +2596,22 @@ var vals = {
               "description":"Gained 1M followers from miracles.",
               "val_req":1000000
               },
+              "5" : {
+              "type":"quantity",
+              "visible":false,  
+              "unlocked":false,
+              "label":"Water into wine",
+              "description":"100000 glasses filled by your miracles!",
+              "click_req":100000
+              },
+              "5_5" : {
+                "type":"total",
+              "visible":false,  
+              "unlocked":false,
+              "label":"An easy Tuesday for Mr Gates",
+              "description":"Gained 1B followers from miracles.",
+              "val_req":1000000000
+              }
             },
              "challenge2":{
               "required_type":'click_a',
@@ -2431,7 +2678,23 @@ var vals = {
               "label":"Unlimited power",
               "description":"You've Converted 1M followers.",
               "val_req":1000000
-              }
+              },
+              "5" : {
+                "type":"quantity",
+                "visible":false,  
+                "unlocked":false,
+                "label":"Clicking like Fred Astaire.",
+                "description":"You've converted 100000 mortal beings to essence.",
+                "click_req":100000
+                },
+              "5_5" : {
+              "type":"total",
+                "visible":false,  
+                "unlocked":false,
+                "label":"What the hell is a giggawatt?",
+                "description":"You've Converted 1.21B followers.",
+                "val_req":1000000
+                }
 
             },
              "challenge3":{
@@ -2520,6 +2783,13 @@ var vals = {
                 "label":"Enemy defeated",
                 "description": "You conquered your first foe, but there are many others awaiting you.",
                 "req_stage":1
+              },
+              "3": {
+                "visible":true,
+                "unlocked":false,
+                "label":"Seasoned veteran",
+                "description": "Many foes lay wasted at your feet.",
+                "req_stage":4
               }
             }
            }

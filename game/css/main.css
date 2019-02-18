@@ -1962,10 +1962,6 @@ a {
 
 }
 
-#Runner {
-  margin-top: 1%
-}
-
 @-webkit-keyframes animate-positive {
     0% { width: 0%;}
 }
@@ -2393,6 +2389,10 @@ a {
       font-size: 0.625em;
     }
 
+    html, body {
+      overflow-x: initial;
+    }
+
     #left_wrap { 
       width: 30%;
       margin-top: 6%;
@@ -2525,11 +2525,6 @@ a {
       white-space: normal;
     }
     
-    #upgrade_table {
-      overflow-y: hidden;
-      height: 40vh;
-    }
-    
     .table-container {
       overflow: hidden;
     }
@@ -2552,7 +2547,19 @@ a {
     #super {
       transform: rotate(0deg);
    }
+   #upgrade_table {
+    overflow-y: hidden;
+    height: 50vh;
+    font-size: 0.75em;
+  }
+
+  #upgrade_table div {
+    overflow: initial;
+    height: 50vh;
+  }
+  
 }
+
 @media screen and (min-width: 1300px) { 
     h3 {
       font-size: 1.5em;
@@ -2708,7 +2715,58 @@ a {
     padding: 5% 0;
     font-size: 0.75em;
    }
+
+   #above_div {
+     font-size: 1em;
+   }
 }
+
+@media screen and (min-width: 1300px) and (max-height: 800px) {
+  #miracle, #ascend {
+    font-size: 1em;
+    height: 20vh;
+  }
+}
+
+@media screen and (min-height: 1000px) {
+  #upgrade_table div {
+    height: 70vh;
+  }
+
+  #Upgrades .uncompleted {
+    font-size: 1.3em;
+  }
+
+  .pricing-header {
+    margin: 10% 0%;
+  }
+  .upg div .pricing-features li {
+    padding: 10% 0;
+    font-size: 1em;
+  }
+
+  .upg div .pricing-price {
+    margin-top: 5%;
+  }
+
+  .upg div .wrap .btn-11 {
+    margin-top: 5%;
+  }
+
+  .perk {
+    width: 20%;
+  }
+
+  #stats_table {
+    height: 50vh;
+    font-size: 1.25em;
+  }
+
+  #perk_table div {
+    overflow: initial;
+  }
+}
+
 @media screen and (min-width: 1600px) { 
     .tabs .button--secondary .button__inner { 
         font-size: 0.4em;

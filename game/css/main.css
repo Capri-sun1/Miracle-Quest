@@ -2753,10 +2753,6 @@ a {
     width: 12vw;
     height: 12vw;
   }
-
-  #super {
-    margin: 0px !important;
-  }
 }
 
 @media screen and (min-height: 800px) {
@@ -2782,6 +2778,10 @@ a {
 
   #uncompleted, #perk_table, #perk_table div {
     height: 80vh;
+  }
+
+  #super {
+    margin: 0px !important;
   }
 
 }
@@ -2835,6 +2835,10 @@ a {
 
   #perk_table div {
     overflow: initial;
+  }
+
+  #ascend .tab_div {
+    height: 20vh;
   }
 }
 

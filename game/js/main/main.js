@@ -11,27 +11,102 @@ function dateDiffInDays(a, b) {
 const defaultValue = (x, y) => {return (x !== null || x == undefined) ? x : y};
 
 var upgrade_box_size = 0;
+var animationFrame;
 
 (function($) {
-
-$(window).resize(function() {
-  setupContainers();
-  if($(window).width() < 700) {
-    $.toaster({ 
-      settings: {
-        toaster : {
-          css : {
-            'width' : '40%',
+  $(document).ready(() => {
+    window.requestAnimationFrame = window.requestAnimationFrame
+    || window.mozRequestAnimationFrame
+    || window.webkitRequestAnimationFrame
+    || window.msRequestAnimationFrame
+    || function(f){return setTimeout(f, 1000/60)} // simulate calling code 60 
+ 
+window.cancelAnimationFrame = window.cancelAnimationFrame
+    || window.mozCancelAnimationFrame
+    || function(requestID){clearTimeout(requestID)} //fall back
+  
+    let canvas, ctx, particles, amount;
+      canvas = document.querySelector("#scene");
+      ctx = canvas.getContext("2d");
+      particles = [];
+      amount = 0;
+  
+    var colors = ["#fff","#880e4f", "#016FF9","#34B484", "#f0f0f0"];
+    var windowWidth = canvas.width = window.innerWidth;
+    var windowHeight = canvas.height = window.innerHeight;
+  
+    function Particle(x,y) {
+      this.x =  Math.random() * windowWidth;
+      this.y =  Math.random() * windowHeight;
+      this.dest = {
+        x : x,
+        y: y
+      };
+      this.r =  window.innerWidth/250;
+      this.vx = (Math.random() -0.5) * 25;
+      this.vy = (Math.random() -0.5) * 25;
+      this.accX = 0;
+      this.accY = 0;
+      this.friction = Math.random() * 0.02 + 0.94;
+  
+      this.color = colors[Math.floor(Math.random() * 6)];
+    }
+  
+    Particle.prototype.render = function() {
+      this.accX = (this.dest.x - this.x)/400;
+      this.accY = (this.dest.y - this.y)/400;
+      this.vx += this.accX;
+      this.vy += this.accY;
+      this.vx *= this.friction;
+      this.vy *= this.friction;
+  
+      this.x += this.vx;
+      this.y +=  this.vy;
+  
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, Math.PI * 2, false);
+      ctx.fill();
+    }
+  
+    function initScene() {
+      windowWidth = canvas.width = window.innerWidth;
+      windowHeight = canvas.height = window.innerHeight;
+  
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+      ctx.font = "bold "+ (windowWidth/10) +"px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Miracle Quest", windowWidth/2, windowHeight/2);
+  
+      let data  = ctx.getImageData(0, 0, windowWidth, windowHeight).data;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = "screen";
+  
+      particles = [];
+      for (let i=0;i < windowWidth; i += Math.round(windowWidth/100)){
+        for (let j=0;j < windowHeight; j += Math.round(windowWidth/100)){
+          if (data[((i + j * windowWidth) * 4) + 3] > 150){
+            particles.push(new Particle(i,j));
           }
         }
       }
-    });
-    fix_names(vals);
-  }
-});
+      amount = particles.length;
+    }
+  
+    function render() {
+      animationFrame = window.requestAnimationFrame(render);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < amount; i++) {
+        particles[i].render();
+      }
+    } 
+  
+    initScene();
+    animationFrame = window.requestAnimationFrame(render);
 
-$(document).ready(() => {
   loadData();
+  loadBackgroundImage();
   showBackground().then(() => {
     fix_tab_buttons(vals);
     fix_names(vals);
@@ -67,6 +142,22 @@ $(document).ready(() => {
   });
 });
 
+$(window).resize(function() {
+  setupContainers();
+  if($(window).width() < 700) {
+    $.toaster({ 
+      settings: {
+        toaster : {
+          css : {
+            'width' : '40%',
+          }
+        }
+      }
+    });
+    fix_names(vals);
+  }
+});
+
 async function showBackground() {
   let shouldLoad = false;
   await scanJsonFile(vals, data);
@@ -84,18 +175,23 @@ async function showBackground() {
     $("#scene").delay(7000).fadeOut(1500);
     $("#background-fill").delay(8750).fadeOut(3000);
     $('#loading-screen').delay(11750).fadeOut(() => { 
-      $('#loading-screen').empty();     
-      $('#1').click(); 
+    $('#loading-screen').empty();     
+    $('#1').click(); 
     }).promise().then(() => {
+      window.cancelAnimationFrame(animationFrame);
       return $('.trigger').click().promise();
     });
   } else {
-      $("#scene").fadeOut();
+      $("#scene").fadeOut(500);
+      $("#background-fill").fadeOut(2000);
       $('#loading-screen').delay(1000).fadeOut(() => { 
       $('#loading-screen').empty();     
       $('#1').click(); 
+    }).promise().then(() => {
+      window.cancelAnimationFrame(animationFrame);
+      return null;
     });
-  } 
+  }
 }
 
 async function scanJsonFile(file, backup) {
@@ -143,7 +239,7 @@ function loadBackgroundImage() {
     img.onload = () => {
       item.classList.remove('asyncImage');
       if (item.nodeName === 'IMG') {
-        $("html").css("background-image", `url(${item.dataset.src})`);
+        $("html").css("background-image", `url(data/background_async.jpg)`);
       }
     };
   });
@@ -394,6 +490,10 @@ function handleScroller() {
     hasStarted = true;
   } else if (vals.current_tab !== "Runner" && hasStarted === true) {
     hasStarted = false;
+    try {
+      if (runnerAnimation !== null) window.cancelAnimationFrame(getAnimationFrame());
+    } catch (NoSuchAnimationException) {
+    }
   } else if (hasStarted === true) {
     vals.stats.runner_multiplier = parseFloat($("#runner_multiplier").text());
   }
@@ -877,9 +977,7 @@ function checkAchievements(vals) {
 }
 
 function setButtonAvailability(vals) {
-  let cost = 1;
-
-  setPurchaseAvailability(cost);
+  setPurchaseAvailability();
   if (vals.current_tab === 'Upgrades') {
     for (let k in vals.upgrades) {
       const purchase_num = k.substr(k.length -1 );
@@ -889,7 +987,7 @@ function setButtonAvailability(vals) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', true);
             continue;
         } else if (vals.upgrades[k][i].unlocked != true) {
-          if (vals.energy >= (cost * vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < (vals.upgrades["3"]["upgrade1"].cost/3)) {
+          if (vals.energy >= (vals.upgrades[k][i].cost) && vals.upgrades[k][i].cost < (vals.upgrades["3"]["upgrade1"].cost/3)) {
             $('#upgrade_btn_' + purchase_num + "_1").prop('disabled', false);
             $('#upgrade_btn_' + purchase_num + "_1").parent().css("display", "block");
           } else {
@@ -966,7 +1064,7 @@ function setButtonAvailability(vals) {
     }
     if (vals.current_tab === 'Leap') {
       const leapUpgrades = ['click', 'boss', 'tier'];
-      for (upg in leapUpgrades) {
+      for (let upg in leapUpgrades) {
         let leapUpgrade = leapUpgrades[upg];
         const id = $('.wrap-nav').attr('id');
         const tier = id.substr(id.length-1);
@@ -1001,7 +1099,7 @@ function setButtonAvailability(vals) {
     }
   }
 
-function setPurchaseAvailability(mul) {
+function setPurchaseAvailability() {
   //TODO - consider extracting this map to its own method for use elsewhere
   let myMap = new Map();
   myMap.set("Conversion", ["purchase", vals.miracle]);
@@ -1177,7 +1275,7 @@ function fix_pantheon(vals) {
         $('#max_hp').text(truncate_bigint(vals.pantheon.bosses[k].max_hp));
         $('#boss_hp_bar').css('width', 100 * ((vals.pantheon.bosses[k].current_hp)/(vals.pantheon.bosses[k].max_hp)) + '%');
         $('#regen').text(truncate_bigint(vals.pantheon.bosses[k].regen));
-        $('#boss_name').text(vals.pantheon.bosses[k].name);
+        $('#boss_name').text(vals.god_status[vals.god_status.current].boss_label + " " + vals.pantheon.bosses[k].name);
         break;
       }
     }
@@ -1485,7 +1583,7 @@ function fix_challenges(vals) {
          if( !document.getElementById('challenges_' + challenge_num + '_' + i) && !document.getElementById('new_challenge') && i.substr(i.length-1) != "1" ){
           var can_clone = false;
           //check for click challenges - go through each group
-          switch( vals.challenges[k].required_type) {
+          switch (vals.challenges[k].required_type) {
             case 'click_m' : case 'click_a' :
               if( ( vals.challenges[k][i].type === 'quantity' ) ){
                 if( vals.challenges[k][(String(parseInt(i) -1))].unlocked) can_clone = true;
@@ -1519,16 +1617,13 @@ function fix_challenges(vals) {
                 '<em id="challenges_text">Text placeholder</em> </p></div>').prependTo($('#challenge' + challenge_num));
               $("#new_challenge").find('#challenges_lbl_').attr('id', "challenges_lbl_" + challenge_num + '_' + i);
               $("#new_challenge").find('#challenges_text').attr('id', "challenges_text_" + challenge_num + '_' + i);
-              $('#new_challenge').children().each(function() {
-                if( this.id === 'challenge_head_temp')
-                  this.id = "challenges_header_" + challenge_num + '_' + i;
-              });
-              $('#new_challenge').attr('id','challenges_' + challenge_num + '_' + i);
+              $('#new_challenge').children().each(cloneChallenge(this.id, challenge_num, i));
+              $('#new_challenge').attr('id', 'challenges_' + challenge_num + '_' + i);
               vals.challenges[k][i].visible = true;
           }
         }
       }
-        if( vals.challenges[k][i].visible) {
+        if (vals.challenges[k][i].visible) {
           $('#challenges_header_'+ challenge_num + '_' + i).css('padding-left', '2.5%');
           $('#challenges_header_' + challenge_num + '_' + i).contents().filter(function(){ return this.nodeType == 3; }).first().replaceWith(vals.challenges[k][i].label);
           $('#challenges_text_' + challenge_num + '_' + i).css('padding-left', '1%');
@@ -1554,6 +1649,11 @@ function fix_challenges(vals) {
        }
     }
 }
+
+function cloneChallenge(id, challenge_num, i) {
+  if (id === 'challenge_head_temp')
+  id = "challenges_header_" + challenge_num + '_' + i;
+};
 
   /**
    * (more) bad code ends.
@@ -1595,7 +1695,7 @@ function staticLeapValuesToJson() {
     const totalClickMul = generateTotalValueFor('click', 1) * tierMul;
     const totalDamageMul = generateTotalValueFor('boss', 1) * tierMul * totalClickMul;
     const newLeapUpgradeCost = vals.upgrades["3"]["upgrade1"].cost * (vals.god_status[vals.god_status.current].mul * 1.1 * 15);
-    const nextLeapCost = vals.god_status.current > 2 ? (vals.god_status[vals.god_status.current].mul * vals.god_status.current-1) : 1;
+    const nextLeapCost = vals.god_status.current > 2 ? (vals.god_status[vals.god_status.current].mul * vals.god_status.current) : 1;
 
     let save = {
         'e':0,
@@ -1645,12 +1745,13 @@ function adjustedBossToJson() {
     const items = vals.pantheon.bosses[k];
     let temp_a = [];
     let mul = vals.god_status.current <= 2 ? 1 : 1 + adjustForGodStatus(vals.god_status[vals.god_status.current].mul, 0.3);
+    let reward = generateRewardFor(items, index);
     temp_a.push('max_hp' + ":" + (mul * items.base_hp).toString(16));
     temp_a.push('current_hp' + ":" + (mul * items.base_hp).toString(16));
     temp_a.push('base_hp' + ":" + (mul * items.base_hp).toString(16));
     temp_a.push('regen' + ":" + (mul * (items.base_hp / 2500)).toString(16));
     temp_a.push('defeated' + ":" + (false).toString().toLowerCase());
-    temp_a.push('reward' + ":" + (mul * 0.67 * items.reward).toString(16));    
+    temp_a.push('reward' + ":" + Math.ceil(mul * 0.67 * reward).toString(16));    
     pantheon.push(temp_a);
   }
 
@@ -1666,6 +1767,18 @@ function adjustedBossToJson() {
   }
 
   return pantheon; 
+}
+
+function generateRewardFor(item, index) {
+  let reward = 0;
+  
+  if (item.reward <= 0.5) {
+    reward += index;
+  } else {
+    reward += item.reward;
+  }
+
+  return reward;
 }
 
 function generateLeapOffset(tier) {
@@ -1764,10 +1877,12 @@ $(document).on("click", ".purchase", function() {
 });
 
 function handleSound(id) {
-  if(id.includes('save')) {
-    saveSound.play();
-  } else {
-    purchaseSound.play();
+  if (toPlay == true) {
+    if(id.includes('save')) {
+      saveSound.play();
+    } else {
+      purchaseSound.play();
+    }
   }
 }
 
@@ -2530,7 +2645,7 @@ $(document).on("click", ".battle", function() {
 });
 
 function attack(id, dam) {  
-  const btn = id, divToAppend = '.boss_img';
+  const divToAppend = '.boss_img';
   const damage = generateDamage(dam);
   let bossClick = new BossClick({}, setAttackTarget(damage));
 
@@ -2573,7 +2688,7 @@ function handleBossLogic(damage) {
         let currentBoss = vals.pantheon.bosses[k];
         currentBoss.current_hp -= damage;
 
-        if(bossIsDefeated(currentBoss)) {
+        if (bossIsDefeated(currentBoss)) {
           handleVictory(currentBoss);
           fix_pantheon(vals);
           break;
@@ -2592,7 +2707,7 @@ function handleVictory(boss) {
 }
 
 function updatePlayerStats(boss) {
-   vals.flame += boss.reward;
+   vals.flame += generateRewardFor(boss, 1);
 }
 
 function updateBossStats(boss) {
@@ -2862,8 +2977,6 @@ const debugPrint = args => args.forEach((element) => console.log(element + ' '))
 $(document).ready(() => {
 var quadrantItems = document.querySelectorAll('.quadrant__item');
 var cube = document.querySelector('.cube');
-var closeButton = document.querySelector('.quadrant__item__content--close');
-var isInside = false;
 
 var tl = new TimelineLite({paused: true});
 tl.timeScale(1.6);
@@ -2903,93 +3016,4 @@ function reverseTimeline(e) {
   tl.timeScale(1.8);
   tl.reverse();
 }
-});
-
-
-$(document).ready(() => {
-  let canvas, ctx, particles, amount, radius;
-  try {
-    canvas = document.querySelector("#scene"),
-    ctx = canvas.getContext("2d"),
-    particles = [],
-    amount = 0,
-    radius = 1;
-
-  var colors = ["#fff","#880e4f", "#016FF9","#34B484", "#f0f0f0"];
-  var windowWidth = canvas.width = window.innerWidth;
-  var windowHeight = canvas.height = window.innerHeight;
-
-  function Particle(x,y) {
-    this.x =  Math.random() * windowWidth;
-    this.y =  Math.random() * windowHeight;
-    this.dest = {
-      x : x,
-      y: y
-    };
-    this.r =  window.innerWidth/250;
-    this.vx = (Math.random() -0.5) * 25;
-    this.vy = (Math.random() -0.5) * 25;
-    this.accX = 0;
-    this.accY = 0;
-    this.friction = Math.random() * 0.02 + 0.94;
-
-    this.color = colors[Math.floor(Math.random() * 6)];
-  }
-
-  Particle.prototype.render = function() {
-    this.accX = (this.dest.x - this.x)/400;
-    this.accY = (this.dest.y - this.y)/400;
-    this.vx += this.accX;
-    this.vy += this.accY;
-    this.vx *= this.friction;
-    this.vy *= this.friction;
-
-    this.x += this.vx;
-    this.y +=  this.vy;
-
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, Math.PI * 2, false);
-    ctx.fill();
-  }
-
-  function initScene() {
-    windowWidth = canvas.width = window.innerWidth;
-    windowHeight = canvas.height = window.innerHeight;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.font = "bold "+ (windowWidth/10) +"px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("Miracle Quest", windowWidth/2, windowHeight/2);
-
-    let data  = ctx.getImageData(0, 0, windowWidth, windowHeight).data;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = "screen";
-
-    particles = [];
-    for (let i=0;i < windowWidth; i += Math.round(windowWidth/100)){
-      for (let j=0;j < windowHeight; j += Math.round(windowWidth/100)){
-        if (data[((i + j * windowWidth) * 4) + 3] > 150){
-          particles.push(new Particle(i,j));
-        }
-      }
-    }
-    amount = particles.length;
-  }
-
-  function render(a) {
-    requestAnimationFrame(render);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < amount; i++) {
-      particles[i].render();
-    }
-  };
-
-  initScene();
-  requestAnimationFrame(render);
-    } catch (NoSuchCanvasException) {
-    console.log("No canvas present.");
-  }
-
 });

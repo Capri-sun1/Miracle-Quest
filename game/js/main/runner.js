@@ -1,3 +1,15 @@
+window.requestAnimationFrame = window.requestAnimationFrame
+|| window.mozRequestAnimationFrame
+|| window.webkitRequestAnimationFrame
+|| window.msRequestAnimationFrame
+|| function(f){return setTimeout(f, 1000/60)} // simulate calling code 60 
+
+window.cancelAnimationFrame = window.cancelAnimationFrame
+|| window.mozCancelAnimationFrame
+|| function(requestID){clearTimeout(requestID)} //fall back
+
+var multiplierDiv = $("#runner_multiplier");
+var runnerAnimation;
 
    var i = 0;
 
@@ -22,8 +34,12 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
         run();
     }
 
+    function getAnimationFrame() {
+        return runnerAnimation;
+    }
+
     function run() {
-        requestAnimationFrame(run);
+        runnerAnimation = window.requestAnimationFrame(run);
         now = Date.now();
         elapsed = now - then;
         if (elapsed > fpsInterval) {
@@ -152,13 +168,13 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
                 particle.draw();
             }
         
-
-            ctx.font = '1em Arial';
-            ctx.fillStyle = '#fff';
-            ctx.fillText('BEST: ' + this.jumpCountRecord, ((this.acceleration * 4)), 33 - (this.acceleration * 4));
-            ctx.fillStyle = this.scoreColor;
-            ctx.font = (12 + (this.acceleration * 3))+'pt Arial';
-            ctx.fillText('SCORE: '+ this.jumpCount, ((this.acceleration * 4)), 50);
+            //commented out for performance, temporarily
+            // ctx.font = '1em Arial';
+            // ctx.fillStyle = '#fff';
+            // ctx.fillText('BEST: ' + this.jumpCountRecord, ((this.acceleration * 4)), 33 - (this.acceleration * 4));
+            // ctx.fillStyle = this.scoreColor;
+            // ctx.font = (12 + (this.acceleration * 3))+'pt Arial';
+            // ctx.fillText('SCORE: '+ this.jumpCount, ((this.acceleration * 4)), 50);
         }
 
         restart() {
@@ -424,7 +440,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
             if (engine.jumpCountRecord < 10) {
                 multiplerText += "0";
             }
-            $("#runner_multiplier").text(multiplerText + engine.jumpCountRecord);
+            multiplierDiv.text(multiplerText + engine.jumpCountRecord);
         }
     }
     class Particle {

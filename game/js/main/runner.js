@@ -8,7 +8,6 @@ window.cancelAnimationFrame = window.cancelAnimationFrame
 || window.mozCancelAnimationFrame
 || function(requestID){clearTimeout(requestID)} //fall back
 
-var multiplierDiv = $("#runner_multiplier");
 var runnerAnimation;
 
    var i = 0;
@@ -39,6 +38,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
     }
 
     function run() {
+        console.log('here');
         runnerAnimation = window.requestAnimationFrame(run);
         now = Date.now();
         elapsed = now - then;
@@ -440,7 +440,7 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
             if (engine.jumpCountRecord < 10) {
                 multiplerText += "0";
             }
-            multiplierDiv.text(multiplerText + engine.jumpCountRecord);
+            $("#runner_multiplier").text(multiplerText + engine.jumpCountRecord);
         }
     }
     class Particle {

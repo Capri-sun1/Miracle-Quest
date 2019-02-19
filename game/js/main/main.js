@@ -484,15 +484,22 @@ function handlePantheon() {
 }
 
 var hasStarted = false;
+var engineRunning = false;
 
 function handleScroller() {
   if (vals.current_tab === "Runner" && hasStarted !== true) {
     hasStarted = true;
+    try {
+      if (engineRunning == true) run();
+    } catch (NoSuchInstanceException) {
+      console.log("Couldn't run the game..");
+    }
   } else if (vals.current_tab !== "Runner" && hasStarted === true) {
     hasStarted = false;
     try {
       if (runnerAnimation !== null) window.cancelAnimationFrame(getAnimationFrame());
     } catch (NoSuchAnimationException) {
+      console.log("Couldn't stop the game..");
     }
   } else if (hasStarted === true) {
     vals.stats.runner_multiplier = parseFloat($("#runner_multiplier").text());
@@ -504,6 +511,7 @@ $(document).on("click", "#start_runner_btn", () => {
   $("#runner_before").css("display", "none");
   startRunner();
   hasStarted = true;
+  engineRunning = true;
 });
 
 function handleCurrentBoss(mul, boss) {
@@ -2555,8 +2563,10 @@ $(document).on('contextmenu', '.miracle', function(event) {
 var timeoutId;
 
 $(document).on('mousedown touchstart', ".miracle", function(event) {
+  event.preventDefault();
   setTimeout(autoClick(this), 0);
 }).on("mouseup mouseleave touchend touchcancel", ".miracle", function(event) {
+  event.preventDefault();
   clearTimeout(timeoutId);  
 });
 

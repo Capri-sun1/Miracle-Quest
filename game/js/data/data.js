@@ -1506,7 +1506,7 @@ var vals = {
         "description":"You do increased damage to bosses.",
         "cost": 0,
         "amount":0,
-        "mul": 4,
+        "mul": 3,
         "max": 1,
         "req": 0
       },

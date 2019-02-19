@@ -2552,6 +2552,21 @@ $(document).on('contextmenu', '.miracle', function(event) {
   $(this).click();
 });
 
+var timeoutId;
+
+$(document).on('mousedown touchstart', ".miracle", function(event) {
+  setTimeout(autoClick(this), 0);
+}).on("mouseup mouseleave touchend touchcancel", ".miracle", function(event) {
+  clearTimeout(timeoutId);  
+});
+
+function autoClick(miracle) {
+  timeoutId = setTimeout(() => {
+    $(miracle).click()
+    autoClick(miracle);
+  }, 250);
+}
+
 $(document).on("click", '.miracle', function(event) { 
   var used_id = $(this).attr('id').substr($(this).attr('id').indexOf('_') + 1);
   try {
@@ -2600,7 +2615,7 @@ class Click {
 generateOffset(id) {
     let yOffset = this.resolveVerticalOffset();
     let xOffset = $(id).offset().right;
-    if(id === '#miracle2_div') {
+    if (id === '#miracle2_div') {
       yOffset *= 0.75;
       xOffset *= 0.8;
     }
@@ -2733,18 +2748,9 @@ class MiracleClick extends Click {
     return true;
   }
 
+  //extract all this setup to some global holder, to prevent calculations on each click
   animate() {
-    let width = $(window).width();
-    let xOffset = '+=' + generateRandomOffset();
-    let yOffset = $('#miracle_div').height()/2;
-    if (width < 1100 && width > 600) {
-      yOffset = 2 * generateRandomOffset();
-      xOffset = width / 3;
-    }   
-    this.target.animate({ 'top': '+=' + yOffset, 'opacity':0.1, 'left': xOffset}, 750,
-     function() { 
-      $(this).remove();
-    });
+    clickAnimation("#miracle_div", this.target);
   }
 }
 
@@ -2755,18 +2761,32 @@ class TranscendClick extends Click {
   }
 
   animate() {
-    let width = $(window).width();
-    let xOffset = '+=' + generateRandomOffset();
-    let yOffset = $('#miracle_div').height()/2;
-    if (width < 1100 && width > 600) {
-      yOffset = 0;
-      xOffset = width / 3;
-    }
-    this.target.animate({'top': '-=' + yOffset, 'opacity':0.1, 'left': + xOffset + 'px'}, 750, 
-      function() { 
-        $(this).remove();
-    });
+    clickAnimation("#miracle2_div", this.target);
   }
+}
+
+function clickAnimation(parentDiv, target) {
+  let xOffset = '+=' + generateRandomOffset();
+  let yOffset = $(parentDiv).height()/2;
+  let parentOffset = $(parentDiv).offset();
+  let parentTop = parentOffset.top;
+  if (parentDiv === "#miracle_div") {
+    yOffset = $("#miracle2_div").offset().top * 1.2;
+    parentTop += $(parentDiv).height()/2;
+  }
+  target.offset({'left': (4 * generateRandomOffset()) + parentOffset.left, 'top': parentTop});
+  if (($(window).width() < 1100 && $(window).width() > 600) || ($(window).height() <= 800 && $(window).width() > 600)) {
+    yOffset = 2 * generateRandomOffset() + (parentOffset.top);
+    if (parentDiv === "#miracle2_div") xOffset = 4 * generateRandomOffset() + $(window).width()/3;
+    else {
+      xOffset = 4 * generateRandomOffset() + $(window).width()/2;
+      target.offset({'left': (4 * generateRandomOffset()) + parentOffset.left + $(window).width()/5, 'top': parentOffset.top });
+    }
+  }
+  target.animate({'top': yOffset, 'opacity':0.1, 'left': xOffset + 'px'}, 750, 
+    function() { 
+      $(this).remove();
+  });
 }
 
 function handleError() {
@@ -2778,17 +2798,21 @@ function handleError() {
 function gen_boss_offset(id, target) {
     var width = $(window).width();
     if (width <= 750) 
-      target.offset({'left': $(window).width()/2, 'top': $(id).offset().top * 1.05});
+      target.offset({'left': width/2, 'top': $(id).offset().top * 1.05});
     else if (width <= 1100) 
-      target.offset( {'left': $(window).width()/2, 'top': $(id).offset().top * 1.1});
+      target.offset( {'left': width/2, 'top': $(id).offset().top * 1.1});
     else if (width <= 1300) 
-      target.offset( {'left': $(window).width()/1.8, 'top': $(id).offset().top * 1.2});
+      target.offset( {'left': width/1.8, 'top': $(id).offset().top * 1.2});
     else if (width <= 1600) 
-      target.offset( {'left': $(window).width()/1.7, 'top': $(id).offset().top * 1.2});
+      target.offset( {'left': width/1.7, 'top': $(id).offset().top * 1.2});
     else if (width <= 1900)  
-      target.offset({'left': $(window).width()/1.6, 'top': $(id).offset().top * 1.5});
+      target.offset({'left': width/1.6, 'top': $(id).offset().top * 1.5});
     else if (width > 1900) {
-      target.offset({'left': $(window).width()/1.5, 'top': $(id).offset().top * 1.5});
+      target.offset({'left': width/1.5, 'top': $(id).offset().top * 1.5});
+    }
+
+    if ($(window.height()) <= 800) {
+      target.offset({'left': width/2});
     }
 }
 

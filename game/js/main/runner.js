@@ -463,14 +463,18 @@ var canvas, ctx, engine, fpsInterval, now, then, elapsed;
 
     $(document).on("keypress", function(event) {
         if (event.which == "32") {
-            let vel = engine.player.velocityY;
-            if (engine.player.canJump) {
-                processJump();
-                if (vel == engine.player.velocityY && engine.player.jumpNum < 2) {
-                    engine.player.velocityY = engine.player.jumpSize;
-                }
-                engine.player.jumpNum++;
-            }   
+            try {
+                let vel = engine.player.velocityY;
+                if (engine.player.canJump) {
+                    processJump();
+                    if (vel == engine.player.velocityY && engine.player.jumpNum < 2) {
+                        engine.player.velocityY = engine.player.jumpSize;
+                    }
+                    engine.player.jumpNum++;
+                }   
+            } catch (UninitialisedException) {
+                console.log("Game not yet initialised.");
+            }
         }
     });
 

@@ -1,4 +1,5 @@
 var last_saved = 0;
+var playAudio = false;
 
 function dateDiffInDays(a, b) {
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
@@ -205,7 +206,6 @@ function setupAudio() {
     this.currentTime = 0;
     this.play();
   }, false);
-  playAudio(bgm);
 }
 
 function playAudio(bgm) {
@@ -242,9 +242,12 @@ document.addEventListener("visibilitychange", handleVisibilityChange, false);
 
 $(document).on('click','#playing', function(event) {
   if(bgm.ended !== true && bgm.paused !== true) {
+    //set global flag here
     bgm.pause();
+    playAudio = false;
   } else if (bgm.paused === true) {
     playAudio(bgm);
+    playAudio = true;
   }
 });
 
@@ -1435,7 +1438,7 @@ function fix_upgrades(vals) {
         if (vals.upgrades[k][i].cost >= vals.upgrades["3"]["upgrade1"].cost/3) {
             $("#upg_text_" + purchase_num).text("Cannot Purchase");
             $('#upgrade_cost_' + purchase_num + '_1').text('[ NaN ');
-            $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle the this immense power.");
+            $('#upgrade_text_' + purchase_num + '_1').text("You cannot yet handle this immense power.");
             $('#upgrade_lbl_' + purchase_num + '_1').text("Unavailable");
             hasDisplayed = true;
           break;
@@ -2203,7 +2206,7 @@ function sell(id) {
 }
 
 $(document).on("click", '#tab_btns .button', function(event) {
-  playAudio(tabSound);
+  if (playAudio == true) playAudio(tabSound);
   var id = $(this).attr('id');
   var tabName = resolveTabName(id);
 
@@ -2231,7 +2234,7 @@ $(document).on("click", "#prev_boss", function(event) {
 });
 
 $(document).on("click", "#next_boss", function(event) {
-  tabSound.play();
+  if (playAudio == true) tabSound.play();
   if (vals.pantheon.stage <= 4) {
     vals.pantheon.stage++;
     vals.pantheon.bosses['boss' + vals.pantheon.stage].current = false;
@@ -2241,7 +2244,7 @@ $(document).on("click", "#next_boss", function(event) {
 
 $(document).on("click", "#boss_upgrades", function(event) {
   if(isTab('Pantheon')) {
-    tabSound.play();
+    if (playAudio == true) tabSound.play();
     fixBossUpgrades();
     toggleElements(["#pantheon_unlocked .overlay", ".boss_img", ".traverse_bosses"]);
     toggleUi('#' + $(this).attr('id'), ['Upgrade menu', 'Boss fight']);
@@ -2251,7 +2254,7 @@ $(document).on("click", "#boss_upgrades", function(event) {
 
 $(document).on("click", "#upgrades_shown", function(event) {
   if(isTab("Upgrades")) {
-    tabSound.play();
+    if (playAudio == true) tabSound.play();
     toggleElements(["#bought_upgrades", "#uncompleted"]);
     toggleUi('#' + $(this).attr('id'), ['See Purchased', 'See Available']);
   }
@@ -2259,7 +2262,7 @@ $(document).on("click", "#upgrades_shown", function(event) {
 
 $(document).on("click", "#achievements_shown", function(event) {
   if(isTab('Challenges')) {
-    tabSound.play();
+    if (playAudio == true) tabSound.play();
     toggleElements(["#completed_challenges", "#incomplete"]);
     toggleUi('#' + $(this).attr('id'), ['See Completed', 'See Incomplete']);
   }
@@ -2344,7 +2347,7 @@ var perform_trans = function(superclick) {
 }
 
 $(document).on("click", '.boss_upgrade', function(event) { 
-  tabSound.play();
+  if (playAudio == true) tabSound.play();
   var id = $(this).attr('id');
   processBossUpgrade(id);
   fixBossUpgrades();
@@ -2444,7 +2447,8 @@ function handleMiracleClick(used_id, event) {
   var miracle = used_id === 'button';
   var click = resolveClick(miracle, event);
   if (click.canClick()) {
-    new Audio('data/clicksound.mp3').play();
+    //todo - extract this object creation to global, or cache
+    if (playAudio == true) new Audio('data/clicksound.mp3').play();
     var divToAppend = resolveDivFor(miracle); 
     processSuperClick();
     click.setTargetColor(resolveColor(["#FFC400",'#1E90FF']));
@@ -2512,7 +2516,7 @@ $(document).on('contextmenu', '.battle', function(event) {
 });
 
 $(document).on("click", ".battle", function() {
-  new Audio('data/clicksound.mp3').play();
+  if (playAudio == true) new Audio('data/clicksound.mp3').play();
   const hit = 'battle_' + (vals.pantheon.stage+1) + '_hit';
   const id = $(this).attr('id');
 

@@ -265,8 +265,8 @@ function handleTimeSinceLastVisit() {
 }
 
 function handleSecondsIdle(diffInSeconds) {
-  var corrected_prod = adjustProduction();
-  var total_loss = adjustLoss();
+  const total_loss = adjust(vals.loss, 1 - (vals.corruption/125));
+  const corrected_prod = adjust(vals.prod, 1 + (vals.corruption/200)) - total_loss;
   //offline production much slower - hardcoded to only add to one value for now.
   if(isNaN(diffInSeconds) === false) {
     const values = [Math.round((diffInSeconds * corrected_prod)/2), Math.round((diffInSeconds * total_loss)/2)];
@@ -400,8 +400,8 @@ function resolveItemCost(index, base) {
 }
 
 function game_engine(iterations, cycles) {
-  const corrected_prod = adjustProduction();
-  const total_loss = adjustLoss();
+  const total_loss = adjust(vals.loss, 1 - (vals.corruption/125));
+  const corrected_prod = adjust(vals.prod, 1 + (vals.corruption/200)) - total_loss;
   
   handleNegativeValues();
   handleUiUpdate([corrected_prod, total_loss]);
@@ -427,17 +427,11 @@ function adjustForGodStatus(mul, multiplier) {
   return mul > 1 ? mul * multiplier : 1;
 }
 
-function adjustProduction() {
+function adjust(startValue, corruptMul) {
   let passiveMul = vals.perks["passive"].mul; 
   let achieveMul = vals.achievement_multiplier;
-  let corruptMul = 1 + (vals.corruption/100);
-  let runMul = vals.god_status.current >= 2 ? (vals.god_status.current - 1) * vals.stats.runner_multiplier : 1.0;
-  return ((passiveMul * achieveMul * vals.prod * runMul) / (corruptMul)) - (corruptMul * runMul * vals.loss);
-}
-
-function adjustLoss() {
-  let runMul = vals.god_status.current >= 2 ? (vals.god_status.current - 1) * vals.stats.runner_multiplier : 1.0;
-  return vals.loss * (1+(vals.corruption/100)) * vals.perks["passive"].mul * runMul;
+  let runMul = vals.god_status.current >= 2 && vals.stats.runner_multiplier > 1.0 ? (vals.god_status.current - 1) * vals.stats.runner_multiplier : 1.0;
+  return ((passiveMul * achieveMul * startValue * runMul) / corruptMul); 
 }
 
 function handleNegativeValues() {
@@ -2102,7 +2096,7 @@ class Sacrifice {
 	}
 
 	canSacrifice(corruptionOffset) {
-		return Math.abs(vals.corruption) <= corruptionOffset;
+		return vals.corruption <= corruptionOffset;
 	}
 
 	getClass() {
@@ -2123,12 +2117,12 @@ class EntrySacrifice extends Sacrifice {
 		this.offset = 100000000;
 	}
 	action() {
-      vals.sacrifice.unlocked = true;
-      vals.corruption += 5;
-      vals.followers -= 1000000;
-      generateToastMessage("Sacrifice tab unlocked!","Dark path");
-      fix_corruption_bar(vals.corruption);
-      fix_corruption_text(vals.corruption);
+    vals.sacrifice.unlocked = true;
+    vals.corruption += 5;
+    vals.followers -= 1000000;
+    generateToastMessage("Sacrifice tab unlocked!","Dark path");
+    fix_corruption_bar(vals.corruption);
+    fix_corruption_text(vals.corruption);
 	}
 
 	handleCorruptionMessage() {
@@ -2163,11 +2157,11 @@ class MixedSacrifice extends Sacrifice {
 	}
 
 	action() {
-        vals.followers-= vals.sacrifice['sacrifice2'].cost;
-        vals.energy-= vals.sacrifice['sacrifice2'].cost;
-        vals.corruption += 15;
-        generateToastMessage("Your power has intensified.","Sacrifice")
-        super.action();
+    vals.followers-= vals.sacrifice['sacrifice2'].cost;
+    vals.energy-= vals.sacrifice['sacrifice2'].cost;
+    vals.corruption += 15;
+    generateToastMessage("Your power has intensified.","Sacrifice")
+    super.action();
 	}
 
 	handleCorruptionMessage() {

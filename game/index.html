@@ -81,7 +81,7 @@
     </div> 
 </div> 
 	<div id = "tab_btns" class = "scroll_tabs">
-		<button class="button square_btn" id="leap-tab-btn" style="display:none">
+		<button class="button square_btn" id="leap-tab-btn">
 			<span class="button__inner">Ascend</span></button>
 	    <button class="button square_btn" id="convert-tab-btn">
 			<span class="button__inner" id="convert-tab-text" style="background: transparent !important;"></span></button>
@@ -107,7 +107,9 @@
 	<div id="tab_divs" class='tabs'>
 		
 	<div id="Runner" class="tabcontent" style="text-align: center">
-			<canvas id="runner_container" style="width: 100%; height: 100%; border: 1em solid #000; background: transparent; display: none">
+			<h3 style="color:#fff">Base Multiplier <strong id="runner_multiplier" style="text-align: center; color: #880E3F">1.0</strong>x</h3>
+
+			<canvas id="runner_container" style="width: 100%; height: 100%; border: 1em solid #000; background: transparent; display: none; margin-bottom: 2%">
 			</canvas>
 			<div id="runner_before" style="width: 100%; height: 100%; border: 1em solid #000; background: transparent;">
 				<h2 style="color: #fff">Cosmic Cube</h2><br>
@@ -119,7 +121,6 @@
 				<button id="start_runner_btn" class="purchase"
 				style="background:transparent; color:#016FF9; font-size: 1.5em;">START</button>
 		</div>
-		<h3 style="color:#fff">Base Multiplier <strong id="runner_multiplier" style="text-align: center; color: #880E3F">1.0</strong>x</h3>
 	</div>
 	<div id="Leap" class="tabcontent">
 
@@ -128,7 +129,6 @@
 			<h3 style="text-align:center"><strong>Quantum leap</strong></h3><br>
 			<h4 style="text-align:center">Use your powers to jump into a new Quantum state.
 				<br>This restarts your progress but you may choose to take one Upgrade below.</h4>
-			
 		<div class="overlay" style="display:block">	
 			<div class="wrap" id="leap_upgrades_wrap" style="text-align: center">
 			<h3 style="color:#34B484">Ascension Paths
@@ -139,6 +139,19 @@
 				</div>
 			</div>
 			</h3>
+
+			<div class="container" style="text-align:center; width: 100%">
+					<div class="row" style="color: white; font-size: 1.5em">
+							<div class="col-md-6" style="width: 100%;">
+									Next tier in <strong id="energy_to_next">100000</strong><span class="glyphicon glyphicon-flash" style="color: #880E4F"></span> 
+									<div class="progress_bar">
+											<div class="pro-bar" style="width: 0%; background: linear-gradient(to right,  #cf5d81 35%,#5c8ab7 68%);">
+											</div>
+									</div>
+			
+							</div>
+					</div>
+				 </div>
 			<ul class="wrap-nav" id="leap_tier_1">
 			<li id="click_leap" style="padding: 2.5% 2.5%"><span class="upg_header">Path One</span>
 			<ul class="upgrade_field">
@@ -166,6 +179,7 @@
 		  <button class="reset" disabled="disabled" data-balloon="Choose a path" data-balloon-pos="up">Quantum leap</button>
 			</ul>
 		</div>
+		
 		</div>
 	</div>
 </div>
@@ -688,18 +702,6 @@
 		  </div>
 	    </div>
   </div>
-  <div class="container" style="text-align:center; width: 100%">
-    <div class="row" style="color: white; font-size: 1.5em; padding-top: 2.5%">
-        <div class="col-md-6" style="width: 90%;">
-            <div class="progress_bar">
-                <div class="pro-bar" style="width: 0%; background: linear-gradient(to right,  #cf5d81 35%,#5c8ab7 68%);">
-                </div>
-                Next tier in <strong id="energy_to_next">100000</strong><span class="glyphicon glyphicon-flash" style="color: #880E4F"></span> 
-            </div>
-
-        </div>
-    </div>
-   </div>
  </div>
 </div>
 	<div id="Challenges" class="tabcontent">	

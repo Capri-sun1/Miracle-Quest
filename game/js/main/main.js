@@ -410,6 +410,7 @@ function game_engine(iterations, cycles) {
     checkAchievements(vals);
     setButtonAvailability(vals);  
 
+    handleProgressToNext();
     handlePantheon();
     handleScroller();
     handleStats();
@@ -466,6 +467,23 @@ function handleUiUpdate(values) {
     netLoss = (vals.achievement_multiplier * vals.prod) / (1 + (vals.corruption / 100));
   }
   $('#prod_energy').text(truncate_bigint(netLoss));
+}
+
+function handleProgressToNext() {
+  let cent = vals.stats.total_energy / vals.upgrades["3"]["upgrade1"].cost * 100;
+  let percentage = cent > 100 ? 100 : cent;
+  if (percentage === 100) {
+    vals.upgrades["3"]["upgrade1"].unlocked = true;
+  }
+
+  percentage = percentage < 1 ? 0 : percentage;
+  let diff = vals.upgrades["3"]["upgrade1"].cost - vals.stats.total_energy;
+  diff = diff < 0 ? 0 : diff;
+
+  if (vals.current_tab === "Leap") {
+    $('#energy_to_next').text(truncate_bigint(Math.floor(diff)));
+    $('.pro-bar').css('width', percentage + '%');
+  }
 }
 
 function handlePantheon() {
@@ -555,7 +573,7 @@ function handleGameLoop(iterations, cycles) {
 }
 
 function handleGameLogic(corrected_prod) {
-  if( vals.followers >= vals.loss || corrected_prod > 0) {
+  if (vals.followers >= vals.loss || corrected_prod > 0) {
     vals.followers += corrected_prod;
     vals.stats.total_followers += corrected_prod;
     vals.energy += ((1+ (vals.corruption / 100)) * vals.loss);
@@ -1072,6 +1090,15 @@ function setButtonAvailability(vals) {
     }
     if (vals.current_tab === 'Leap') {
       const leapUpgrades = ['click', 'boss', 'tier'];
+      if (vals.upgrades["3"]["upgrade1"].unlocked != true) {
+        leapUpgrades.forEach((upg) => {
+          const id = $('.wrap-nav').attr('id');
+          const tier = id.substr(id.length-1);
+          $('#' + upg + '_btn_' + tier).prop('disabled', true); 
+          $('#' + upg + '_btn_' + tier).attr('data-balloon', "Currently unavailable.");
+        });
+        return;
+      }
       for (let upg in leapUpgrades) {
         let leapUpgrade = leapUpgrades[upg];
         const id = $('.wrap-nav').attr('id');
@@ -1153,8 +1180,6 @@ function fix_tab_buttons(vals) {
   $('#challenges-tab-text').text("Challenges " + Math.floor((vals.achievement_multiplier - 1) * 50) + "/26");
   $('#convert-tab-text').text("Create " + unlock_conv + "/" + total_conv);
   $('#ascend-tab-text').text("Convert " + unlock_ascend + "/" + total_ascend);
-  if (!vals.leap.unlocked) $('#leap-tab-btn').css('display', 'none');
-  else $('#leap-tab-btn').css('display', 'inline-block');
   let hiddenTabs = ["pantheon", "perk", "runner", "sacrifice"];
   hiddenTabs.forEach((element) => {
     let display = determineTabAvailability(element) === true ? 'inline-block' : 'none';
@@ -1196,19 +1221,6 @@ function fix_stats(vals) {
   else $('#stats_field_saved').text(" never");
   $('#stats_field_15').text(truncate_bigint(vals.stats.ascension_click_energy));
   $('#stats_field_16').text(truncate_bigint(vals.stats.miracle_click_energy));
-
-  let cent = vals.stats.total_energy / vals.upgrades["3"]["upgrade1"].cost * 100;
-  let percentage = cent > 100 ? 100 : cent;
-  if (percentage === 100 && vals.leap.unlocked !== true) {
-    vals.upgrades["3"]["upgrade1"].unlocked = true;
-    vals.leap.unlocked = true;
-  }
-  percentage = percentage < 1 ? 0 : percentage;
-  let diff = vals.upgrades["3"]["upgrade1"].cost - vals.stats.total_energy;
-  diff = diff < 0 ? 0 : diff;
-
-  $('#energy_to_next').text(truncate_bigint(Math.floor(diff)));
-  $('.pro-bar').css('width', percentage + '%');
 }
 
 //TODO - remove this method and call each method individually when required
@@ -1241,7 +1253,7 @@ function fix_sacrifice(vals) {
 }
 
 function fix_leap(vals) {
-  if (vals.current_tab === 'Leap' && vals.leap.unlocked) {
+  if (vals.current_tab === 'Leap') {
     var id = $('.wrap-nav').attr('id');
     var tier = id.substr(id.length-1);
     $('#flame').text(vals.flame);
@@ -1356,7 +1368,7 @@ function fix_conv_asc(vals) {
 
   for (let k in vals[keyWord]) {
       var purchase_num = k.substr(k.length-1);
-      if (purchase_num > vals.god_status[vals.god_status.current].max_tier || vals[keyWord][k].cost >= (vals.upgrades["3"]["upgrade1"].cost/3)) break;
+      if (purchase_num > vals.god_status[vals.god_status.current].max_tier) break;
       if ((currentTab === 'Ascension' && vals.loss >= vals[keyWord][k].unlock_rps) || (currentTab === 'Conversion' && (vals.prod >= vals[keyWord][k].unlock_rps))) {
         vals[keyWord][k].unlocked = true;
         //dynamically create divs as needed, saves creating all in the html file.
@@ -2820,8 +2832,7 @@ function gen_boss_offset(id, target) {
     else if (width > 1900) {
       target.offset({'left': width/1.5, 'top': $(id).offset().top * 1.5});
     }
-
-    if ($(window.height()) <= 800) {
+    if ($(window).height() <= 800) {
       target.offset({'left': width/2});
     }
 }

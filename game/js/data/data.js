@@ -1063,9 +1063,9 @@ var data = {
             },
             "bosses" : {
               "boss1":{
-                "max_hp": 250000,
-                "current_hp":250000,
-                "base_hp":250000,
+                "max_hp": 100000,
+                "current_hp":100000,
+                "base_hp":100000,
                 "regen":50,
                 "reward":1000000,
                 "current":true,
@@ -2461,9 +2461,9 @@ var vals = {
             },
             "bosses" : {
               "boss1":{
-                "max_hp": 250000,
-                "current_hp":250000,
-                "base_hp":250000,
+                "max_hp": 100000,
+                "current_hp":100000,
+                "base_hp":100000,
                 "regen":50,
                 "reward":1000000,
                 "current":true,

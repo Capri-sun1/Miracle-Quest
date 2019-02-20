@@ -1929,7 +1929,7 @@ a {
     margin: 2%;
 }
 .progress_bar:first-child{
-    margin: 5% 4%;
+    margin: 1% 1%;
 }
 .progress_bar .pro-bar{
     position: relative;
@@ -2711,10 +2711,6 @@ a {
     width: 37.5%;
    }
 
-   .container {
-    margin-right: 5%;
-   }
-
    .pricing-features li {
     padding: 5% 0;
     font-size: 0.75em;
@@ -2752,6 +2748,20 @@ a {
   #miracle_img {
     width: 12vw;
     height: 12vw;
+  }
+
+  .perk {
+    width: 20%
+  }
+
+  .upg div .pricing-features li {
+    padding: 5% 0;
+    font-size: 1.25em;
+  }
+
+  #stats_panel div ul li {
+    padding: 2% 0;
+    font-size: 1.25em;
   }
 }
 

@@ -1631,7 +1631,7 @@ function fix_challenges(vals) {
                 '<em id="challenges_text">Text placeholder</em> </p></div>').prependTo($('#challenge' + challenge_num));
               $("#new_challenge").find('#challenges_lbl_').attr('id', "challenges_lbl_" + challenge_num + '_' + i);
               $("#new_challenge").find('#challenges_text').attr('id', "challenges_text_" + challenge_num + '_' + i);
-              $('#new_challenge').children().each(cloneChallenge(this.id, challenge_num, i));
+              $('#new_challenge').children().each(function(e) {this.id = cloneChallenge(this.id, challenge_num, i)});
               $('#new_challenge').attr('id', 'challenges_' + challenge_num + '_' + i);
               vals.challenges[k][i].visible = true;
           }
@@ -1665,8 +1665,11 @@ function fix_challenges(vals) {
 }
 
 function cloneChallenge(id, challenge_num, i) {
-  if (id === 'challenge_head_temp')
-  id = "challenges_header_" + challenge_num + '_' + i;
+  if (id === 'challenge_head_temp') {
+    return "challenges_header_" + challenge_num + '_' + i;
+  } else {
+    return id;
+  }
 };
 
   /**

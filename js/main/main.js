@@ -106,7 +106,7 @@ window.cancelAnimationFrame = window.cancelAnimationFrame
     animationFrame = window.requestAnimationFrame(render);
 
   loadData();
-  loadBackgroundImage();
+  //loadBackgroundImage();
   showBackground().then(() => {
     fix_tab_buttons(vals);
     fix_names(vals);

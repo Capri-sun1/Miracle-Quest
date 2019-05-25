@@ -1,9 +1,9 @@
 html {
   font-family: 'Helvetica', sans-serif !important;
   font-size: 18px;
-  background-color: lightgrey;
+  background-color: black;
   transition: background 2s linear;
-    background-image: url('../data/background.jpg');
+    /* background-image: url('../data/background.jpg'); */
 }
 
 
@@ -28,7 +28,7 @@ html {
 body, html {
   margin: 0;
   padding: 0;
-  background-color: transparent !important;
+  /* background-color: transparent !important; */
 }
 
 

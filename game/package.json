@@ -10,7 +10,9 @@
     "type": "git",
     "url": "Miracle-Quest"
   },
-  "moduleDirectories": ["js"],
+  "moduleDirectories": [
+    "js"
+  ],
   "author": "Andrew Barkley",
   "license": "ISC",
   "devDependencies": {

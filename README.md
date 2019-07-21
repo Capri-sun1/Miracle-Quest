@@ -3,7 +3,7 @@
 This is a web-based Incremental game written in JavaScript, with some additions of JQuery, and a few other useful libraries. The game follows the traditional pillars of an incremental/idle-style game, where you perform simple actions such as clicking on the screen repeatedly to earn currency. After a time, as the game plays itself, including in the player's absence, hence the moniker "idle game". 
 
 A peek of the game: 
-![alt text](https://github.com/abarkley123/Miracle-Quest/data/screenshot.png "Screenshot of gameplay")
+![alt text](https://github.com/abarkley123/Miracle-Quest/blob/master/data/screenshot.png "Screenshot of gameplay")
 
 
 ## Getting Started

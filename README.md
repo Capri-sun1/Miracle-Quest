@@ -17,6 +17,13 @@ Since this game is purely web-based, that means getting started is simple. Clone
 
 Some basic of Idle/Incremental games would be useful in knowing the typical formulaic pattern of these games - https://en.wikipedia.org/wiki/Incremental_game. This game takes the existing patterns and adds some extra levels of progression, such as the 'Pantheon', 'Sacrifice' and 'Cosmic Cube' levels each of which have a unique effect on the gameplay.
 
+## Features
+
+* Two key resources - balance production of Followers and conversion of those Followers into Energy.
+* Tiered buildings - Improve the stats of each building as you buy more of them, improving their value proposition.
+* Extended gameplay - Progress through the game with 'Quantum Leap', which resets your progress but unlocks new buildings, bosses, gameplay mechanics as well as giving stat buffs.
+* Much, much more!
+
 ## Built With
 
 * [JavaScript] - Utilising the latest ECMAScript 8 (https://en.wikipedia.org/wiki/ECMAScript#9th_Edition_-_ECMAScript_2018)

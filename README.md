@@ -40,5 +40,4 @@ This project is unlicensed, and you may use it freely - please give credit when 
 
 ## Acknowledgments
 
-* Inspired by Various Idle games: https://www.kongregate.com/incremental-games
-
+* Made possible by the great GopherJS dependency - see above for link to the repository.
